@@ -1,4 +1,3 @@
-
 <template>
   <div class="text-center">
     <div class="d-flex justify-content-center"><RouterView /></div>
