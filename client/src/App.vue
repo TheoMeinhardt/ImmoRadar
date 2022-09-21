@@ -1,9 +1,9 @@
 <template>
-  <div class="text-center">
-    <div class="d-flex justify-content-center"><RouterView /></div>
-  </div>
+  <RouterView />
 </template>
 
 <script setup>
-import {  RouterView } from 'vue-router';
+import { RouterView } from 'vue-router';
 </script>
+
+<style scoped></style>
