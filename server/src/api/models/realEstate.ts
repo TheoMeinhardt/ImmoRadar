@@ -8,4 +8,12 @@ async function getAllRealEstates(): Promise<realEstate[]> {
   return rows;
 }
 
-export { getAllRealEstates };
+async function getOneRealEstate(id: string): Promise<realEstate> {
+  const text: string = 'select * from real_estate where re_id = $1';
+  const args: any[] = [id];
+  const { rows } = await pool.query(text, args);
+
+  return rows[0];
+}
+
+export { getAllRealEstates, getOneRealEstate };
