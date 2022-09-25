@@ -25,7 +25,8 @@
     "express-async-handler": "^1.2.0",
     "helmet": "^6.0.0",
     "morgan": "^1.10.0",
-    "pg": "^8.8.0"
+    "pg": "^8.8.0",
+    "stripe": "^10.11.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
