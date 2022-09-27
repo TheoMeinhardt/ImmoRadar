@@ -1,1 +1,1 @@
-export { default as realEstate } from './realEstate';
+export * from './realEstate';

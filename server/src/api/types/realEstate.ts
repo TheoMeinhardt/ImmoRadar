@@ -1,4 +1,4 @@
-type realEstate = {
+type realEstateDto = {
   re_id: string;
   name: string;
   subname: string;
@@ -19,4 +19,25 @@ type realEstate = {
   document_id: string;
 };
 
-export default realEstate;
+type realEstate = {
+  reID: string;
+  name: string;
+  subname: string;
+  description: string;
+  addressID: string;
+  propertyArea: number;
+  usableArea: number;
+  outsideArea: number;
+  rooms: number;
+  bathrooms: number;
+  bedrooms: number;
+  buyable: boolean;
+  price: number;
+  userID: string;
+  provision: number;
+  constructionYear: Date;
+  heatingID: string;
+  documentID: string;
+};
+
+export { realEstate, realEstateDto };
