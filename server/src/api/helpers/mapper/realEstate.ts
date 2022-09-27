@@ -1,7 +1,7 @@
-import { realEstate, realEstateDto } from '../../types';
+import { realEstate, realEstateDTO } from '../../types';
 
-function realEstateMapper(dto: realEstateDto | realEstateDto[]): realEstate | realEstate[] {
-  const convertRealEstateDTOtoRealEstate = (d: realEstateDto): realEstate => {
+function realEstateMapper(dto: realEstateDTO | realEstateDTO[]): realEstate | realEstate[] {
+  const convertrealEstateDTOtoRealEstate = (d: realEstateDTO): realEstate => {
     const newRealEstate: realEstate = {
       reID: d.re_id,
       name: d.name,
@@ -28,11 +28,11 @@ function realEstateMapper(dto: realEstateDto | realEstateDto[]): realEstate | re
 
   if (Array.isArray(dto)) {
     const newArr: realEstate[] = [];
-    dto.forEach((re) => newArr.push(convertRealEstateDTOtoRealEstate(re)));
+    dto.forEach((re) => newArr.push(convertrealEstateDTOtoRealEstate(re)));
     return newArr;
   }
 
-  return convertRealEstateDTOtoRealEstate(dto);
+  return convertrealEstateDTOtoRealEstate(dto);
 }
 
 export default realEstateMapper;

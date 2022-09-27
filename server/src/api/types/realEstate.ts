@@ -1,4 +1,4 @@
-type realEstateDto = {
+type realEstateDTO = {
   re_id: string;
   name: string;
   subname: string;
@@ -40,4 +40,4 @@ type realEstate = {
   documentID: string;
 };
 
-export { realEstate, realEstateDto };
+export { realEstate, realEstateDTO };
