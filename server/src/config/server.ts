@@ -7,6 +7,9 @@ import Stripe from 'stripe';
 import { realEstatesRouter } from '../api/routes';
 import { notFoundHandler, errorHandler } from '../api/middleware';
 
+import { realEstatesRouter } from '../api/routes';
+import { notFoundHandler, errorHandler } from '../api/middleware';
+
 dotenv.config();
 
 const server = express();
