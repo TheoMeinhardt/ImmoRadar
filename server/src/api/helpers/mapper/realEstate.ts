@@ -1,28 +1,38 @@
 import { realEstate, realEstateDto } from '../../types';
 
-function realEstateMapper(dto: realEstateDto): realEstate {
-  const newRealEstate: realEstate = {
-    reID: dto.re_id,
-    name: dto.name,
-    subname: dto.subname,
-    description: dto.description,
-    addressID: dto.address_id,
-    propertyArea: dto.property_area,
-    usableArea: dto.usable_area,
-    outsideArea: dto.outside_area,
-    rooms: dto.rooms,
-    bathrooms: dto.bathrooms,
-    bedrooms: dto.bedrooms,
-    buyable: dto.buyable,
-    price: dto.price,
-    userID: dto.user_id,
-    provision: dto.provision,
-    constructionYear: dto.construction_year,
-    heatingID: dto.heating_id,
-    documentID: dto.document_id,
+function realEstateMapper(dto: realEstateDto | realEstateDto[]): realEstate | realEstate[] {
+  const convertRealEstateDTOtoRealEstate = (d: realEstateDto): realEstate => {
+    const newRealEstate: realEstate = {
+      reID: d.re_id,
+      name: d.name,
+      subname: d.subname,
+      description: d.description,
+      addressID: d.address_id,
+      propertyArea: d.property_area,
+      usableArea: d.usable_area,
+      outsideArea: d.outside_area,
+      rooms: d.rooms,
+      bathrooms: d.bathrooms,
+      bedrooms: d.bedrooms,
+      buyable: d.buyable,
+      price: d.price,
+      userID: d.user_id,
+      provision: d.provision,
+      constructionYear: d.construction_year,
+      heatingID: d.heating_id,
+      documentID: d.document_id,
+    };
+
+    return newRealEstate;
   };
 
-  return newRealEstate;
+  if (Array.isArray(dto)) {
+    const newArr: realEstate[] = [];
+    dto.forEach((re) => newArr.push(convertRealEstateDTOtoRealEstate(re)));
+    return newArr;
+  }
+
+  return convertRealEstateDTOtoRealEstate(dto);
 }
 
 export default realEstateMapper;

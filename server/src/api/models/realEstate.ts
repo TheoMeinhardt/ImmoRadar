@@ -1,19 +1,20 @@
 import pool from '../../config/dbconfig';
-import { realEstate } from '../types';
+import { realEstateMapper } from '../helpers';
+import { realEstate, realEstateDto } from '../types';
 
 async function getAllRealEstates(): Promise<realEstate[]> {
   const text: string = 'select * from real_estate;';
-  const { rows } = await pool.query(text, []);
+  const { rows }: { rows: realEstateDto[] } = await pool.query(text, []);
 
-  return rows;
+  return realEstateMapper(rows) as realEstate[];
 }
 
 async function getOneRealEstate(id: string): Promise<realEstate> {
   const text: string = 'select * from real_estate where re_id = $1';
   const args: any[] = [id];
-  const { rows } = await pool.query(text, args);
+  const { rows }: { rows: realEstateDto[] } = await pool.query(text, args);
 
-  return rows[0];
+  return realEstateMapper(rows) as realEstate;
 }
 
 export { getAllRealEstates, getOneRealEstate };
