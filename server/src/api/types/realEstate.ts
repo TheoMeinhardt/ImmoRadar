@@ -22,22 +22,22 @@ type realEstateDTO = {
 type realEstate = {
   reID: string;
   name: string;
-  subname: string;
+  subname: string | null;
   description: string;
   addressID: string;
-  propertyArea: number;
+  propertyArea: number | null;
   usableArea: number;
-  outsideArea: number;
+  outsideArea: number | null;
   rooms: number;
   bathrooms: number;
   bedrooms: number;
   buyable: boolean;
-  price: number;
+  price: number | null;
   userID: string;
   provision: number;
-  constructionYear: Date;
-  heatingID: string;
-  documentID: string;
+  constructionYear: Date | null;
+  heatingID: string | null;
+  documentID: string | null;
 };
 
 export { realEstate, realEstateDTO };
