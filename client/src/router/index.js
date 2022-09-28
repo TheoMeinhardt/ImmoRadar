@@ -29,12 +29,12 @@ const router = createRouter({
       component: FormView,
       children: [
         {
-          path: '/login',
+          path: '',
           name: 'login',
           component: LoginView,
         },
         {
-          path: '/register',
+          path: '/form/register',
           name: 'register',
           component: RegisterView,
         },
