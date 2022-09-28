@@ -8,7 +8,10 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "@mapbox/mapbox-gl-geocoder": "^5.0.1",
     "@quasar/extras": "^1.15.3",
+    "@studiometa/vue-mapbox-gl": "^2.0.1",
+    "mapbox-gl": "^2.10.0",
     "pinia": "^2.0.21",
     "quasar": "^2.8.3",
     "vue": "^3.2.38",
