@@ -1,5 +1,5 @@
 <template>
-  <div class="xs bg-blue-grey-7">
+  <div class="xs bg-blue-grey-7 container">
     <h4 style="font-family: Quicksand" class="text-white text-center">ImmoRadar</h4>
     <q-tabs style="font-family: Keep Calm" class="text-white">
       <q-route-tab to="/form">Login</q-route-tab>
@@ -12,3 +12,9 @@
 <script setup>
 import { RouterView } from 'vue-router';
 </script>
+
+<style scoped>
+.container {
+  height: 100%;
+}
+</style>
