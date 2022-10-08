@@ -134,7 +134,7 @@ async function deleteRealEstate(req: Request, res: Response): Promise<void> {
 }
 
 async function postToWebhook(req: Request, res: Response): Promise<void> {
-	express.raw({ type: 'application/json' });
+	raw({ type: 'application/json' });
 	const sig = req.headers['stripe-signature'];
 	let event: any;
 	try {
@@ -161,4 +161,4 @@ async function postToWebhook(req: Request, res: Response): Promise<void> {
 	res.json({ received: true });
 }
 
-export { getAllRealEstates, getOneRealEstate, postToWebhook };
+export { getAllRealEstates, getOneRealEstate, getShortendRealEstates, addRealEstate, deleteRealEstate, patchRealEstate, postToWebhook };
