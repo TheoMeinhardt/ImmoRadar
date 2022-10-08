@@ -14,6 +14,6 @@ import { RouterView } from 'vue-router';
 
 @font-face {
   font-family: 'Quicksand';
-  src: url('fonts/quicksand/Quicksand_Light.otf') format('truetype');
+  src: url('/fonts/quicksand/Quicksand_Light.otf') format('truetype');
 }
 </style>
