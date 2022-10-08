@@ -41,9 +41,17 @@
       color="light-blue-3"
       style="font-family: Keep Calm; width: 300px"
       align="center"
-      label="Login"
+      label="Register"
+      class="btn"
     />
   </div>
 </template>
 
 <script setup></script>
+
+<style scoped>
+.btn {
+  margin: auto;
+  width: 50%;
+}
+</style>
