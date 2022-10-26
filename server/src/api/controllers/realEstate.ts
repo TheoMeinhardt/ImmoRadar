@@ -18,4 +18,12 @@ async function getOneRealEstate(req: Request, res: Response): Promise<void> {
   else res.status(404).send('Not Found');
 }
 
-export { getAllRealEstates, getOneRealEstate };
+async function addRealEstate(req: Request, res: Response): Promise<void> {
+  const newRealEstate: realEstate = req.body;
+  const addedRealEstate: realEstate = await db.addRealEstate(newRealEstate);
+
+  if (!addedRealEstate) res.status(500).end();
+  res.status(200).end();
+}
+
+export { getAllRealEstates, getOneRealEstate, addRealEstate };
