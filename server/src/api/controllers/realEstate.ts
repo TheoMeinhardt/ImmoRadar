@@ -13,7 +13,7 @@ async function getAllRealEstates(req: Request, res: Response): Promise<void> {
 // Controller for sending one Real Estate with specified id to the client
 async function getOneRealEstate(req: Request, res: Response): Promise<void> {
   const id: string = req.params.id;
-  const oneRealEstate: realEstate = await db.getOneRealEstate(id);
+  const oneRealEstate = await db.getOneRealEstate(id);
 
   if (oneRealEstate) res.status(200).json(oneRealEstate);
   else res.status(404).send('Not Found');
@@ -40,9 +40,9 @@ async function deleteRealEstate(req: Request, res: Response): Promise<void> {
   const reID: string = req.params.id;
 
   if (await db.getOneRealEstate(reID)) {
-    const deletedRealEstate: realEstate = await db.deleteRealEstate(reID);
+    const deletedRealEstate = await db.deleteRealEstate(reID);
     if (!deleteRealEstate) res.status(500).end();
-    res.status(200).send(`deleted real estate "${deletedRealEstate.name}"`);
+    res.status(200).send(`deleted real estate "${deletedRealEstate?.name}"`);
   } else {
     res.status(404).send(`real estate with id "${reID}" does not exist`);
   }
