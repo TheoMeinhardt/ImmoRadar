@@ -9,12 +9,12 @@ async function getAllRealEstates(): Promise<realEstate[]> {
   return realEstateMapper(rows) as realEstate[];
 }
 
-async function getOneRealEstate(id: string): Promise<realEstate> {
+async function getOneRealEstate(id: string): Promise<realEstate | undefined> {
   const text: string = 'select * from real_estate where re_id = $1';
   const params: any[] = [id];
   const { rows }: { rows: realEstateDTO[] } = await pool.query(text, params);
 
-  return realEstateMapper(rows) as realEstate;
+  return rows[0] ? (realEstateMapper(rows[0]) as realEstate) : undefined;
 }
 
 async function addRealEstate(newRealEstate: realEstate): Promise<realEstate> {
@@ -25,12 +25,12 @@ async function addRealEstate(newRealEstate: realEstate): Promise<realEstate> {
   return realEstateMapper(rows[0]) as realEstate;
 }
 
-async function deleteRealEstate(reID: string): Promise<realEstate> {
+async function deleteRealEstate(reID: string): Promise<realEstate | undefined> {
   const text: string = 'delete from real_estate where re_id = $1 returning *';
   const params: any[] = [reID];
 
   const { rows }: { rows: realEstateDTO[] } = await pool.query(text, params);
-  return realEstateMapper(rows[0]) as realEstate;
+  return rows[0] ? (realEstateMapper(rows[0]) as realEstate) : undefined;
 }
 
 export { getAllRealEstates, getOneRealEstate, addRealEstate, deleteRealEstate };
