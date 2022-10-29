@@ -25,6 +25,14 @@ async function addRealEstate(newRealEstate: realEstate): Promise<realEstate> {
   return realEstateMapper(rows[0]) as realEstate;
 }
 
+async function patchRealEstate(reID: string, newRealEstate: realEstate): Promise<realEstate> {
+  const text: string = 'update real_estate set name = $1, subname = $2, description = $3, address_id = $4, property_area = $5, usable_area = $6, outside_area = $7, rooms = $8, bathrooms = $9, bedrooms = $10, buyable = $11, price = $12, user_id = $13, provision = $14, heating_id = $15, document_id = $16 where re_id = $17 returning *';
+  const params: any[] = [newRealEstate.name, newRealEstate.subname, newRealEstate.description, newRealEstate.addressID, newRealEstate.propertyArea, newRealEstate.usableArea, newRealEstate.outsideArea, newRealEstate.rooms, newRealEstate.bathrooms, newRealEstate.bedrooms, newRealEstate.buyable, newRealEstate.price, newRealEstate.userID, newRealEstate.provision, newRealEstate.heatingID, newRealEstate.documentID, reID];
+
+  const { rows }: { rows: realEstateDTO[] } = await pool.query(text, params);
+  return realEstateMapper(rows[0]) as realEstate;
+}
+
 async function deleteRealEstate(reID: string): Promise<realEstate | undefined> {
   const text: string = 'delete from real_estate where re_id = $1 returning *';
   const params: any[] = [reID];
@@ -33,4 +41,4 @@ async function deleteRealEstate(reID: string): Promise<realEstate | undefined> {
   return rows[0] ? (realEstateMapper(rows[0]) as realEstate) : undefined;
 }
 
-export { getAllRealEstates, getOneRealEstate, addRealEstate, deleteRealEstate };
+export { getAllRealEstates, getOneRealEstate, addRealEstate, patchRealEstate, deleteRealEstate };

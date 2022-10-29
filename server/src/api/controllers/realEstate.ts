@@ -35,6 +35,31 @@ async function addRealEstate(req: Request, res: Response): Promise<void> {
   }
 }
 
+// Controller for patching a real estate with id and data sent by client
+async function patchRealEstate(req: Request, res: Response): Promise<void> {
+  const id: string = req.params.id;
+  const realEstateData: realEstate = req.body;
+  const originalRealEstate = await db.getOneRealEstate(id);
+
+  // check if real estate exists
+  if (originalRealEstate) {
+    // create a new real estate object with the data from the original real estate and overwrite every property with the data from the real estate data object
+    const patchedRealEstate: realEstate = { ...originalRealEstate, ...realEstateData };
+
+    // Json verification
+    realEstateValidator(patchedRealEstate);
+    if (!realEstateValidator.errors) {
+      const newRealEstate: realEstate = await db.patchRealEstate(id, patchedRealEstate);
+
+      res.status(200).send(`updated real estate with id "${newRealEstate.reID}"`);
+    } else {
+      res.status(400).send(realEstateValidator.errors);
+    }
+  } else {
+    res.status(404).send(`real estate with id "${id}" does not exist`);
+  }
+}
+
 // Controller for deleting a real estate in the database by id sent by user
 async function deleteRealEstate(req: Request, res: Response): Promise<void> {
   const reID: string = req.params.id;
@@ -48,4 +73,4 @@ async function deleteRealEstate(req: Request, res: Response): Promise<void> {
   }
 }
 
-export { getAllRealEstates, getOneRealEstate, addRealEstate, deleteRealEstate };
+export { getAllRealEstates, getOneRealEstate, addRealEstate, deleteRealEstate, patchRealEstate };
