@@ -1,8 +1,12 @@
 import { Request, Response } from 'express';
 
-import { realEstate } from '../types';
+import { realEstate, shortRealEstate } from '../types';
 import { realEstateValidator } from '../validators';
 import * as db from '../models';
+
+// ---------------
+// GET Controllers
+// ---------------
 
 // Controller for sending all Real Estates to the client
 async function getAllRealEstates(req: Request, res: Response): Promise<void> {
@@ -19,6 +23,18 @@ async function getOneRealEstate(req: Request, res: Response): Promise<void> {
   else res.status(404).send('Not Found');
 }
 
+// Controller for sending a shortend selection auf Real Estate Properties to client
+async function getShortendRealEstates(req: Request, res: Response): Promise<void> {
+  const longRealEstates: realEstate[] = await db.getAllRealEstates();
+  const shortRealEstates: shortRealEstate[] = longRealEstates.map(({ name, addressID, price, usableArea, rooms }) => ({ name, addressID, price, usableArea, rooms }));
+
+  res.status(200).json(shortRealEstates);
+}
+
+// ----------------
+// POST Controllers
+// ----------------
+
 // Controller for adding a new Real Estate sent by the client
 async function addRealEstate(req: Request, res: Response): Promise<void> {
   const newRealEstate: realEstate = req.body;
@@ -34,6 +50,10 @@ async function addRealEstate(req: Request, res: Response): Promise<void> {
     res.status(400).send(realEstateValidator.errors);
   }
 }
+
+// -----------------
+// PATCH Controllers
+// -----------------
 
 // Controller for patching a real estate with id and data sent by client
 async function patchRealEstate(req: Request, res: Response): Promise<void> {
@@ -60,6 +80,10 @@ async function patchRealEstate(req: Request, res: Response): Promise<void> {
   }
 }
 
+// ------------------
+// DELETE Controllers
+// ------------------
+
 // Controller for deleting a real estate in the database by id sent by user
 async function deleteRealEstate(req: Request, res: Response): Promise<void> {
   const reID: string = req.params.id;
@@ -73,4 +97,4 @@ async function deleteRealEstate(req: Request, res: Response): Promise<void> {
   }
 }
 
-export { getAllRealEstates, getOneRealEstate, addRealEstate, deleteRealEstate, patchRealEstate };
+export { getAllRealEstates, getOneRealEstate, getShortendRealEstates, addRealEstate, deleteRealEstate, patchRealEstate };

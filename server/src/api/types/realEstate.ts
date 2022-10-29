@@ -40,4 +40,12 @@ type realEstate = {
   documentID: string | null;
 };
 
-export { realEstate, realEstateDTO };
+type shortRealEstate = {
+  name: string;
+  addressID: string;
+  price: number | null;
+  usableArea: number;
+  rooms: number;
+};
+
+export { realEstate, realEstateDTO, shortRealEstate };
