@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 
 import { realEstate } from '../types';
+import { realEstateValidator } from '../validators';
 import * as db from '../models';
 
 // Controller for sending all Real Estates to the client
@@ -20,10 +21,16 @@ async function getOneRealEstate(req: Request, res: Response): Promise<void> {
 
 async function addRealEstate(req: Request, res: Response): Promise<void> {
   const newRealEstate: realEstate = req.body;
-  const addedRealEstate: realEstate = await db.addRealEstate(newRealEstate);
 
-  if (!addedRealEstate) res.status(500).end();
-  res.status(200).end();
+  realEstateValidator(newRealEstate);
+  if (!realEstateValidator.errors) {
+    const addedRealEstate: realEstate = await db.addRealEstate(newRealEstate);
+
+    if (!addedRealEstate) res.status(500).send(addRealEstate);
+    res.status(200).end();
+  } else {
+    res.status(400).send(realEstateValidator.errors);
+  }
 }
 
 export { getAllRealEstates, getOneRealEstate, addRealEstate };
