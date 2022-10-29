@@ -22,7 +22,6 @@ async function addRealEstate(newRealEstate: realEstate): Promise<realEstate> {
   const args: any[] = [newRealEstate.name, newRealEstate.subname, newRealEstate.description, newRealEstate.addressID, newRealEstate.propertyArea, newRealEstate.usableArea, newRealEstate.outsideArea, newRealEstate.rooms, newRealEstate.bathrooms, newRealEstate.bedrooms, newRealEstate.buyable, newRealEstate.price, newRealEstate.userID, newRealEstate.provision, newRealEstate.heatingID, newRealEstate.documentID];
   const { rows }: { rows: realEstateDTO[] } = await pool.query(text, args);
 
-  console.log(rows[0]);
   return realEstateMapper(rows[0]) as realEstate;
 }
 
