@@ -11,10 +11,18 @@ async function getAllUsers(): Promise<user[]> {
 
 async function getUserById(id: string): Promise<user> {
   const text = 'select * from users where user_id = $1';
-  const args = [id];
-  const { rows }: { rows: userDTO[] } = await pool.query(text, args);
+  const params = [id];
+  const { rows }: { rows: userDTO[] } = await pool.query(text, params);
 
   return userMapper(rows[0]) as user;
 }
 
-export { getAllUsers, getUserById };
+async function addUser(newUser: user): Promise<user | undefined> {
+  const text: string = 'insert into users (user_id, username, address_id, company, phone, email, photo_id, profile_pic, user_password) values (default, $1, $2, $3, $4, $5, $6, $7, $8) returning *';
+  const params = [newUser.name, newUser.addressID, newUser.company, newUser.phone, newUser.email, null, newUser.profilePic, newUser.password];
+
+  const { rows }: { rows: userDTO[] } = await pool.query(text, params);
+  return rows[0] ? (userMapper(rows[0]) as user) : undefined;
+}
+
+export { getAllUsers, getUserById, addUser };
