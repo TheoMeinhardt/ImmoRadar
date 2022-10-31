@@ -1,22 +1,22 @@
 import asyncHandler from 'express-async-handler';
 import { Router } from 'express';
 
-import { getAllRealEstates, getOneRealEstate, getShortendRealEstates, addRealEstate, deleteRealEstate, patchRealEstate } from '../controllers/realEstate';
+import { realEstateControllers } from '../controllers';
 
 const router = Router();
 
 // GETs
-router.get('/', asyncHandler(getAllRealEstates));
-router.get('/short', asyncHandler(getShortendRealEstates));
-router.get('/:id', asyncHandler(getOneRealEstate));
+router.get('/', asyncHandler(realEstateControllers.getAllRealEstates));
+router.get('/short', asyncHandler(realEstateControllers.getShortendRealEstates));
+router.get('/:id', asyncHandler(realEstateControllers.getOneRealEstate));
 
 // POSTs
-router.post('/', asyncHandler(addRealEstate));
+router.post('/', asyncHandler(realEstateControllers.addRealEstate));
 
 // PATCHs
-router.patch('/:id', asyncHandler(patchRealEstate));
+router.patch('/:id', asyncHandler(realEstateControllers.patchRealEstate));
 
 // DELETEs
-router.delete('/:id', asyncHandler(deleteRealEstate));
+router.delete('/:id', asyncHandler(realEstateControllers.deleteRealEstate));
 
 export default router;
