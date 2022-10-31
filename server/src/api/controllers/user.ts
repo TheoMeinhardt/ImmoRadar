@@ -33,14 +33,39 @@ async function addUser(req: Request, res: Response): Promise<void> {
   const newUser: user = req.body;
 
   // JSON validation
-  userValidator(newUser);
-  if (!userValidator.errors) {
+  if (userValidator(newUser)) {
     const addedUser = await db.addUser(newUser);
 
     if (!addedUser) res.status(500).end();
     res.status(200).end();
   } else {
     res.status(400).send(userValidator.errors);
+  }
+}
+
+// ------
+// PATCHs
+// ------
+
+// Controller for patching an existing user with new data from client
+async function updateUser(req: Request, res: Response): Promise<void> {
+  const id = req.params.id;
+  const data = req.body;
+
+  // check if user exists
+  if (await userExists(id)) {
+    const oldUser: user = (await db.getUserById(id)) as user;
+    const newUser: user = { ...oldUser, ...data };
+
+    // JSON validation
+    if (userValidator(newUser)) {
+      const updatedUser: user = await db.patchUser(id, newUser);
+      res.status(200).send(`updated user with id "${updatedUser.userID}"`);
+    } else {
+      res.status(400).send(userValidator.errors);
+    }
+  } else {
+    res.status(400).send(`User with id "${id} does not exist"`);
   }
 }
 
@@ -63,4 +88,4 @@ async function deleteUser(req: Request, res: Response): Promise<void> {
   }
 }
 
-export { getAllUsers, getUserById, addUser, deleteUser };
+export { getAllUsers, getUserById, addUser, updateUser, deleteUser };

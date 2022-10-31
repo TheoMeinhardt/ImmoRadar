@@ -12,6 +12,9 @@ router.get('/:id', asyncHandler(userControllers.getUserById));
 // POSTs
 router.post('/', asyncHandler(userControllers.addUser));
 
+// PATCHs
+router.patch('/:id', asyncHandler(userControllers.updateUser));
+
 // DELETEs
 router.delete('/:id', asyncHandler(userControllers.deleteUser));
 
