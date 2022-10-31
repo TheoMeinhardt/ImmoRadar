@@ -9,12 +9,12 @@ async function getAllUsers(): Promise<user[]> {
   return userMapper(rows) as user[];
 }
 
-async function getUserById(id: string): Promise<user> {
+async function getUserById(id: string): Promise<user | undefined> {
   const text = 'select * from users where user_id = $1';
   const params = [id];
   const { rows }: { rows: userDTO[] } = await pool.query(text, params);
 
-  return userMapper(rows[0]) as user;
+  return rows[0] ? (userMapper(rows[0]) as user) : undefined;
 }
 
 async function addUser(newUser: user): Promise<user | undefined> {
@@ -25,4 +25,12 @@ async function addUser(newUser: user): Promise<user | undefined> {
   return rows[0] ? (userMapper(rows[0]) as user) : undefined;
 }
 
-export { getAllUsers, getUserById, addUser };
+async function deleteUser(id: string): Promise<user | undefined> {
+  const text = 'delete from users where user_id = $1 returning *';
+  const params = [id];
+
+  const { rows }: { rows: userDTO[] } = await pool.query(text, params);
+  return rows[0] ? (userMapper(rows[0]) as user) : undefined;
+}
+
+export { getAllUsers, getUserById, addUser, deleteUser };

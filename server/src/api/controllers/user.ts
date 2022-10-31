@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import * as db from '../models';
 import { user } from '../types/user';
 import { userValidator } from '../validators';
+import { userExists } from '../helpers';
 
 // ----
 // GETs
@@ -17,17 +18,17 @@ async function getAllUsers(req: Request, res: Response): Promise<void> {
 // Controller for sending one user with specified id to client
 async function getUserById(req: Request, res: Response): Promise<void> {
   const id: string = req.params.id;
-  const userById: user = await db.getUserById(id);
+  const userById = await db.getUserById(id);
 
   if (userById) res.status(200).json(userById);
-  else res.status(404).send('Not found');
+  else res.status(404).send('User not found');
 }
 
 // -----
 // POSTs
 // -----
 
-// Controller for adding a User with data from client to database
+// Controller for adding an User with data from client to database
 async function addUser(req: Request, res: Response): Promise<void> {
   const newUser: user = req.body;
 
@@ -43,4 +44,23 @@ async function addUser(req: Request, res: Response): Promise<void> {
   }
 }
 
-export { getAllUsers, getUserById, addUser };
+// -------
+// DELETEs
+// -------
+
+// Controller for deleteing an User with specified id sent by Client
+async function deleteUser(req: Request, res: Response): Promise<void> {
+  const id: string = req.params.id;
+
+  // check if user exists
+  if (await userExists(id)) {
+    const deletedUser = await db.deleteUser(id);
+
+    if (deletedUser) res.status(200).send(`deleted user with id "${deletedUser.userID}"`);
+    else res.status(500).end();
+  } else {
+    res.status(400).send(`user with id "${id}" does not exist`);
+  }
+}
+
+export { getAllUsers, getUserById, addUser, deleteUser };

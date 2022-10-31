@@ -12,4 +12,7 @@ router.get('/:id', asyncHandler(userControllers.getUserById));
 // POSTs
 router.post('/', asyncHandler(userControllers.addUser));
 
+// DELETEs
+router.delete('/:id', asyncHandler(userControllers.deleteUser));
+
 export default router;
