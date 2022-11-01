@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 import * as db from '../models';
-import { user } from '../types/user';
+import { user } from '../types';
 import { userValidator } from '../validators';
 import { userExists } from '../helpers';
 

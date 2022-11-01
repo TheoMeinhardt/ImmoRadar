@@ -1,4 +1,4 @@
-import { user, userDTO } from '../../types/user';
+import { user, userDTO } from '../../types';
 
 function userMapper(dto: userDTO | userDTO[]): user | user[] {
   const convertUserDtoToUser = (d: userDTO): user => {

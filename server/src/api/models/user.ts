@@ -1,6 +1,6 @@
 import pool from '../../config/dbconfig';
 import { userMapper } from '../helpers';
-import { user, userDTO } from '../types/user';
+import { user, userDTO } from '../types';
 
 async function getAllUsers(): Promise<user[]> {
   const text = 'select * from users';
