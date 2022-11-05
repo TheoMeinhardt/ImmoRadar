@@ -7,7 +7,19 @@ const realEstate = validator({
     name: { type: 'string' },
     subname: { type: 'string' },
     description: { type: 'string' },
-    addressID: { type: 'string' },
+    address: {
+      type: 'object',
+      properties: {
+        addressID: { type: 'string' },
+        address: { type: 'string' },
+        zip: { type: 'number' },
+        city: { type: 'string' },
+        state: { type: 'string' },
+        country: { type: 'string' },
+      },
+      required: ['address', 'zip', 'city', 'state', 'country'],
+      additionalProperties: false,
+    },
     propertyArea: { type: 'string' },
     usableArea: { type: 'string' },
     outsideArea: { type: 'string' },
@@ -22,7 +34,7 @@ const realEstate = validator({
     heatingID: { type: 'string' },
     documentID: { type: 'string' },
   },
-  required: ['name', 'description', 'addressID', 'usableArea', 'rooms', 'bathrooms', 'bedrooms', 'buyable', 'userID', 'provision'],
+  required: ['name', 'description', 'address', 'usableArea', 'rooms', 'bathrooms', 'bedrooms', 'buyable', 'userID', 'provision'],
   additionalProperties: false,
 });
 

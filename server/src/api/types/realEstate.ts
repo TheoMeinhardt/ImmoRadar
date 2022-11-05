@@ -1,3 +1,5 @@
+import { address } from './index';
+
 type realEstateDTO = {
   re_id: string;
   name: string;
@@ -25,6 +27,7 @@ type realEstate = {
   subname: string | null;
   description: string;
   addressID: string;
+  address?: address;
   propertyArea: number | null;
   usableArea: number;
   outsideArea: number | null;
@@ -42,7 +45,7 @@ type realEstate = {
 
 type shortRealEstate = {
   name: string;
-  addressID: string;
+  address?: string;
   price: number | null;
   usableArea: number;
   rooms: number;
