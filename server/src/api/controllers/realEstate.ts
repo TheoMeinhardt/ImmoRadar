@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-import { realEstate, shortRealEstate } from '../types';
+import { address, realEstate, shortRealEstate } from '../types';
 import { makeReadableAddress } from '../helpers';
 import { realEstateValidator } from '../validators';
 import * as db from '../models';
@@ -61,10 +61,13 @@ async function addRealEstate(req: Request, res: Response): Promise<void> {
 
   // Json verification
   realEstateValidator(newRealEstate);
-  if (!realEstateValidator.errors) {
+  if (!realEstateValidator.errors && newRealEstate.address) {
+    const addedAddress: address = await db.addAddress(newRealEstate.address);
+    newRealEstate.address.addressID = addedAddress.addressID;
     const addedRealEstate: realEstate = await db.addRealEstate(newRealEstate);
 
     if (!addedRealEstate) res.status(500).send(addRealEstate);
+    else if (!addedAddress) res.status(500).send(addedAddress);
     res.status(200).end();
   } else {
     res.status(400).send(realEstateValidator.errors);

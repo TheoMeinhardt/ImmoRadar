@@ -18,4 +18,12 @@ async function getAddress(id: string): Promise<address | undefined> {
   return rows[0] ? (addressMapper(rows[0]) as address) : undefined;
 }
 
-export { getAllAddresses, getAddress };
+async function addAddress(newAddress: address): Promise<address> {
+  const text = 'insert into address (address_id, address, zip_code, city, state, country) values (default, $1, $2, $3, $4, $5) returning *';
+  const params = [newAddress.address, newAddress.zip, newAddress.city, newAddress.state, newAddress.country];
+
+  const { rows }: { rows: addressDTO[] } = await pool.query(text, params);
+  return addressMapper(rows[0]) as address;
+}
+
+export { getAllAddresses, getAddress, addAddress };
