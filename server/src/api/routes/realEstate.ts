@@ -2,7 +2,7 @@ import asyncHandler from 'express-async-handler';
 import { Router, raw } from 'express';
 
 import { realEstateControllers } from '../controllers';
-import { postToWebhook, createCustomer, createCheckout, createPortal, createSubscription } from '../controllers/stripeServer';
+import { postToWebhook, createCustomer, createCheckout, createPortal, createSubscription, config, checkoutSession } from '../controllers/stripeServer';
 
 const router = Router();
 
@@ -21,6 +21,8 @@ router.patch('/:id', asyncHandler(realEstateControllers.patchRealEstate));
 router.delete('/:id', asyncHandler(realEstateControllers.deleteRealEstate));
 
 // STRIPE
+router.get('/config', asyncHandler(config));
+router.get('/checkout-session', asyncHandler(checkoutSession));
 router.post('/webhook', raw({ type: 'application/json' }), asyncHandler(postToWebhook));
 router.post('/create-checkout-session', asyncHandler(createCheckout));
 router.post('/create-portal-session', asyncHandler(createPortal));
