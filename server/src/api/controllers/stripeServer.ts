@@ -4,14 +4,17 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const stripe: Stripe = new Stripe(process.env.SECRET_KEY as string, {
-  apiVersion: '2022-08-01',
-  appInfo: {
-    name: 'immoradar',
-    version: '0.0.1',
-    url: 'immoradar.at',
+const stripe: Stripe = new Stripe(
+  'sk_test_51LkOYYKr94hGO7PCiTzlKx8duhxgMbUypUcWf47njwy5dVir6eRltBlKxa7hrVjB8Dd1Eqb65PmKAwTYEE0wfFpw00PE0OM81E' as string,
+  {
+    apiVersion: '2022-08-01',
+    appInfo: {
+      name: 'immoradar',
+      version: '0.0.1',
+      url: 'immoradar.co.at',
+    },
   },
-});
+);
 
 async function postToWebhook(req: Request, res: Response): Promise<void> {
   let event: any;
@@ -50,35 +53,42 @@ async function createCustomer(req: Request, res: Response): Promise<void> {
 }
 
 async function createCheckout(req: Request, res: Response): Promise<void> {
-  const prices = await stripe.prices.list({
-    lookup_keys: [req.body.lookup_key],
-    expand: ['data.product'],
-  });
-  const session = await stripe.checkout.sessions.create({
-    billing_address_collection: 'auto',
-    line_items: [
-      {
-        price: prices.data[0].id,
-        quantity: 1,
-      },
-    ],
-    mode: 'subscription',
-    success_url: 'http://localhost:8080/success',
-    cancel_url: 'http://localhost:8080/cancel',
-  });
+  try {
+    const prices = await stripe.prices.list({
+      lookup_keys: [req.body.lookup_key],
+      expand: ['data.product'],
+    });
+    console.log(prices);
+    const session = await stripe.checkout.sessions.create({
+      mode: 'subscription',
+      billing_address_collection: 'auto',
+      line_items: [
+        {
+          price: prices.data[0].id,
+          quantity: 1,
+        },
+      ],
+      success_url: 'http://localhost:8080/success',
+      cancel_url: 'http://localhost:8080/cancel',
+    });
+    console.log(session);
 
-  res.redirect(303, session.url as string);
+    console.log(session.url);
+    return res.redirect(303, session.url as string);
+  } catch (error) {
+    return console.error(error);
+  }
 }
 
 async function createPortal(req: Request, res: Response): Promise<void> {
   // VOn Datenbank holen
   const { session_id } = req.body;
-  const checkoutSession = await stripe.checkout.sessions.retrieve(session_id);
+  const checkout_session = await stripe.checkout.sessions.retrieve(session_id);
 
   const returnUrl = 'http://localhost:8080/home';
 
   const portalSession = await stripe.billingPortal.sessions.create({
-    customer: checkoutSession.customer as string,
+    customer: checkout_session.customer as string,
     return_url: returnUrl,
   });
 
@@ -104,4 +114,26 @@ async function createSubscription(req: Request, res: Response): Promise<void> {
   }
 }
 
-export { postToWebhook, createCustomer, createCheckout, createPortal, createSubscription };
+async function config(req: Request, res: Response): Promise<void> {
+  res.send({
+    publishableKey: process.env.PUBLIC_KEY,
+    basicPrice: process.env.BASIC_PRICE_ID,
+    proPrice: process.env.PRO_PRICE_ID,
+  });
+}
+
+async function checkoutSession(req: Request, res: Response): Promise<void> {
+  const { sessionId } = req.query;
+  const session = await stripe.checkout.sessions.retrieve(sessionId as any);
+  res.send(session);
+}
+
+export {
+  postToWebhook,
+  createCustomer,
+  createCheckout,
+  createPortal,
+  createSubscription,
+  config,
+  checkoutSession,
+};

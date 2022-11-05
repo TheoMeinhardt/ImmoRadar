@@ -9,6 +9,8 @@ import {
   createCheckout,
   createPortal,
   createSubscription,
+  config,
+  checkoutSession,
 } from '../controllers/stripeServer';
 
 const router = Router();
@@ -18,6 +20,9 @@ router.get('/', asyncHandler(getAllRealEstates));
 router.get('/:id', asyncHandler(getOneRealEstate));
 
 // STRIPE
+router.get('/config', asyncHandler(config));
+router.get('/checkout-session', asyncHandler(checkoutSession));
+
 router.post('/webhook', express.raw({ type: 'application/json' }), asyncHandler(postToWebhook));
 router.post('/create-checkout-session', asyncHandler(createCheckout));
 router.post('/create-portal-session', asyncHandler(createPortal));
