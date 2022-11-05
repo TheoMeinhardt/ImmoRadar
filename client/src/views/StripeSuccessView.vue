@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- {{ iframe }} -->
     <div class="togethere-background"></div>
     <div class="sr-root">
       <div class="sr-main">
@@ -7,9 +8,9 @@
           <h1>Your payment succeeded</h1>
           <h4>View CheckoutSession response:</h4>
         </div>
-        
       </div>
       <div class="sr-content"></div>
     </div>
   </div>
 </template>
+<script setup></script>

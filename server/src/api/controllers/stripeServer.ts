@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import Stripe from 'stripe';
 import dotenv from 'dotenv';
+import axios from 'axios';
 
 dotenv.config();
 
@@ -58,7 +59,6 @@ async function createCheckout(req: Request, res: Response): Promise<void> {
       lookup_keys: [req.body.lookup_key],
       expand: ['data.product'],
     });
-    console.log(prices);
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
       billing_address_collection: 'auto',
@@ -71,10 +71,9 @@ async function createCheckout(req: Request, res: Response): Promise<void> {
       success_url: 'http://localhost:8080/success',
       cancel_url: 'http://localhost:8080/cancel',
     });
-    console.log(session);
-
     console.log(session.url);
-    return res.redirect(303, session.url as string);
+    res.redirect(303, session.url as string);
+    return session.url as any;
   } catch (error) {
     return console.error(error);
   }
