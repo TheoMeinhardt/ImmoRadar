@@ -26,4 +26,12 @@ async function addAddress(newAddress: address): Promise<address> {
   return addressMapper(rows[0]) as address;
 }
 
-export { getAllAddresses, getAddress, addAddress };
+async function deleteAddress(id: string): Promise<address | undefined> {
+  const text = 'delete from address where address_id = $1';
+  const params = [id];
+
+  const { rows }: { rows: addressDTO[] } = await pool.query(text, params);
+  return rows[0] ? (addressMapper(rows[0]) as address) : undefined;
+}
+
+export { getAllAddresses, getAddress, addAddress, deleteAddress };

@@ -113,8 +113,12 @@ async function deleteRealEstate(req: Request, res: Response): Promise<void> {
 
   if (await db.getOneRealEstate(reID)) {
     const deletedRealEstate = await db.deleteRealEstate(reID);
-    if (!deleteRealEstate) res.status(500).end();
-    res.status(200).send(`deleted real estate "${deletedRealEstate?.name}"`);
+
+    if (!deletedRealEstate) res.status(500).end();
+    else {
+      await db.deleteAddress(deletedRealEstate?.addressID);
+      res.status(200).send(`deleted real estate "${deletedRealEstate?.name}"`);
+    }
   } else {
     res.status(404).send(`real estate with id "${reID}" does not exist`);
   }
