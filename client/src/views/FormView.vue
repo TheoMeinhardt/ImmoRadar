@@ -15,6 +15,6 @@ import { RouterView } from 'vue-router';
 
 <style scoped>
 .container {
-  height: 100%;
+  height: 100vh;
 }
 </style>
