@@ -14,8 +14,7 @@ import { RouterView } from 'vue-router';
 </script>
 
 <style scoped>
-#body {
+.container {
 	height: 100vh;
-	background-color: #4b506e;
 }
 </style>
