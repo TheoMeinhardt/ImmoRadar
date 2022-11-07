@@ -32,14 +32,16 @@
 </template>
 <script setup>
 import axios from 'axios';
+import { createRouter } from 'vue-router';
 // import { useStore } from '../stores/counter.js';
 // const store = useStore();
+const router = createRouter();
 
 async function createCheckout() {
   console.log('test');
   const { data } = await axios.post('http://localhost:3000/realestate/create-checkout-session');
   // store.checkout = data;
-  console.log(data);
+  router.push(data);
   // const link = await axios.get('http://localhost:3000/realestate/create-checkout-session');
   // console.log(link);
 }

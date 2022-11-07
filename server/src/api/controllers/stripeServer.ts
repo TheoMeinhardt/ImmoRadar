@@ -71,9 +71,10 @@ async function createCheckout(req: Request, res: Response): Promise<void> {
       success_url: 'http://localhost:8080/success',
       cancel_url: 'http://localhost:8080/cancel',
     });
-    console.log(session.url);
-    res.redirect(303, session.url as string);
-    return session.url as any;
+    // console.log(session.url);
+    // res.redirect(303, session.url as string);
+    // return session.url as any;
+    res.status(200).send(session.url);
   } catch (error) {
     return console.error(error);
   }
