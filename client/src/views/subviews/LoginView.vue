@@ -17,6 +17,7 @@
       outlined
       v-model="password"
       label="Password"
+      type="password"
     />
 
     <div class="q-pa-md">
