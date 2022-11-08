@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="q-mx-md">
     <q-input
       bg-color="white"
       style="font-family: Keep Calm"
@@ -35,15 +35,18 @@
       v-model="password"
       label="Password"
     />
-    <q-btn
-      unelevated
-      rounded
-      color="light-blue-3"
-      style="font-family: Keep Calm; width: 300px"
-      align="center"
-      label="Register"
-      class="btn"
-    />
+    <div style="text-align: center">
+      <q-btn
+        unelevated
+        rounded
+        color="light-blue-3"
+        style="font-family: Keep Calm; width: 300px"
+        align="center"
+        label="Register"
+        class="btn"
+        to="/"
+      />
+    </div>
   </div>
 </template>
 
