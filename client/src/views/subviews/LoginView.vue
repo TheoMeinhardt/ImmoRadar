@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div class="q-mx-md">
     <q-input
       bg-color="white"
       style="font-family: Keep Calm"
-      class="q-my-lg q-mx-sm"
+      class="q-my-lg"
       rounded
       outlined
       v-model="username"
@@ -12,7 +12,7 @@
     <q-input
       bg-color="white"
       style="font-family: Keep Calm"
-      class="q-mx-sm"
+      class=""
       rounded
       outlined
       v-model="password"
@@ -21,17 +21,20 @@
     />
 
     <div class="q-pa-md">
-      <q-checkbox class="text-white" v-model="rememberMe" label="Remember me" />
+      <q-checkbox class="text-white" v-model="rememberMe" label="Remember me" style="font-family: Keep Calm;" />
     </div>
 
-    <q-btn
-      unelevated
-      rounded
-      color="light-blue-3"
-      style="font-family: Keep Calm; width: 300px"
-      align="center"
-      label="Login"
-    />
+    <div style="text-align: center">
+      <q-btn
+        unelevated
+        rounded
+        color="light-blue-3"
+        style="font-family: Keep Calm; width: 300px"
+        align="center"
+        label="Login"
+        to="/"
+      />
+    </div>
   </div>
 </template>
 
