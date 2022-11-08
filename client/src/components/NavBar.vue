@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ul class="row ">
+    <ul class="row">
       <i class="fa-solid fa-magnifying-glass fa-xl"></i>
       <i class="fa-solid fa-house fa-xl"></i>
       <i class="fa-solid fa-user fa-xl"></i>
@@ -9,6 +9,10 @@
 </template>
 
 <style scoped>
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
 div {
   background-color: #71d1ec;
   width: 55vw;
