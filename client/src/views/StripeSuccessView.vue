@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- {{ iframe }} -->
     <div class="togethere-background"></div>
     <div class="sr-root">
       <div class="sr-main">
@@ -13,4 +12,12 @@
     </div>
   </div>
 </template>
-<script setup></script>
+<script setup>
+import axios from 'axios';
+
+async function createPortal() {
+  const { data } = await axios.post('http://localhost:3000/realestate/create-portal-session');
+  console.log(data);
+  window.location = data;
+}
+</script>

@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue';
 import SuccessView from '../views/StripeSuccessView.vue';
 import CancelView from '../views/StripeCancelView.vue';
 import CheckoutView from '../views/StripeCheckoutView.vue';
+import PortalView from '../views/StripePortalView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -34,6 +35,11 @@ const router = createRouter({
       path: '/checkout',
       name: 'checkout',
       component: CheckoutView,
+    },
+    {
+      path: '/portal',
+      name: 'portal',
+      component: PortalView,
     },
   ],
 });
