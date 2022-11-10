@@ -1,9 +1,6 @@
 import { Request, Response } from 'express';
-import dotenv from 'dotenv';
 import { realEstate } from '../types';
 import * as db from '../models';
-
-dotenv.config();
 
 // Controller for sending all Real Estates to the client
 async function getAllRealEstates(req: Request, res: Response): Promise<void> {

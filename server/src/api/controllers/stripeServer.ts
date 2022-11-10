@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import Stripe from 'stripe';
 import dotenv from 'dotenv';
-import axios from 'axios';
 
 dotenv.config();
 
@@ -44,14 +43,14 @@ async function postToWebhook(req: Request, res: Response): Promise<void> {
   res.json({ received: true });
 }
 
-async function createCustomer(req: Request, res: Response): Promise<void> {
-  const customer = await stripe.customers.create({ email: req.body.email });
+// async function createCustomer(req: Request, res: Response): Promise<void> {
+//   const customer = await stripe.customers.create({ email: req.body.email });
 
-  // User und ID in Datenbank speichern
-  res.cookie('customer', customer.id, { maxAge: 900000, httpOnly: true });
+//   // User und ID in Datenbank speichern
+//   res.cookie('customer', customer.id, { maxAge: 900000, httpOnly: true });
 
-  res.send({ customer });
-}
+//   res.send({ customer });
+// }
 
 async function createCheckout(req: Request, res: Response): Promise<void> {
   try {
@@ -91,28 +90,27 @@ async function createPortal(req: Request, res: Response): Promise<void> {
     customer: checkout_session.customer as string,
     return_url: returnUrl,
   });
-
-  res.redirect(303, portalSession.url);
+  res.status(200).send(portalSession.url);
 }
 
-async function createSubscription(req: Request, res: Response): Promise<void> {
-  // Stripe Customer ID --> Authenticated user
-  const customerId = req.cookies['customer'];
+// async function createSubscription(req: Request, res: Response): Promise<void> {
+//   // Stripe Customer ID --> Authenticated user
+//   const customerId = req.cookies['customer'];
 
-  const priceId = req.body.priceId;
+//   const priceId = req.body.priceId;
 
-  try {
-    const subscription = await stripe.subscriptions.create({
-      customer: customerId,
-      items: [{ price: priceId }],
-      payment_behavior: 'default_incomplete',
-      expand: ['latest_invoice.payment_intent'],
-    });
-    res.send({ subscriptionId: subscription.id });
-  } catch (error) {
-    res.status(400).send(error);
-  }
-}
+//   try {
+//     const subscription = await stripe.subscriptions.create({
+//       customer: customerId,
+//       items: [{ price: priceId }],
+//       payment_behavior: 'default_incomplete',
+//       expand: ['latest_invoice.payment_intent'],
+//     });
+//     res.send({ subscriptionId: subscription.id });
+//   } catch (error) {
+//     res.status(400).send(error);
+//   }
+// }
 
 async function config(req: Request, res: Response): Promise<void> {
   res.send({
@@ -130,10 +128,10 @@ async function checkoutSession(req: Request, res: Response): Promise<void> {
 
 export {
   postToWebhook,
-  createCustomer,
+  // createCustomer,
   createCheckout,
   createPortal,
-  createSubscription,
+  // createSubscription,
   config,
   checkoutSession,
 };
