@@ -5,8 +5,8 @@ import { makeReadableAddress } from '../helpers';
 import { realEstateValidator } from '../validators';
 import * as db from '../models';
 
-const stripe: Stripe = new Stripe(process.env.SECRET_KEY, {
-	apiVersion: '2022-09-28',
+const stripe: Stripe = new Stripe(process.env.SECRET_KEY ? process.env.SECRET_KEY : '', {
+	apiVersion: '2022-08-01',
 	appInfo: {
 		name: 'immoradar',
 		version: '0.0.1',
@@ -97,6 +97,7 @@ async function patchRealEstate(req: Request, res: Response): Promise<void> {
 	if (originalRealEstate) {
 		// create a new real estate object with the data from the original real estate and overwrite every property with the data from the real estate data object
 		const patchedRealEstate: realEstate = { ...originalRealEstate, ...realEstateData };
+		patchedRealEstate.address = await db.getAddress(patchedRealEstate.addressID);
 
 		// Json verification
 		realEstateValidator(patchedRealEstate);
@@ -133,12 +134,16 @@ async function deleteRealEstate(req: Request, res: Response): Promise<void> {
 	}
 }
 
+// --------------
+// Strip Bullshit
+// --------------
+
 async function postToWebhook(req: Request, res: Response): Promise<void> {
 	raw({ type: 'application/json' });
 	const sig = req.headers['stripe-signature'];
 	let event: any;
 	try {
-		event = stripe.webhooks.constructEvent(req.body, sig, process.env.END_POINT_SECRET);
+		event = stripe.webhooks.constructEvent(req.body, sig as string | string[] | Buffer, process.env.END_POINT_SECRET ?? '');
 	} catch (err: any) {
 		res.status(400).send(`Webhook Error: ${err.message}`);
 	}
@@ -146,12 +151,12 @@ async function postToWebhook(req: Request, res: Response): Promise<void> {
 	switch (event.type) {
 		case 'payment_intent.succeeded': {
 			const paymentIntent = event.data.object;
-			console.log('PaymentIntent was successful!');
+			console.log(`${paymentIntent} was successful!`);
 			break;
 		}
 		case 'payment_method.attached': {
 			const paymentMethod = event.data.object;
-			console.log('PaymentMethod was attached to a Customer!');
+			console.log(`${paymentMethod} was attached to a Customer!`);
 			break;
 		}
 		default: {
