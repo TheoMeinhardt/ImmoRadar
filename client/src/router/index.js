@@ -3,7 +3,8 @@ import HomeView from '../views/HomeView.vue';
 import SuccessView from '../views/StripeSuccessView.vue';
 import CancelView from '../views/StripeCancelView.vue';
 import CheckoutView from '../views/StripeCheckoutView.vue';
-import PortalView from '../views/StripePortalView.vue';
+import NotFound from '../views/404View.vue';
+// import PortalView from '../views/StripePortalView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -36,11 +37,12 @@ const router = createRouter({
       name: 'checkout',
       component: CheckoutView,
     },
-    {
-      path: '/portal',
-      name: 'portal',
-      component: PortalView,
-    },
+    { path: '/:catchAll(.*)', component: NotFound },
+    // {
+    //   path: '/portal',
+    //   name: 'portal',
+    //   component: PortalView,
+    // },
   ],
 });
 
