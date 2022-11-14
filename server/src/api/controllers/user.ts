@@ -3,7 +3,8 @@ import { Request, Response } from 'express';
 import * as db from '../models';
 import { user } from '../types';
 import { userValidator } from '../validators';
-import { userExists, hashString } from '../helpers';
+import { userExists } from '../helpers';
+import * as auth from '../authentication';
 
 // ----
 // GETs
@@ -34,13 +35,27 @@ async function addUser(req: Request, res: Response): Promise<void> {
 
   // JSON validation
   if (userValidator(newUser)) {
-    newUser.password = await hashString(newUser.password);
+    newUser.password = await auth.hashString(newUser.password);
     const addedUser = await db.addUser(newUser);
 
     if (!addedUser) res.status(500).end();
     res.status(200).end();
   } else {
     res.status(400).send(userValidator.errors);
+  }
+}
+
+// Controller which handles logins
+async function login(req: Request, res: Response): Promise<void> {
+  const { email, password } = req.body;
+  const existingUser: user | undefined = await db.getUserByEmail(email);
+
+  if (!existingUser) res.status(400).send('User does not exist!');
+
+  if (await auth.checkPassword(password, existingUser?.password as string)) {
+    res.status(200).send(true);
+  } else {
+    res.status(200).send(false);
   }
 }
 
@@ -89,4 +104,4 @@ async function deleteUser(req: Request, res: Response): Promise<void> {
   }
 }
 
-export { getAllUsers, getUserById, addUser, updateUser, deleteUser };
+export { getAllUsers, getUserById, addUser, login, updateUser, deleteUser };

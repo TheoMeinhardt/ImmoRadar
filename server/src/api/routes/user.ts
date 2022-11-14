@@ -11,6 +11,7 @@ router.get('/:id', asyncHandler(userControllers.getUserById));
 
 // POSTs
 router.post('/', asyncHandler(userControllers.addUser));
+router.post('/login', asyncHandler(userControllers.login));
 
 // PATCHs
 router.patch('/:id', asyncHandler(userControllers.updateUser));

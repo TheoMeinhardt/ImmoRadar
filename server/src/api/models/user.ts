@@ -17,6 +17,14 @@ async function getUserById(id: string): Promise<user | undefined> {
   return rows[0] ? (userMapper(rows[0]) as user) : undefined;
 }
 
+async function getUserByEmail(email: string): Promise<user | undefined> {
+  const text = 'select * from users where email = $1';
+  const params = [email];
+  const { rows }: { rows: userDTO[] } = await pool.query(text, params);
+
+  return rows[0] ? (userMapper(rows[0]) as user) : undefined;
+}
+
 async function addUser(newUser: user): Promise<user | undefined> {
   const text: string = 'insert into users (user_id, username, address_id, company, phone, email, photo_id, profile_pic, user_password) values (default, $1, $2, $3, $4, $5, $6, $7, $8) returning *';
   const params = [newUser.name, newUser.addressID, newUser.company, newUser.phone, newUser.email, null, newUser.profilePic, newUser.password];
@@ -42,4 +50,4 @@ async function deleteUser(id: string): Promise<user | undefined> {
   return rows[0] ? (userMapper(rows[0]) as user) : undefined;
 }
 
-export { getAllUsers, getUserById, addUser, patchUser, deleteUser };
+export { getAllUsers, getUserById, getUserByEmail, addUser, patchUser, deleteUser };
