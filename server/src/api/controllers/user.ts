@@ -1,3 +1,4 @@
+import { JwtPayload } from 'jsonwebtoken';
 import { Request, Response } from 'express';
 
 import * as db from '../models';
@@ -53,7 +54,13 @@ async function login(req: Request, res: Response): Promise<void> {
   if (!existingUser) res.status(400).send('User does not exist!');
 
   if (await auth.checkPassword(password, existingUser?.password as string)) {
-    res.status(200).send(true);
+    const payload: JwtPayload = {
+      iss: existingUser?.email,
+      sub: 'login',
+      aud: 'client',
+    };
+
+    res.status(200).send(auth.signJWT(payload));
   } else {
     res.status(200).send(false);
   }
