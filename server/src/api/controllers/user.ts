@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import * as db from '../models';
 import { user } from '../types';
 import { userValidator } from '../validators';
-import { userExists } from '../helpers';
+import { userExists, hashString } from '../helpers';
 
 // ----
 // GETs
@@ -34,6 +34,7 @@ async function addUser(req: Request, res: Response): Promise<void> {
 
   // JSON validation
   if (userValidator(newUser)) {
+    newUser.password = await hashString(newUser.password);
     const addedUser = await db.addUser(newUser);
 
     if (!addedUser) res.status(500).end();
