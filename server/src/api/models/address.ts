@@ -26,6 +26,14 @@ async function addAddress(newAddress: address): Promise<address> {
   return addressMapper(rows[0]) as address;
 }
 
+async function updateAdress(id: string, newAddress: address): Promise<address> {
+  const text = 'update address set address = $1, zip_code = $2, city = $3, state = $4, country = $5 where address_id = $6 returning *';
+  const params = [newAddress.address, newAddress.zip, newAddress.city, newAddress.state, newAddress.country, id];
+
+  const { rows }: { rows: addressDTO[] } = await pool.query(text, params);
+  return addressMapper(rows[0]) as address;
+}
+
 async function deleteAddress(id: string): Promise<address | undefined> {
   const text = 'delete from address where address_id = $1';
   const params = [id];
@@ -34,4 +42,4 @@ async function deleteAddress(id: string): Promise<address | undefined> {
   return rows[0] ? (addressMapper(rows[0]) as address) : undefined;
 }
 
-export { getAllAddresses, getAddress, addAddress, deleteAddress };
+export { getAllAddresses, getAddress, addAddress, updateAdress, deleteAddress };
