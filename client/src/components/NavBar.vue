@@ -1,10 +1,8 @@
 <template>
   <div>
-    <ul class="row">
-      <i class="fa-solid fa-magnifying-glass fa-xl"></i>
-      <i class="fa-solid fa-house fa-xl"></i>
-      <i class="fa-solid fa-user fa-xl"></i>
-    </ul>
+    <q-btn to="/search" icon="fa-solid fa-magnifying-glass fa-xl" unelevated></q-btn>
+    <q-btn to="/" icon="fa-solid fa-house fa-xl" unelevated></q-btn>
+    <q-btn to="/user" icon="fa-solid fa-user fa-xl" unelevated></q-btn>
   </div>
 </template>
 
