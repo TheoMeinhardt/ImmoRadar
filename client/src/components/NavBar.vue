@@ -12,10 +12,6 @@
 </template>
 
 <style scoped>
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
-
 div {
   background-color: #71d1ec;
   width: 55vw;
