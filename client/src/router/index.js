@@ -6,9 +6,6 @@ import CheckoutView from '../views/StripeCheckoutView.vue';
 import NotFound from '../views/404View.vue';
 // import PortalView from '../views/StripePortalView.vue';
 import AboutView from '../views/AboutView.vue';
-import FormView from '../views/FormView.vue';
-import LoginView from '../views/subviews/LoginView.vue';
-import RegisterView from '../views/subviews/RegisterView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
