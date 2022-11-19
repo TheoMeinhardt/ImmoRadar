@@ -1,8 +1,13 @@
 <template>
-  <div>
-    <q-btn to="/search" icon="fa-solid fa-magnifying-glass fa-xl" unelevated></q-btn>
-    <q-btn to="/" icon="fa-solid fa-house fa-xl" unelevated></q-btn>
-    <q-btn to="/user" icon="fa-solid fa-user fa-xl" unelevated></q-btn>
+  <div class="text-center">
+    <q-btn
+      to="/search"
+      icon="fa-solid fa-magnifying-glass fa-xl"
+      unelevated
+      text-color="btnColor"
+    ></q-btn>
+    <q-btn to="/" icon="fa-solid fa-house fa-xl" unelevated text-color="btnColor"></q-btn>
+    <q-btn to="/user" icon="fa-solid fa-user fa-xl" unelevated text-color="btnColor"></q-btn>
   </div>
 </template>
 
@@ -16,12 +21,9 @@ div {
   width: 55vw;
   height: 4.5vh;
   border-radius: 25px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  align-items: center;
 }
 
-i {
-  color: #4b506e;
+.text-btnColor {
+  color: #4b506e !important;
 }
 </style>
