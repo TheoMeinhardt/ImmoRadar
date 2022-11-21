@@ -1,4 +1,6 @@
-type realEstateDto = {
+import { address } from './index';
+
+type realEstateDTO = {
   re_id: string;
   name: string;
   subname: string;
@@ -22,22 +24,31 @@ type realEstateDto = {
 type realEstate = {
   reID: string;
   name: string;
-  subname: string;
+  subname: string | null;
   description: string;
   addressID: string;
-  propertyArea: number;
+  address?: address;
+  propertyArea: number | null;
   usableArea: number;
-  outsideArea: number;
+  outsideArea: number | null;
   rooms: number;
   bathrooms: number;
   bedrooms: number;
   buyable: boolean;
-  price: number;
+  price: number | null;
   userID: string;
   provision: number;
-  constructionYear: Date;
-  heatingID: string;
-  documentID: string;
+  constructionYear: Date | null;
+  heatingID: string | null;
+  documentID: string | null;
 };
 
-export { realEstate, realEstateDto };
+type shortRealEstate = {
+  name: string;
+  address?: string;
+  price: number | null;
+  usableArea: number;
+  rooms: number;
+};
+
+export { realEstate, realEstateDTO, shortRealEstate };

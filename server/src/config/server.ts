@@ -2,8 +2,9 @@ import express from 'express';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
+import cors from 'cors';
 
-import { realEstatesRouter } from '../api/routes';
+import { realEstatesRouter, userRouter } from '../api/routes';
 import { notFoundHandler, errorHandler } from '../api/middleware';
 
 dotenv.config();
@@ -12,11 +13,13 @@ const server = express();
 
 const PORT = process.env.PORT ?? 3000;
 
+server.use(cors());
 server.use(morgan('dev'));
 server.use(helmet());
 server.use(express.json());
 
 server.use('/realestate', realEstatesRouter);
+server.use('/user', userRouter);
 
 server.use(errorHandler);
 server.use(notFoundHandler);
