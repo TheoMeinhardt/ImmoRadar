@@ -1,7 +1,7 @@
 <template>
   <div class="xs">
-    <NavBar style="position: absolute;"></NavBar>
     <TheMap></TheMap>
+    <NavBar></NavBar>
   </div>
 </template>
 
