@@ -5,14 +5,14 @@ const user = validator({
   properties: {
     userID: { type: 'string' },
     name: { type: 'string' },
-    addressID: { type: 'string' },
+    addressID: { type: ['string', 'null'] },
     company: { type: ['string', 'null'] },
     phone: { type: ['string', 'null'] },
     email: { type: 'string' },
     profilePic: { type: ['string', 'null'] },
     password: { type: 'string' },
   },
-  required: ['name', 'addressID', 'email', 'password'],
+  required: ['name', 'email', 'password'],
   additionalProperties: false,
 });
 
