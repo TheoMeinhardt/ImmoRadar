@@ -64,7 +64,7 @@ async function submitLogin() {
 }
 </script>
 
-<style scoped>
+<style>
 .error-message-container {
 	border: 2px #ec5864 solid;
 	border-radius: 99px;

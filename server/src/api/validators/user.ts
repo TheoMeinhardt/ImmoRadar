@@ -5,7 +5,7 @@ const user = validator({
   properties: {
     userID: { type: 'string' },
     name: { type: 'string' },
-    addressID: { type: 'string' },
+    addressID: { type: ['string', 'null'] },
     company: { type: ['string', 'null'] },
     phone: { type: ['string', 'null'] },
     email: { type: 'string' },
