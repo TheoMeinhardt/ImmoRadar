@@ -11,7 +11,7 @@
     </div>
 
     <div style="text-align: center">
-      <q-btn type="submit" rounded color="light-blue-3" style="font-family: Keep Calm; width: 300px" align="center" label="Login" />
+      <q-btn type="submit" rounded color="light-blue-3" style="font-family: Keep Calm; width: 300px" align="center" label="Login" class="btn" />
     </div>
   </form>
 </template>
@@ -52,5 +52,9 @@ async function submitLogin() {
   line-height: 2.31rem;
 
   background-color: #ec58646a;
+}
+
+body {
+  background-color: #4b506e;
 }
 </style>
