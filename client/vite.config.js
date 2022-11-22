@@ -7,7 +7,7 @@ import { quasar, transformAssetUrls } from '@quasar/vite-plugin';
 // https://vitejs.dev/config/
 export default defineConfig({
   server: {
-    port: 4831,
+    port: 8080,
     proxy: {
       '/api': {
         target: 'https://immoradar-server.onrender.com/',
