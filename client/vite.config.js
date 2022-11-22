@@ -10,7 +10,7 @@ export default defineConfig({
     port: 4831,
     proxy: {
       '/api': {
-        target: 'http://127.0.0.1:3000',
+        target: 'https://immoradar-server.onrender.com/',
         changeOrigin: true,
         rewrite: (path) => path.replace('/api', ''),
       },
