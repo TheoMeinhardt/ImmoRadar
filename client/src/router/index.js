@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue';
 import AboutView from '../views/AboutView.vue';
 import UserView from '@/views/UserView.vue';
 import SearchView from '@/views/SearchView.vue';
+import AddHouseView from '@/views/AddHouseView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,6 +27,11 @@ const router = createRouter({
       path: '/search',
       name: 'search',
       component: SearchView,
+    },
+    {
+      path: '/addhouse',
+      name: 'addhouse',
+      component: AddHouseView,
     },
   ],
 });
