@@ -1,11 +1,19 @@
 <template>
-  <TheMap></TheMap>
   <RouterView />
 </template>
 
 <script setup>
 import { RouterView } from 'vue-router';
-import TheMap from './components/TheMap.vue';
 </script>
 
-<style scoped></style>
+<style>
+@font-face {
+  font-family: 'Keep Calm';
+  src: url('/fonts/keep_calm/KeepCalm-Medium.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Quicksand';
+  src: url('/fonts/quicksand/Quicksand_Light.otf') format('truetype');
+}
+</style>

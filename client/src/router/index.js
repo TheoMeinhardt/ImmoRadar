@@ -5,6 +5,10 @@ import CancelView from '../views/StripeCancelView.vue';
 import CheckoutView from '../views/StripeCheckoutView.vue';
 import NotFound from '../views/404View.vue';
 // import PortalView from '../views/StripePortalView.vue';
+import AboutView from '../views/AboutView.vue';
+import UserView from '@/views/UserView.vue';
+import SearchView from '@/views/SearchView.vue';
+import AddHouseView from '@/views/AddHouseView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -17,16 +21,41 @@ const router = createRouter({
     {
       path: '/about',
       name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue'),
+      component: AboutView,
     },
     {
-      path: '/success',
-      name: 'success',
-      component: SuccessView,
+      path: '/user',
+      name: 'user',
+      component: UserView,
     },
+    {
+      path: '/search',
+      name: 'search',
+      component: SearchView,
+    },
+    {
+      path: '/addhouse',
+      name: 'addhouse',
+      component: AddHouseView,
+    },
+    {
+      path: '/form',
+      name: 'form',
+      component: FormView,
+      children: [
+        {
+          path: '',
+          name: 'login',
+          component: LoginView,
+        },
+        {
+          path: '/form/register',
+          name: 'register',
+          component: RegisterView,
+        },
+      ],
+    },
+    { path: '/success', name: 'success', component: SuccessView },
     {
       path: '/cancel',
       name: 'cancel',
