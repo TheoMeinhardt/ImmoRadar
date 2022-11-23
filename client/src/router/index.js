@@ -38,23 +38,23 @@ const router = createRouter({
       name: 'addhouse',
       component: AddHouseView,
     },
-    {
-      path: '/form',
-      name: 'form',
-      component: FormView,
-      children: [
-        {
-          path: '',
-          name: 'login',
-          component: LoginView,
-        },
-        {
-          path: '/form/register',
-          name: 'register',
-          component: RegisterView,
-        },
-      ],
-    },
+    // {
+    //   path: '/form',
+    //   name: 'form',
+    //   component: FormView,
+    //   children: [
+    //     {
+    //       path: '',
+    //       name: 'login',
+    //       component: LoginView,
+    //     },
+    //     {
+    //       path: '/form/register',
+    //       name: 'register',
+    //       component: RegisterView,
+    //     },
+    //   ],
+    // },
     { path: '/success', name: 'success', component: SuccessView },
     {
       path: '/cancel',

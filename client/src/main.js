@@ -20,4 +20,6 @@ app.use(Quasar, {
 app.use(createPinia());
 app.use(router);
 
+app.config.globalProperties.$VITE_MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
+
 app.mount('#app');
