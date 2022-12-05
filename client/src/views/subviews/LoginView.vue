@@ -11,9 +11,12 @@
     </div>
 
     <div style="text-align: center">
-      <q-btn disabled type="submit" rounded color="light-blue-3" style="font-family: Keep Calm; width: 300px" align="center" class="btn">
-        <q-spinner-tail color="#000000" size="1em" thickness="5" />
-        <q-tooltip :offset="[0, 8]">QSpinnerTail</q-tooltip>
+      <q-btn :disabled="submitInProgress" type="submit" rounded color="light-blue-3" style="font-family: Keep Calm; width: 300px" align="center" class="btn">
+        <div v-if="!submitInProgress">Login</div>
+        <div v-else>
+          <q-spinner-tail size="1em" thickness="5" />
+          <q-tooltip :offset="[0, 8]">QSpinnerTail</q-tooltip>
+        </div>
       </q-btn>
     </div>
   </form>
@@ -30,18 +33,24 @@ const email = ref('');
 const password = ref('');
 const rememberMe = ref(false);
 const loginErrors = ref('');
+const submitInProgress = ref(false);
 
 async function submitLogin() {
   try {
+    submitInProgress.value = true;
     const res = await axios.post('/api/user/login', {
       email: email.value,
       password: password.value,
     });
 
     if (res.status === 200 && res.data !== false) router.push('/');
-    else if (res.status === 200 && res.data === false) loginErrors.value = 'Invalid Email or Password!';
+    else if (res.status === 200 && res.data === false) {
+      loginErrors.value = 'Invalid Email or Password!';
+      submitInProgress.value = false;
+    }
   } catch (err) {
     if (err.request.status === 400) loginErrors.value = 'Invalid Email or Password!';
+    submitInProgress.value = false;
   }
 }
 </script>
