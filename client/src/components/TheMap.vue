@@ -12,7 +12,7 @@ import RealEstateBadge from './RealEstateMapBadge.vue';
 import { MapboxMap, MapboxMarker } from '@studiometa/vue-mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
-import useRealEstateStore from './stores/realEstates';
+import { useRealEstateStore } from '../stores/realEstates';
 
 const realEstateStore = useRealEstateStore();
 

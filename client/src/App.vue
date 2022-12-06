@@ -7,7 +7,7 @@ import axios from 'axios';
 import { onMounted } from 'vue';
 import { RouterView } from 'vue-router';
 
-import useRealEstateStore from './stores/realEstates';
+import { useRealEstateStore } from './stores/realEstates';
 
 const realEstateStore = useRealEstateStore();
 
