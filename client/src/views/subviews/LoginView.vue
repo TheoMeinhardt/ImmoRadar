@@ -26,8 +26,10 @@
 import axios from 'axios';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useUserStore } from '../../stores/user';
 
 const router = useRouter();
+const userStore = useUserStore();
 
 const email = ref('');
 const password = ref('');
@@ -43,8 +45,10 @@ async function submitLogin() {
       password: password.value,
     });
 
-    if (res.status === 200 && res.data !== false) router.push('/');
-    else if (res.status === 200 && res.data === false) {
+    if (res.status === 200 && res.data !== false) {
+      userStore.jwt = res.data;
+      router.push('/');
+    } else if (res.status === 200 && res.data === false) {
       loginErrors.value = 'Invalid Email or Password!';
       submitInProgress.value = false;
     }
