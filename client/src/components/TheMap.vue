@@ -21,7 +21,8 @@ const realEstates = ref();
 // const badgeExpanded = ref(false);
 
 async function getShortRealEstates() {
-  const res = await axios.get('/api/realestate/short');
+  // const res = await axios.get('/api/realestate/short');
+  const res = await axios.get('https://immoradar-server.onrender.com/realestate/short');
   console.log(res);
   realEstates.value = res.data;
 }
