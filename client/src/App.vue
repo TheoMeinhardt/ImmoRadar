@@ -3,7 +3,18 @@
 </template>
 
 <script setup>
+import axios from 'axios';
+import { onMounted } from 'vue';
 import { RouterView } from 'vue-router';
+
+import useRealEstateStore from './stores/realEstates';
+
+const realEstateStore = useRealEstateStore();
+
+onMounted(async () => {
+  const { data } = await axios.get('/api/realestate/short');
+  realEstateStore.realEstatesShort = data;
+});
 </script>
 
 <style>

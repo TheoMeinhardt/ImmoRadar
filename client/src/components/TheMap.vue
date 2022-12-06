@@ -1,6 +1,6 @@
 <template>
   <MapboxMap style="height: 100vh" :access-token="token" mapStyle="mapbox://styles/matthiaseisenhut/cl8comqv0002114mvdz3z0gh3" :center="[16.313192, 48.212161]" :zoom="12">
-    <MapboxMarker v-for="(re, k) of realEstates" :lng-lat="[re.long, re.lat]" :key="k">
+    <MapboxMarker v-for="(re, k) of realEstateStore.realEstatesShort" :lng-lat="[re.long, re.lat]" :key="k">
       <RealEstateBadge :realEstate="re"></RealEstateBadge>
     </MapboxMarker>
   </MapboxMap>
@@ -9,21 +9,12 @@
 <script setup>
 import RealEstateBadge from './RealEstateMapBadge.vue';
 
-import axios from 'axios';
-import { ref } from 'vue';
 import { MapboxMap, MapboxMarker } from '@studiometa/vue-mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
-getShortRealEstates();
+import useRealEstateStore from './stores/realEstates';
+
+const realEstateStore = useRealEstateStore();
 
 const token = import.meta.env.VITE_MAPBOX_TOKEN;
-const realEstates = ref();
-// const badgeExpanded = ref(false);
-
-async function getShortRealEstates() {
-  // const res = await axios.get('/api/realestate/short');
-  const res = await axios.get('https://immoradar-server.onrender.com/realestate/short');
-  console.log(res);
-  realEstates.value = res.data;
-}
 </script>
