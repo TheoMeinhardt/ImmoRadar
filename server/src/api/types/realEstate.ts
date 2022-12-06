@@ -46,6 +46,8 @@ type realEstate = {
 type shortRealEstate = {
   name: string;
   address?: string;
+  lat: number;
+  long: number;
   price: number | null;
   usableArea: number;
   rooms: number;

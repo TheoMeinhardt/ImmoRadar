@@ -14,6 +14,8 @@ type address = {
   city: string;
   state: string;
   country: string;
+  lat?: number;
+  long?: number;
 };
 
 export { address, addressDTO };
