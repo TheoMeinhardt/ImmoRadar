@@ -21,8 +21,7 @@ const realEstates = ref();
 // const badgeExpanded = ref(false);
 
 async function getShortRealEstates() {
-  // const { data } = await axios.get('/api/realestate/short');
-  // const { data } = await axios.get('/api/realestate/short');
-  // realEstates.value = data;
+  const { data } = await axios.get('/api/realestate/short');
+  realEstates.value = data;
 }
 </script>
