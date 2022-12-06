@@ -18,10 +18,11 @@ getShortRealEstates();
 
 const token = import.meta.env.VITE_MAPBOX_TOKEN;
 const realEstates = ref();
-const badgeExpanded = ref(false);
+// const badgeExpanded = ref(false);
 
 async function getShortRealEstates() {
-  const { data } = await axios.get('/api/realestate/short');
+  const { data } = await axios.get('https://immoradar-server.onrender.com/realestate/short');
+  // const { data } = await axios.get('/api/realestate/short');
   realEstates.value = data;
 }
 </script>
