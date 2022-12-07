@@ -13,9 +13,7 @@ import { useRealEstateStore } from './stores/realEstates';
 const realEstateStore = useRealEstateStore();
 
 async function getRealEstates() {
-  console.log(await axios.get('/api/user'));
-  const { data } = await axios.get('/api/realestate/short');
-  console.log(await axios.get('/api/realestate'));
+  const { data } = await axios.get('https://immoradar-server.onrender.com/realestate/short');
   realEstateStore.realEstatesShort = data;
 }
 
