@@ -1,5 +1,4 @@
 <template>
-  <q-btn @click="getRealEstates" label="get realestates"></q-btn>
   <RouterView />
 </template>
 
@@ -12,14 +11,9 @@ import { useRealEstateStore } from './stores/realEstates';
 
 const realEstateStore = useRealEstateStore();
 
-async function getRealEstates() {
+onMounted(async () => {
   const { data } = await axios.get('https://immoradar-server.onrender.com/realestate/short');
   realEstateStore.realEstatesShort = data;
-}
-
-onMounted(async () => {
-  // const { data } = await axios.get('/api/realestate/short');
-  // realEstateStore.realEstatesShort = data;
 });
 </script>
 
