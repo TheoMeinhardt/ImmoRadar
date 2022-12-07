@@ -1,10 +1,9 @@
 import { defineStore } from 'pinia';
-import realEstates from '@/assets/data/realEstates.json';
 
-export const useRealEstatesStore = defineStore('realEstates', {
+export const useRealEstateStore = defineStore('realEstateStore', {
   state: () => {
     return {
-      realEstates,
+      realEstatesShort: Array,
     };
   },
 });

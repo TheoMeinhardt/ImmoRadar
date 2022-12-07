@@ -1,7 +1,7 @@
 import { Request, Response, raw } from 'express';
 import Stripe from 'stripe';
-import { address, realEstate, shortRealEstate } from '../types';
-import { makeReadableAddress } from '../helpers';
+import { address, mapquestRes, realEstate, shortRealEstate } from '../types';
+import { makeReadableAddress, addressGeocode } from '../helpers';
 import { realEstateValidator } from '../validators';
 import * as db from '../models';
 
@@ -48,9 +48,13 @@ async function getShortendRealEstates(req: Request, res: Response): Promise<void
 
   for await (const { name, addressID, price, usableArea, rooms } of longRealEstates) {
     const adrs = await db.getAddress(addressID);
+    const geoinfo: mapquestRes = await addressGeocode(adrs as address);
+
     shortRealEstates.push({
       name,
       address: adrs ? makeReadableAddress(adrs) : undefined,
+      lat: geoinfo.results[0].locations[0].latLng.lat,
+      long: geoinfo.results[0].locations[0].latLng.lng,
       price,
       usableArea,
       rooms,
@@ -101,7 +105,6 @@ async function patchRealEstate(req: Request, res: Response): Promise<void> {
     const patchedRealEstate: realEstate = { ...originalRealEstate, ...realEstateData };
     patchedRealEstate.address = realEstateData.address ? { ...originalAddress, ...realEstateData.address } : originalAddress;
 
-    console.log(patchedRealEstate);
     // Json verification
     realEstateValidator(patchedRealEstate);
     if (!realEstateValidator.errors) {

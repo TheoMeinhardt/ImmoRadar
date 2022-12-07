@@ -3,7 +3,18 @@
 </template>
 
 <script setup>
+import axios from 'axios';
+import { onMounted } from 'vue';
 import { RouterView } from 'vue-router';
+
+import { useRealEstateStore } from './stores/realEstates';
+
+const realEstateStore = useRealEstateStore();
+
+onMounted(async () => {
+  const { data } = await axios.get('https://immoradar-server.onrender.com/realestate/short');
+  realEstateStore.realEstatesShort = data;
+});
 </script>
 
 <style>
@@ -17,13 +28,8 @@ import { RouterView } from 'vue-router';
   src: url('/fonts/quicksand/Quicksand_Light.otf') format('truetype');
 }
 
-@font-face {
-  font-family: 'Quicksand-Book';
-  src: url('/fonts/quicksand/Quicksand_Book.otf') format('truetype');
-}
-
-#underConstruction {
-  height: 100vh;
-  background-color: #4b506e;
+:root {
+  --q-primary: #71d1ec !important;
+  --q-secondary: #4b506e !important;
 }
 </style>
