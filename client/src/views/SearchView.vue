@@ -9,7 +9,7 @@
         class="q-mt-xl q-mx-md"
         label="Search"
         :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }"
-        style="font-family: Quicksand-Book"
+        style="font-family: Quicksand"
       >
         <template v-slot:prepend>
           <q-icon name="fa-solid fa-magnifying-glass" style="color: #4b506e"></q-icon>
@@ -21,13 +21,13 @@
       </q-input>
       <div class="q-pa-md row items-start justify-center q-gutter-md q-mt-md q-mb-xl text-white">
         <q-card
-          v-for="estate in realEstates"
+          v-for="estate in realEstate"
           :key="estate.re_id"
           class="my-card q-pa-xs"
           style="font-family: Keep Calm"
           bordered
         >
-          <img src="https://cdn.quasar.dev/img/mountains.jpg" />
+          <img src="https://via.placeholder.com/200x150" />
 
           <q-card-section>
             <div class="text-subtitle1">{{ estate.name }}</div>
@@ -66,11 +66,11 @@
 
 <script setup>
 import NavBar from '@/components/NavBar.vue';
-import { useRealEstatesStore } from '@/stores/realEstates.js';
+import { useRealEstateStore } from '@/stores/realEstates.js';
 import { ref } from 'vue';
 
-const realEstatesStore = useRealEstatesStore();
-const realEstates = realEstatesStore.realEstates;
+const realEstateStore = useRealEstateStore();
+const realEstate = realEstateStore.realEstatesShort;
 
 const searchStr = ref('');
 const icon = ref(false);
