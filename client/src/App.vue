@@ -1,4 +1,5 @@
 <template>
+  <q-btn @click="getRealEstates" label="get realestates"></q-btn>
   <RouterView />
 </template>
 
@@ -11,9 +12,14 @@ import { useRealEstateStore } from './stores/realEstates';
 
 const realEstateStore = useRealEstateStore();
 
-onMounted(async () => {
+async function getRealEstates() {
   const { data } = await axios.get('/api/realestate/short');
   realEstateStore.realEstatesShort = data;
+}
+
+onMounted(async () => {
+  // const { data } = await axios.get('/api/realestate/short');
+  // realEstateStore.realEstatesShort = data;
 });
 </script>
 
