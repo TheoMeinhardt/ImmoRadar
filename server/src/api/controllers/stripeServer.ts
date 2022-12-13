@@ -70,9 +70,6 @@ async function createCheckout(req: Request, res: Response): Promise<void> {
       success_url: 'http://localhost:8080/success',
       cancel_url: 'http://localhost:8080/cancel',
     });
-    // console.log(session.url);
-    // res.redirect(303, session.url as string);
-    // return session.url as any;
     res.status(200).send(session.url);
   } catch (error) {
     return console.error(error);
@@ -81,6 +78,7 @@ async function createCheckout(req: Request, res: Response): Promise<void> {
 
 async function createPortal(req: Request, res: Response): Promise<void> {
   // VOn Datenbank holen
+  console.log('test');
   const { session_id } = req.body;
   const checkout_session = await stripe.checkout.sessions.retrieve(session_id);
 
