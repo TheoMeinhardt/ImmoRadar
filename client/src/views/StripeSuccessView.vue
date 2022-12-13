@@ -17,25 +17,33 @@
         </p>
         <p class="text-gray-300">Einen schönen Tag noch!</p>
         <div class="py-10 text-center">
-          <a
-            href="http://localhost:8080"
+          <button
+            onclick="window.location.href = '/';"
             class="px-12 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3"
           >
             Home
-          </a>
+          </button>
+        </div>
+        <div class="py-10 text-center">
+          <button
+            @click="createPortal"
+            class="px-12 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3"
+          >
+            Mangage Billing
+          </button>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script setup>
-// import axios from 'axios';
+import axios from 'axios';
 
-// async function createPortal() {
-//   const { data } = await axios.post('http://localhost:3000/realestate/create-portal-session');
-//   console.log(data);
-//   window.location = data;
-// }
+async function createPortal() {
+  const { data } = await axios.post('http://localhost:3000/realestate/create-portal-session');
+  console.log(data);
+  // window.location = data;
+}
 </script>
 <style scoped>
 @import 'tailwindcss/base';
