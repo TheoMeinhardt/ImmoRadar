@@ -38,10 +38,27 @@
 </template>
 <script setup>
 import axios from 'axios';
+import { useStore } from '../stores/counter.js';
+import { onMounted, ref } from 'vue';
+const store = useStore();
+
+const sessionId = ref('');
+const jsonSession = ref({});
+
+onMounted(async () => {
+  const searchParams = new URLSearchParams(new URL(window.location).search);
+  sessionId.value = searchParams.get('session_id');
+  console.log(sessionId.value);
+});
 
 async function createPortal() {
+  const session = await axios.get(
+    `'http://localhost:3000/realestate/checkout-session?sessionId=${sessionId.value}'`,
+  );
+  jsonSession.value = JSON.stringify(session, null, 2);
   const { data } = await axios.post('http://localhost:3000/realestate/create-portal-session');
   console.log(data);
+  console.log(session);
   // window.location = data;
 }
 </script>

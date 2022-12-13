@@ -21,13 +21,15 @@
 </template>
 <script setup>
 import axios from 'axios';
+import { useStore } from '../stores/counter.js';
+
+const store = useStore();
 
 async function createCheckout() {
-  // const daten = await axios.get('http://localhost:3000/realestate/config');
-  // console.log(daten);
-  const { data } = await axios.post('/realestate/create-checkout-session');
+  const { data } = await axios.post('http://localhost:3000/realestate/create-checkout-session');
   console.log(data);
-  window.location = data;
+  store.checkout = data.url;
+  window.location = data.url;
 }
 </script>
 <style scoped>
