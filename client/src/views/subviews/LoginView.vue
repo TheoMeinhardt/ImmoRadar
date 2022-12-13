@@ -47,6 +47,7 @@ async function submitLogin() {
 
     if (res.status === 200 && res.data !== false) {
       userStore.jwt = res.data;
+      axios.defaults.headers.common['authorization'] = userStore.jwt;
       router.push('/');
     } else if (res.status === 200 && res.data === false) {
       loginErrors.value = 'Invalid Email or Password!';
