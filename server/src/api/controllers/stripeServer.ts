@@ -67,10 +67,10 @@ async function createCheckout(req: Request, res: Response): Promise<void> {
           quantity: 1,
         },
       ],
-      success_url: 'http://localhost:8080/success',
+      success_url: 'http://localhost:8080/success?=session_id{CHECKOUT_SESSION_ID}',
       cancel_url: 'http://localhost:8080/cancel',
     });
-    res.status(200).send(session.url);
+    res.status(200).send(session);
   } catch (error) {
     return console.error(error);
   }
@@ -80,8 +80,9 @@ async function createPortal(req: Request, res: Response): Promise<void> {
   // VOn Datenbank holen
   console.log('test');
   const { session_id } = req.body;
+  console.log('test2');
   const checkout_session = await stripe.checkout.sessions.retrieve(session_id);
-
+  console.log('test3');
   const returnUrl = 'http://localhost:8080/home';
 
   const portalSession = await stripe.billingPortal.sessions.create({
@@ -91,45 +92,10 @@ async function createPortal(req: Request, res: Response): Promise<void> {
   res.status(200).send(portalSession.url);
 }
 
-// async function createSubscription(req: Request, res: Response): Promise<void> {
-//   // Stripe Customer ID --> Authenticated user
-//   const customerId = req.cookies['customer'];
-
-//   const priceId = req.body.priceId;
-
-//   try {
-//     const subscription = await stripe.subscriptions.create({
-//       customer: customerId,
-//       items: [{ price: priceId }],
-//       payment_behavior: 'default_incomplete',
-//       expand: ['latest_invoice.payment_intent'],
-//     });
-//     res.send({ subscriptionId: subscription.id });
-//   } catch (error) {
-//     res.status(400).send(error);
-//   }
-// }
-
-async function config(req: Request, res: Response): Promise<void> {
-  res.send({
-    publishableKey: process.env.PUBLIC_KEY,
-    basicPrice: process.env.BASIC_PRICE_ID,
-    proPrice: process.env.PRO_PRICE_ID,
-  });
-}
-
 async function checkoutSession(req: Request, res: Response): Promise<void> {
   const { sessionId } = req.query;
   const session = await stripe.checkout.sessions.retrieve(sessionId as any);
-  res.send(session);
+  res.status(200).send(session.url);
 }
 
-export {
-  postToWebhook,
-  // createCustomer,
-  createCheckout,
-  createPortal,
-  // createSubscription,
-  config,
-  checkoutSession,
-};
+export { postToWebhook, createCheckout, createPortal, checkoutSession };
