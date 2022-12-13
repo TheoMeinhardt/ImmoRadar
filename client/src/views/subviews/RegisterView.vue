@@ -50,7 +50,7 @@ async function submitRegister() {
       submitInProgress.value = false;
       registerErrors.value = 'Passwords do not match!';
     } else {
-      const { data } = await axios.post('/api/user', {
+      const { data } = await axios.post('/user', {
         name: username.value,
         email: email.value,
         password: password.value,

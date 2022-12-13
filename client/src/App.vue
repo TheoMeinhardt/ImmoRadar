@@ -11,8 +11,11 @@ import { useRealEstateStore } from './stores/realEstates';
 
 const realEstateStore = useRealEstateStore();
 
+axios.defaults.baseURL = import.meta.env.DEV ? 'http://localhost:3000' : 'https://immoradar-server.onrender.com';
+console.log(`${import.meta.env.MODE} mode`);
+
 onMounted(async () => {
-  const { data } = await axios.get('https://immoradar-server.onrender.com/realestate/short');
+  const { data } = await axios.get('/realestate/short');
   realEstateStore.realEstatesShort = data;
 });
 </script>

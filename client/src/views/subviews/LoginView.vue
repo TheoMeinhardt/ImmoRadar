@@ -40,7 +40,7 @@ const submitInProgress = ref(false);
 async function submitLogin() {
   try {
     submitInProgress.value = true;
-    const res = await axios.post('/api/user/login', {
+    const res = await axios.post('/user/login', {
       email: email.value,
       password: password.value,
     });
