@@ -1,6 +1,6 @@
 <template>
   <div>
-    <q-icon @click="expand = true" v-if="!expand" name="fa-solid fa-house" color="primary" size="xs"></q-icon>
+    <q-icon @click="expand = true" v-if="!expand" class="shadow-1" name="fa-solid fa-house" color="primary" size="xs"></q-icon>
 
     <div @click="expand = false" v-else class="badge bg-secondary q-pa-sm text-white">
       <img src="https://via.placeholder.com/200x150" />
