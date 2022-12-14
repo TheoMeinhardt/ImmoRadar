@@ -67,7 +67,7 @@ async function createCheckout(req: Request, res: Response): Promise<void> {
           quantity: 1,
         },
       ],
-      success_url: 'http://localhost:8080/success?=session_id{CHECKOUT_SESSION_ID}',
+      success_url: 'http://localhost:8080/success?session_id={CHECKOUT_SESSION_ID}',
       cancel_url: 'http://localhost:8080/cancel',
     });
     res.status(200).send(session);
@@ -83,7 +83,7 @@ async function createPortal(req: Request, res: Response): Promise<void> {
   console.log('test2');
   const checkout_session = await stripe.checkout.sessions.retrieve(session_id);
   console.log('test3');
-  const returnUrl = 'http://localhost:8080/home';
+  const returnUrl = 'http://localhost:8080';
 
   const portalSession = await stripe.billingPortal.sessions.create({
     customer: checkout_session.customer as string,
@@ -95,7 +95,7 @@ async function createPortal(req: Request, res: Response): Promise<void> {
 async function checkoutSession(req: Request, res: Response): Promise<void> {
   const { sessionId } = req.query;
   const session = await stripe.checkout.sessions.retrieve(sessionId as any);
-  res.status(200).send(session.url);
+  res.status(200).send(session);
 }
 
 export { postToWebhook, createCheckout, createPortal, checkoutSession };
