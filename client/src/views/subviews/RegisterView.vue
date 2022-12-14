@@ -4,10 +4,10 @@
       <p class="text-white">{{ registerErrors }}</p>
     </div>
 
-    <q-input type="text" bg-color="white" style="font-family: Quicksand-Book" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="q-my-lg" rounded outlined v-model="username" label="Username" />
-    <q-input type="email" bg-color="white" style="font-family: Quicksand-Book" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" rounded outlined v-model="email" label="Email" />
-    <q-input v-model="password" type="password" bg-color="white" style="font-family: Quicksand-Book" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="q-my-lg" rounded outlined label="Password" />
-    <q-input v-model="passwordConfirm" type="password" bg-color="white" style="font-family: Quicksand-Book" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="q-my-lg" rounded outlined label="Confirm Password" />
+    <q-input type="text" bg-color="white" style="font-family: Quicksand Book" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="q-my-lg" rounded outlined v-model="username" label="Username" />
+    <q-input type="email" bg-color="white" style="font-family: Quicksand Book" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" rounded outlined v-model="email" label="Email" />
+    <q-input v-model="password" type="password" bg-color="white" style="font-family: Quicksand Book" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="q-my-lg" rounded outlined label="Password" />
+    <q-input v-model="passwordConfirm" type="password" bg-color="white" style="font-family: Quicksand Book" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="q-my-lg" rounded outlined label="Confirm Password" />
 
     <div style="text-align: center; background-color: #4b506e">
       <q-btn :disabled="submitInProgress" type="submit" rounded color="light-blue-3" style="font-family: Keep Calm; width: 300px" align="center" class="btn">
