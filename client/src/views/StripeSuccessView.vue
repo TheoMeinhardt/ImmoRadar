@@ -39,25 +39,23 @@
 <script setup>
 import axios from 'axios';
 import { onMounted, ref } from 'vue';
-
 const session_id = ref('');
-const jsonSession = ref({});
-
+const jsonSession = ref();
+const returnSession = ref();
 onMounted(async () => {
   const searchParams = new URLSearchParams(new URL(window.location).search);
-  session_id .value = searchParams.get('session_id');
-  console.log(session_id .value);
+  session_id.value = searchParams.get('session_id');
   const session = await axios.get(
-    `http://localhost:3000/realestate/checkout-session?session_id=${session_id .value}`,
+    `http://localhost:3000/realestate/checkout-session/${session_id.value}`,
   );
+  returnSession.value = session.data;
   jsonSession.value = JSON.stringify(session, null, 2);
-  console.log(jsonSession.value);
 });
-
 async function createPortal() {
-  const { data } = await axios.post('http://localhost:3000/realestate/create-portal-session');
-  console.log(data);
-  // window.location = data;
+  const { data } = await axios.post('http://localhost:3000/realestate/create-portal-session', {
+    session: returnSession.value,
+  });
+  window.location = data;
 }
 </script>
 <style scoped>

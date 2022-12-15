@@ -78,11 +78,9 @@ async function createCheckout(req: Request, res: Response): Promise<void> {
 
 async function createPortal(req: Request, res: Response): Promise<void> {
   // VOn Datenbank holen
-  console.log('test');
-  const { session_id } = req.body;
-  console.log('test2');
+  const { session } = req.body;
+  const session_id = session.id;
   const checkout_session = await stripe.checkout.sessions.retrieve(session_id);
-  console.log('test3');
   const returnUrl = 'http://localhost:8080';
 
   const portalSession = await stripe.billingPortal.sessions.create({
@@ -93,8 +91,10 @@ async function createPortal(req: Request, res: Response): Promise<void> {
 }
 
 async function checkoutSession(req: Request, res: Response): Promise<void> {
-  const { sessionId } = req.query;
-  const session = await stripe.checkout.sessions.retrieve(sessionId as any);
+  console.log('checkout session');
+  const { session_id } = req.params;
+  console.log(session_id);
+  const session = await stripe.checkout.sessions.retrieve(session_id as any);
   res.status(200).send(session);
 }
 
