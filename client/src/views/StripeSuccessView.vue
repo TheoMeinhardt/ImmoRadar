@@ -47,18 +47,14 @@ const returnSession = ref();
 onMounted(async () => {
   const searchParams = new URLSearchParams(new URL(window.location).search);
   session_id.value = searchParams.get('session_id');
-  console.log(session_id.value);
   const session = await axios.get(
     `http://localhost:3000/realestate/checkout-session/${session_id.value}`,
   );
-  console.log(session.data);
   returnSession.value = session.data;
   jsonSession.value = JSON.stringify(session, null, 2);
-  // console.log(jsonSession.value);
 });
 
 async function createPortal() {
-  console.log(returnSession.value);
   const { data } = await axios.post('http://localhost:3000/realestate/create-portal-session', {
     session: returnSession.value,
   });
