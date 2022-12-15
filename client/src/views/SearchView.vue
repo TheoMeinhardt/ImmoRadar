@@ -1,25 +1,7 @@
 <template>
   <q-layout>
     <q-page-container>
-      <q-input
-        v-model="searchStr"
-        bg-color="white"
-        rounded
-        outlined
-        class="q-mt-xl q-mx-md"
-        label="Search"
-        :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }"
-        style="font-family: Quicksand"
-      >
-        <template v-slot:prepend>
-          <q-icon name="fa-solid fa-magnifying-glass" style="color: #4b506e"></q-icon>
-        </template>
-        <template v-slot:append
-          ><q-btn @click="icon = true" icon="fa-solid fa-filter" unelevated text-color="#4b506e">
-          </q-btn
-        ></template>
-      </q-input>
-      <div class="q-pa-md row items-start justify-center q-gutter-md q-mt-md q-mb-xl text-white">
+      <div class="q-pa-md row items-start justify-center q-gutter-md q-mt-xl q-mb-xl text-white">
         <q-card
           v-for="estate in realEstate"
           :key="estate.re_id"
@@ -43,7 +25,7 @@
       </div>
 
       <q-dialog v-model="icon">
-        <q-card>
+        <q-card style="font-family: Keep Calm" class="my-card text-white" bordered>
           <q-card-section class="row items-center q-pb-none">
             <div class="text-h6">Search by</div>
             <q-space />
@@ -52,12 +34,37 @@
 
           <q-card-section>
             <div class="q-gutter-sm">
-              <q-option-group v-model="search" :options="options"></q-option-group>
+              <q-option-group
+                v-model="search"
+                :options="options"
+                color="grey-1"
+                keep-color
+              ></q-option-group>
             </div>
           </q-card-section>
         </q-card>
       </q-dialog>
     </q-page-container>
+    <q-page-sticky position="top">
+      <q-input
+        v-model="searchStr"
+        bg-color="white"
+        rounded
+        outlined
+        class="q-mt-xl q-mx-md"
+        label="Search"
+        :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }"
+        style="font-family: Quicksand"
+      >
+        <template v-slot:prepend>
+          <q-icon name="fa-solid fa-magnifying-glass" style="color: #4b506e"></q-icon>
+        </template>
+        <template v-slot:append
+          ><q-btn @click="icon = true" icon="fa-solid fa-filter" unelevated text-color="#4b506e">
+          </q-btn
+        ></template>
+      </q-input>
+    </q-page-sticky>
     <q-page-sticky position="bottom" :offset="[18, 18]">
       <NavBar></NavBar>
     </q-page-sticky>
@@ -94,6 +101,18 @@ const options = [
     value: 'street',
   },
 ];
+
+const searchEstate = () => {
+  if (search.value === 'name') {
+    realEstateStore.searchByName(searchStr.value);
+  } else if (search.value === 'plz') {
+    realEstateStore.searchByPlz(searchStr.value);
+  } else if (search.value === 'rooms') {
+    realEstateStore.searchByRooms(searchStr.value);
+  } else if (search.value === 'street') {
+    realEstateStore.searchByStreet(searchStr.value);
+  }
+};
 </script>
 
 <style lang="sass" scoped>
