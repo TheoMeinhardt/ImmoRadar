@@ -26,13 +26,18 @@ import { ref } from 'vue';
 const expand = ref(false);
 const badgeHidden = ref(true);
 
-defineProps({
+const props = defineProps({
+  map: Object,
   realEstate: Object,
 });
 
 function showBadge() {
   expand.value = true;
   badgeHidden.value = false;
+  props.map.flyTo({
+    center: [props.realEstate.long, props.realEstate.lat],
+    essential: true,
+  });
 }
 </script>
 
