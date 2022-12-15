@@ -2,7 +2,12 @@ import asyncHandler from 'express-async-handler';
 import { Router, raw } from 'express';
 
 import { realEstateControllers } from '../controllers';
-import { postToWebhook, createCheckout, createPortal, checkoutSession } from '../controllers/stripeServer';
+import {
+  postToWebhook,
+  createCheckout,
+  createPortal,
+  checkoutSession,
+} from '../controllers/stripeServer';
 
 const router = Router();
 
