@@ -93,8 +93,10 @@ async function createPortal(req: Request, res: Response): Promise<void> {
 }
 
 async function checkoutSession(req: Request, res: Response): Promise<void> {
-  const { sessionId } = req.query;
-  const session = await stripe.checkout.sessions.retrieve(sessionId as any);
+  console.log('hurensohn');
+  const { session_id } = req.query;
+  console.log(session_id);
+  const session = await stripe.checkout.sessions.retrieve(session_id as any);
   res.status(200).send(session);
 }
 
