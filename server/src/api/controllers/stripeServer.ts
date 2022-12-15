@@ -80,9 +80,7 @@ async function createPortal(req: Request, res: Response): Promise<void> {
   // VOn Datenbank holen
   const { session } = req.body;
   const session_id = session.id;
-  console.log(session_id);
   const checkout_session = await stripe.checkout.sessions.retrieve(session_id);
-  console.log('test3');
   const returnUrl = 'http://localhost:8080';
 
   const portalSession = await stripe.billingPortal.sessions.create({
