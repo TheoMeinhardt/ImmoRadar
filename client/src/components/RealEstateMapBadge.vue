@@ -36,6 +36,7 @@ function showBadge() {
   badgeHidden.value = false;
   props.map.flyTo({
     center: [props.realEstate.long, props.realEstate.lat],
+    zoom: 15,
     essential: true,
   });
 }
