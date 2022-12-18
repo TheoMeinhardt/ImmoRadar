@@ -1,6 +1,5 @@
 <template>
   <RouterView />
-  <RouterView />
 </template>
 
 <script setup>
@@ -15,7 +14,7 @@ const realEstateStore = useRealEstateStore();
 const userStore = useUserStore();
 const router = useRouter();
 
-axios.defaults.baseURL = import.meta.env.DEV ? 'http://localhost:3000' : 'https://immoradar-server.onrender.com';
+axios.defaults.baseURL = import.meta.env.DEV ? 'http://192.168.1.52:3000' : 'https://immoradar-server.onrender.com';
 console.log(`${import.meta.env.MODE} mode`);
 
 onMounted(async () => {

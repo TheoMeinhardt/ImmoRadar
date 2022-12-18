@@ -1,6 +1,5 @@
 <template>
   <q-layout>
-  <q-layout>
     <q-page-container>
       <div class="q-pa-md row items-start justify-center q-gutter-md q-mt-xl q-mb-xl text-white">
         <q-card v-for="estate in realEstate" :key="estate.re_id" class="my-card q-pa-xs" style="font-family: Keep Calm" bordered>
@@ -91,54 +90,8 @@ const searchEstate = () => {
     realEstateStore.searchByStreet(searchStr.value);
   }
 };
-import { useRealEstateStore } from '@/stores/realEstates.js';
-import { ref } from 'vue';
-
-const realEstateStore = useRealEstateStore();
-const realEstate = realEstateStore.realEstatesShort;
-
-const searchStr = ref('');
-const icon = ref(false);
-const search = ref('name');
-
-const options = [
-  {
-    label: 'Name',
-    value: 'name',
-  },
-  {
-    label: 'PLZ',
-    value: 'plz',
-  },
-  {
-    label: 'Rooms',
-    value: 'rooms',
-  },
-  {
-    label: 'Street',
-    value: 'street',
-  },
-];
-
-const searchEstate = () => {
-  if (search.value === 'name') {
-    realEstateStore.searchByName(searchStr.value);
-  } else if (search.value === 'plz') {
-    realEstateStore.searchByPlz(searchStr.value);
-  } else if (search.value === 'rooms') {
-    realEstateStore.searchByRooms(searchStr.value);
-  } else if (search.value === 'street') {
-    realEstateStore.searchByStreet(searchStr.value);
-  }
-};
 </script>
 
-<style lang="sass" scoped>
-.my-card
-  width: 100%
-  max-width: 250px
-  background-color: #2F3245
-  border-color: white
 <style lang="sass" scoped>
 .my-card
   width: 100%
