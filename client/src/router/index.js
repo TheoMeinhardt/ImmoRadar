@@ -8,7 +8,6 @@ import SuccessView from '../views/StripeSuccessView.vue';
 import CancelView from '../views/StripeCancelView.vue';
 import CheckoutView from '../views/StripeCheckoutView.vue';
 import NotFound from '../views/404View.vue';
-// import PortalView from '../views/StripePortalView.vue';
 import UserView from '@/views/UserView.vue';
 import SearchView from '@/views/SearchView.vue';
 import AddHouseView from '@/views/AddHouseView.vue';
@@ -70,11 +69,6 @@ const router = createRouter({
       component: CheckoutView,
     },
     { path: '/:catchAll(.*)', component: NotFound },
-    // {
-    //   path: '/portal',
-    //   name: 'portal',
-    //   component: PortalView,
-    // },
   ],
 });
 

@@ -17,25 +17,46 @@
         </p>
         <p class="text-gray-300">Einen schönen Tag noch!</p>
         <div class="py-10 text-center">
-          <a
-            href="http://localhost:8080"
+          <button
+            onclick="window.location.href = '/';"
             class="px-12 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3"
           >
             Home
-          </a>
+          </button>
+        </div>
+        <div class="py-10 text-center">
+          <button
+            @click="createPortal"
+            class="px-12 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3"
+          >
+            Mangage Billing
+          </button>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script setup>
-// import axios from 'axios';
-
-// async function createPortal() {
-//   const { data } = await axios.post('http://localhost:3000/realestate/create-portal-session');
-//   console.log(data);
-//   window.location = data;
-// }
+import axios from 'axios';
+import { onMounted, ref } from 'vue';
+const session_id = ref('');
+const jsonSession = ref();
+const returnSession = ref();
+onMounted(async () => {
+  const searchParams = new URLSearchParams(new URL(window.location).search);
+  session_id.value = searchParams.get('session_id');
+  const session = await axios.get(
+    `/realestate/checkout-session/${session_id.value}`,
+  );
+  returnSession.value = session.data;
+  jsonSession.value = JSON.stringify(session, null, 2);
+});
+async function createPortal() {
+  const { data } = await axios.post('/realestate/create-portal-session', {
+    session: returnSession.value,
+  });
+  window.location = data;
+}
 </script>
 <style scoped>
 @import 'tailwindcss/base';
