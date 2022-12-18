@@ -1,12 +1,12 @@
 <template>
-	<div class="xs container">
-		<div style="text-align: center"><img class="q-my-md" src="/images/Logo_Horizontal.svg" alt="" width="250" /></div>
-		<q-tabs style="font-family: Keep Calm" class="text-white">
-			<q-route-tab to="/form">Login</q-route-tab>
-			<q-route-tab to="/form/register">Register</q-route-tab>
-		</q-tabs>
-		<RouterView class="q-mt-xl"></RouterView>
-	</div>
+  <div class="xs container bg-secondary">
+    <div style="text-align: center"><img class="q-my-md" src="/images/Logo_Horizontal.svg" alt="" width="250" /></div>
+    <q-tabs style="font-family: Keep Calm" class="text-white">
+      <q-route-tab to="/form">Login</q-route-tab>
+      <q-route-tab to="/form/register">Register</q-route-tab>
+    </q-tabs>
+    <RouterView class="q-mt-xl"></RouterView>
+  </div>
 </template>
 
 <script setup>
@@ -15,7 +15,6 @@ import { RouterView } from 'vue-router';
 
 <style scoped>
 .container {
-	height: 100vh;
-	background-color: #4b506e;
+  height: 100vh;
 }
 </style>
