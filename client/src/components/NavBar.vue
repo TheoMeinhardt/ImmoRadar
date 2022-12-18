@@ -1,11 +1,6 @@
 <template>
   <div class="text-center">
-    <q-btn
-      to="/search"
-      icon="fa-solid fa-magnifying-glass fa-xl"
-      unelevated
-      text-color="btnColor"
-    ></q-btn>
+    <q-btn to="/search" icon="fa-solid fa-magnifying-glass fa-xl" unelevated text-color="btnColor"></q-btn>
     <q-btn to="/" icon="fa-solid fa-house fa-xl" unelevated text-color="btnColor"></q-btn>
     <q-btn to="/user" icon="fa-solid fa-user fa-xl" unelevated text-color="btnColor"></q-btn>
   </div>

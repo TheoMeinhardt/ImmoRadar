@@ -60,7 +60,12 @@ async function login(req: Request, res: Response): Promise<void> {
       aud: 'client',
     };
 
-    res.status(200).send(auth.signJWT(payload));
+    const returnObj = {
+      jwt: auth.signJWT(payload),
+      user: existingUser,
+    };
+
+    res.status(200).json(returnObj);
   } else {
     res.status(200).send(false);
   }

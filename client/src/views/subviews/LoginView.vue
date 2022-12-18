@@ -51,8 +51,12 @@ async function submitLogin() {
     });
 
     if (res.status === 200 && res.data !== false) {
-      userStore.jwt = res.data;
+      const { jwt, user } = res.data;
+      userStore.jwt = jwt;
+      userStore.user = user;
+      userStore.user.password = 'Fantasier nicht';
       axios.defaults.headers.common['authorization'] = userStore.jwt;
+
       router.push('/');
     } else if (res.status === 200 && res.data === false) {
       loginErrors.value = 'Invalid Email or Password!';

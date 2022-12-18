@@ -42,5 +42,7 @@ onMounted(async () => {
 :root {
   --q-primary: #71d1ec !important;
   --q-secondary: #4b506e !important;
+  --q-accent: #264653 !important;
+  --q-dark: #2f3245 !important;
 }
 </style>
