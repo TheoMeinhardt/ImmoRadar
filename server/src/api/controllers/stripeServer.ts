@@ -71,6 +71,7 @@ async function createCheckout(req: Request, res: Response): Promise<void> {
       cancel_url: 'http://localhost:8080/cancel',
     });
     res.status(200).send(session);
+    console.log(session.url);
   } catch (error) {
     return console.error(error);
   }

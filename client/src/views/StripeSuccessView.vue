@@ -43,11 +43,17 @@ const session_id = ref('');
 const jsonSession = ref();
 const returnSession = ref();
 onMounted(async () => {
-  const searchParams = new URLSearchParams(new URL(window.location).search);
-  session_id.value = searchParams.get('session_id');
-  const session = await axios.get(
-    `/realestate/checkout-session/${session_id.value}`,
-  );
+  var hash = location.hash;
+  var sessionId = hash.match(/session_id=([^&]+)/)[1];
+  console.log(sessionId);
+  session_id.value = sessionId;
+
+  // const searchParams = new URLSearchParams(new URL(window.location).search);
+  // console.log(searchParams);
+  // session_id.value = searchParams.get('session_id');
+  // console.log(session_id.value);
+
+  const session = await axios.get(`/realestate/checkout-session/${session_id.value}`);
   returnSession.value = session.data;
   jsonSession.value = JSON.stringify(session, null, 2);
 });
