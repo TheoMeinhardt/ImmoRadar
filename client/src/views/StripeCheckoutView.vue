@@ -25,7 +25,7 @@ async function createCheckout() {
   // console.log(daten);
   const { data } = await axios.post('/realestate/create-checkout-session');
   console.log(data);
-  window.location = data;
+  window.location = data.url;
 }
 </script>
 <style scoped>
