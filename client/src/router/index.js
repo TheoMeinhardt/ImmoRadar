@@ -10,6 +10,9 @@ import NotFound from '../views/404View.vue';
 import UserView from '@/views/UserView.vue';
 import SearchView from '@/views/SearchView.vue';
 import AddHouseView from '@/views/AddHouseView.vue';
+import AddHouseOne from '@/views/subviews/AddHouseOne.vue';
+import AddHouseTwo from '@/views/subviews/AddHouseTwo.vue';
+import AddHouseThree from '@/views/subviews/AddHouseThree.vue';
 import UserOverview from '@/views/subviews/UserOverview.vue';
 
 const router = createRouter({
@@ -52,6 +55,23 @@ const router = createRouter({
       path: '/addhouse',
       name: 'addhouse',
       component: AddHouseView,
+      children: [
+        {
+          path: '',
+          name: 'AddHouseOne',
+          component: AddHouseOne,
+        },
+        {
+          path: '/addhouse/addhousetwo',
+          name: 'AddHouseTwo',
+          component: AddHouseTwo,
+        },
+        {
+          path: '/addhouse/addhousethree',
+          name: 'AddHouseThree',
+          component: AddHouseThree,
+        },
+      ],
     },
     {
       path: '/form',

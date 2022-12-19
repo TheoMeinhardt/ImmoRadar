@@ -3,11 +3,38 @@
     <div v-if="loginErrors.length > 0" class="error-message-container">
       <p class="text-white">{{ loginErrors }}</p>
     </div>
-    <q-input type="email" bg-color="white" style="font-family: Quicksand Book" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="q-my-lg" rounded outlined v-model="email" label="Email" required />
-    <q-input type="password" bg-color="white" style="font-family: Quicksand Book" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" rounded outlined v-model="password" label="Password" required />
+    <q-input
+      type="email"
+      bg-color="white"
+      style="font-family: Quicksand Book"
+      :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }"
+      class="q-my-lg"
+      rounded
+      outlined
+      v-model="email"
+      label="Email"
+      required
+    />
+    <q-input
+      type="password"
+      bg-color="white"
+      style="font-family: Quicksand Book"
+      :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }"
+      rounded
+      outlined
+      v-model="password"
+      label="Password"
+      required
+    />
 
     <div class="q-pa-md">
-      <q-checkbox dark class="text-white" v-model="rememberMe" label="Remember me" style="font-family: Keep Calm" />
+      <q-checkbox
+        dark
+        class="text-white"
+        v-model="rememberMe"
+        label="Remember me"
+        style="font-family: Keep Calm"
+      />
     </div>
 
     <div style="font-family: Keep Calm; text-align: center">
