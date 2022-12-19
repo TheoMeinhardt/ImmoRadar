@@ -1,7 +1,7 @@
 <template>
-  <q-layout id="underConstruction">
+  <q-layout>
     <q-page-container>
-      <UnderConstruction></UnderConstruction>
+      <RouterView></RouterView>
     </q-page-container>
     <q-page-sticky position="bottom" :offset="[18, 18]">
       <NavBar></NavBar>
@@ -10,13 +10,6 @@
 </template>
 
 <script setup>
-import UnderConstruction from '@/components/UnderConstruction.vue';
+import { RouterView } from 'vue-router';
 import NavBar from '@/components/NavBar.vue';
 </script>
-
-<style>
-#underConstruction {
-  height: 100vh;
-  background-color: #4b506e;
-}
-</style>
