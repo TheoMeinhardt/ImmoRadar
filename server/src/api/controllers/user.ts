@@ -33,6 +33,7 @@ async function getUserById(req: Request, res: Response): Promise<void> {
 // Controller for adding an User with data from client to database
 async function addUser(req: Request, res: Response): Promise<void> {
   const newUser: user = req.body;
+  console.log(newUser);
 
   // JSON validation
   if (userValidator(newUser)) {
@@ -42,6 +43,7 @@ async function addUser(req: Request, res: Response): Promise<void> {
     if (!addedUser) res.status(500).end();
     res.status(200).end();
   } else {
+    console.log(userValidator.errors);
     res.status(400).send(userValidator.errors);
   }
 }

@@ -10,6 +10,7 @@ import NotFound from '../views/404View.vue';
 import UserView from '@/views/UserView.vue';
 import SearchView from '@/views/SearchView.vue';
 import AddHouseView from '@/views/AddHouseView.vue';
+import UserOverview from '@/views/subviews/UserOverview.vue';
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -28,12 +29,20 @@ const router = createRouter({
       path: '/user',
       name: 'user',
       component: UserView,
+      children: [
+        {
+          path: '',
+          name: 'userOverview',
+          component: UserOverview,
+        },
+        {
+          path: '/user/details',
+          name: 'userDetails',
+          component: () => import('../views/UserDetails.vue'),
+        },
+      ],
     },
-    {
-      path: '/user/details',
-      name: 'userDetails',
-      component: () => import('../views/UserDetails.vue'),
-    },
+
     {
       path: '/search',
       name: 'search',

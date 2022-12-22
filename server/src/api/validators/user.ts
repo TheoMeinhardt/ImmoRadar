@@ -15,7 +15,7 @@ const user = validator({
     profilePic: { type: ['string', 'null'] },
     password: { type: 'string' },
   },
-  required: ['name', 'email', 'password'],
+  required: ['username', 'email', 'password'],
   additionalProperties: false,
 });
 

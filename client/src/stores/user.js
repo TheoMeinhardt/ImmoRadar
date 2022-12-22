@@ -5,6 +5,12 @@ export const useUserStore = defineStore('userStore', {
     return {
       jwt: String,
       user: Object,
+      needProfileUpdate: Boolean,
     };
+  },
+  actions: {
+    checkIfProfileNeedsUpdate() {
+      this.needProfileUpdate = !(this.user.username && this.user.firstname && this.user.lastname && this.user.phone);
+    },
   },
 });

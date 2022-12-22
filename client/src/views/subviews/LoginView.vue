@@ -55,6 +55,8 @@ async function submitLogin() {
       userStore.jwt = jwt;
       userStore.user = user;
       userStore.user.password = 'Fantasier nicht';
+      userStore.checkIfProfileNeedsUpdate();
+
       axios.defaults.headers.common['authorization'] = userStore.jwt;
 
       router.push('/');

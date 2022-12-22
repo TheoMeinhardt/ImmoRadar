@@ -8,26 +8,16 @@
 
       <div v-else style="font-family: Keep Calm">
         <div class="text-center text-white">
-          <q-img :src="userStore.user.profilePic" class="profilePic"></q-img>
-          <span class="text-h4 block q-mt-md">{{ userStore.user.name }}</span>
+          <q-img v-if="userStore.user.profilePic" :src="userStore.user.profilePic" class="profilePic"></q-img>
+          <div v-else class="userIconBigger row content-center justify-center">
+            <q-icon name="fa-regular fa-user" size="xl" />
+          </div>
+
+          <span class="text-h4 block q-mt-md">{{ userStore.user.username }}</span>
           <span class="text-body2 block text-grey">{{ userStore.user.email }}</span>
         </div>
 
-        <div class="row justify-center text-white q-mt-xl">
-          <div class="userIcon row content-center justify-center">
-            <q-icon class="q-m-lg" name="fa-regular fa-user" size="sm" />
-          </div>
-          <div class="column justify-evenly q-ml-md">
-            <span class="block" style="font-size: 0.85rem">My Account</span>
-            <span class="block text-grey" style="font-size: 0.65rem">Make changes to your account</span>
-          </div>
-          <div class="column justify-center align-center">
-            <q-icon name="fa-solid fa-triangle-exclamation" size="xs" color="red" class="q-ml-lg" />
-          </div>
-          <div class="column justify-center align-center">
-            <q-btn to="/user/details" round unelevated color="secondary" text-color="grey" size="sm" icon="fa-solid fa-chevron-right" class="q-ml-md" />
-          </div>
-        </div>
+        <RouterView></RouterView>
       </div>
     </q-page-container>
     <q-page-sticky position="bottom" :offset="[18, 18]">
@@ -51,10 +41,12 @@ const userStore = useUserStore();
   border-radius: 999px;
 }
 
-.userIcon {
+.userIconBigger {
   border-radius: 999px;
   background-color: #545975;
-  height: 60px;
-  width: 60px;
+  height: 25vw;
+  width: 25vw;
+  margin: auto;
+  margin-top: 10vh;
 }
 </style>
