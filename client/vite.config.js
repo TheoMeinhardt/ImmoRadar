@@ -9,6 +9,9 @@ export default defineConfig({
   server: {
     port: 8080,
   },
+  preview: {
+    port: 4172,
+  },
   plugins: [
     vue({
       template: { transformAssetUrls },

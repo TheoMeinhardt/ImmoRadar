@@ -27,22 +27,22 @@ onMounted(async () => {
 @font-face {
   font-family: 'Keep Calm';
   src: url('/fonts/keep_calm/KeepCalm-Medium.ttf') format('truetype');
+  font-display: swap;
 }
 
 @font-face {
   font-family: 'Quicksand';
   src: url('/fonts/quicksand/Quicksand_Light.otf') format('truetype');
+  font-display: swap;
 }
 
 @font-face {
   font-family: 'Quicksand Book';
   src: url('/fonts/quicksand/Quicksand_Book.otf') format('truetype');
+  font-display: swap;
 }
 
-:root {
-  --q-primary: #71d1ec !important;
-  --q-secondary: #4b506e !important;
-  --q-accent: #264653 !important;
-  --q-dark: #2f3245 !important;
+body {
+  background-color: #4b506e;
 }
 </style>

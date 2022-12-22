@@ -1,6 +1,9 @@
 type userDTO = {
   user_id: string;
   username: string;
+  firstname: string;
+  middlename: string;
+  lastname: string;
   address_id: string;
   company: string | null;
   phone: string | null;
@@ -11,7 +14,10 @@ type userDTO = {
 
 type user = {
   userID: string;
-  name: string;
+  username: string;
+  firstname: string;
+  middlename: string;
+  lastname: string;
   addressID: string;
   company: string | null;
   phone: string | null;
