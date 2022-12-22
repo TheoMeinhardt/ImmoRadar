@@ -1,9 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
-import HomeView from '../views/HomeView.vue';
 import AboutView from '../views/AboutView.vue';
 import FormView from '../views/FormView.vue';
 import LoginView from '../views/subviews/LoginView.vue';
-import RegisterView from '../views/subviews/RegisterView.vue';
 import SuccessView from '../views/StripeSuccessView.vue';
 import CancelView from '../views/StripeCancelView.vue';
 import CheckoutView from '../views/StripeCheckoutView.vue';
@@ -11,6 +9,7 @@ import NotFound from '../views/404View.vue';
 import UserView from '@/views/UserView.vue';
 import SearchView from '@/views/SearchView.vue';
 import AddHouseView from '@/views/AddHouseView.vue';
+import UserDetails from '@/views/subviews/UserDetails.vue';
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -18,7 +17,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView,
+      component: () => import('@/views/HomeView.vue'),
     },
     {
       path: '/about',
@@ -29,6 +28,13 @@ const router = createRouter({
       path: '/user',
       name: 'user',
       component: UserView,
+      children: [
+        {
+          path: '/user/details',
+          name: 'userDetails',
+          component: UserDetails,
+        },
+      ],
     },
     {
       path: '/search',
@@ -53,7 +59,7 @@ const router = createRouter({
         {
           path: '/form/register',
           name: 'register',
-          component: RegisterView,
+          component: () => import('@/views/subviews/RegisterView.vue'),
         },
       ],
     },
