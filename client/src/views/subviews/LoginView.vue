@@ -11,7 +11,7 @@
     </div>
 
     <div style="font-family: Keep Calm; text-align: center">
-      <q-btn :disabled="submitInProgress" type="submit" rounded color="light-blue-3" style="width: 300px" align="center" class="btn block">
+      <q-btn :disabled="submitInProgress" type="submit" color="primary" class="btn block" rounded style="width: 300px" align="center">
         <div v-if="!submitInProgress">Login</div>
         <div v-else>
           <q-spinner-tail size="1em" thickness="5" />
@@ -78,9 +78,5 @@ async function submitLogin() {
   line-height: 2.31rem;
 
   background-color: #ec58646a;
-}
-
-body {
-  background-color: #4b506e;
 }
 </style>

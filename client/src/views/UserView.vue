@@ -6,11 +6,27 @@
         <p @click="$router.push('/form')" class="text-subtitle1 text-center text-white cursor-pointer" style="font-family: Quicksand Book">Proceed to Login</p>
       </div>
 
-      <div v-else>
-        <div class="text-center text-white" style="font-family: Keep Calm">
+      <div v-else style="font-family: Keep Calm">
+        <div class="text-center text-white">
           <q-img :src="userStore.user.profilePic" class="profilePic"></q-img>
           <span class="text-h4 block q-mt-md">{{ userStore.user.name }}</span>
-          <span class="text-body1 block" style="color: #717171">{{ userStore.user.email }}</span>
+          <span class="text-body2 block text-grey">{{ userStore.user.email }}</span>
+        </div>
+
+        <div class="row justify-center text-white q-mt-xl">
+          <div class="userIcon row content-center justify-center">
+            <q-icon class="q-m-lg" name="fa-regular fa-user" size="sm" />
+          </div>
+          <div class="column justify-evenly q-ml-md">
+            <span class="block" style="font-size: 0.85rem">My Account</span>
+            <span class="block text-grey" style="font-size: 0.65rem">Make changes to your account</span>
+          </div>
+          <div class="column justify-center align-center">
+            <q-icon name="fa-solid fa-triangle-exclamation" size="xs" color="red" class="q-ml-lg" />
+          </div>
+          <div class="column justify-center align-center">
+            <q-btn to="/user/details" round unelevated color="secondary" text-color="grey" size="sm" icon="fa-solid fa-chevron-right" class="q-ml-md" />
+          </div>
         </div>
       </div>
     </q-page-container>
@@ -29,13 +45,16 @@ const userStore = useUserStore();
 </script>
 
 <style scoped>
-body {
-  background-color: #4b506e;
-}
-
 .profilePic {
   width: 25vw;
-  margin-top: 15vh;
+  margin-top: 10vh;
   border-radius: 999px;
+}
+
+.userIcon {
+  border-radius: 999px;
+  background-color: #545975;
+  height: 60px;
+  width: 60px;
 }
 </style>
