@@ -4,7 +4,10 @@ const user = validator({
   type: 'object',
   properties: {
     userID: { type: 'string' },
-    name: { type: 'string' },
+    username: { type: 'string' },
+    firstname: { type: ['string', 'null'] },
+    middlename: { type: ['string', 'null'] },
+    lastname: { type: ['string', 'null'] },
     addressID: { type: ['string', 'null'] },
     company: { type: ['string', 'null'] },
     phone: { type: ['string', 'null'] },
