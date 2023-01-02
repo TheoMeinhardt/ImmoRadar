@@ -1,18 +1,8 @@
 import { Request, Response, raw } from 'express';
-import Stripe from 'stripe';
 import { address, mapquestRes, realEstate, shortRealEstate } from '../types';
 import { makeReadableAddress, addressGeocode } from '../helpers';
 import { realEstateValidator } from '../validators';
 import * as db from '../models';
-
-const stripe: Stripe = new Stripe(process.env.SECRET_KEY ? process.env.SECRET_KEY : '', {
-  apiVersion: '2022-08-01',
-  appInfo: {
-    name: 'immoradar',
-    version: '0.0.1',
-    url: 'immoradar.at',
-  },
-});
 
 // ---------------
 // GET Controllers
@@ -103,7 +93,9 @@ async function patchRealEstate(req: Request, res: Response): Promise<void> {
 
     // create a new real estate object with the data from the original real estate and overwrite every property with the data from the real estate data object
     const patchedRealEstate: realEstate = { ...originalRealEstate, ...realEstateData };
-    patchedRealEstate.address = realEstateData.address ? { ...originalAddress, ...realEstateData.address } : originalAddress;
+    patchedRealEstate.address = realEstateData.address
+      ? { ...originalAddress, ...realEstateData.address }
+      : originalAddress;
 
     // Json verification
     realEstateValidator(patchedRealEstate);
@@ -150,7 +142,11 @@ async function postToWebhook(req: Request, res: Response): Promise<void> {
   const sig = req.headers['stripe-signature'];
   let event: any;
   try {
-    event = stripe.webhooks.constructEvent(req.body, sig as string | string[] | Buffer, process.env.END_POINT_SECRET ?? '');
+    event = stripe.webhooks.constructEvent(
+      req.body,
+      sig as string | string[] | Buffer,
+      process.env.END_POINT_SECRET ?? '',
+    );
   } catch (err: any) {
     res.status(400).send(`Webhook Error: ${err.message}`);
   }
@@ -173,4 +169,12 @@ async function postToWebhook(req: Request, res: Response): Promise<void> {
   res.json({ received: true });
 }
 
-export { getAllRealEstates, getOneRealEstate, getShortendRealEstates, addRealEstate, deleteRealEstate, patchRealEstate, postToWebhook };
+export {
+  getAllRealEstates,
+  getOneRealEstate,
+  getShortendRealEstates,
+  addRealEstate,
+  deleteRealEstate,
+  patchRealEstate,
+  postToWebhook,
+};
