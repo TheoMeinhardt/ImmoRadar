@@ -39,6 +39,7 @@ async function addUser(req: Request, res: Response): Promise<void> {
   if (userValidator(newUser)) {
     newUser.password = await auth.hashString(newUser.password);
     const addedUser = await db.addUser(newUser);
+    if (addedUser?.address) await db.addAddress(addedUser.address);
 
     if (!addedUser) res.status(500).end();
     res.status(200).end();
@@ -89,7 +90,18 @@ async function updateUser(req: Request, res: Response): Promise<void> {
 
     // JSON validation
     if (userValidator(newUser)) {
+      if (newUser.address) {
+        if (newUser.address.addressID) {
+          const addedAddress = await db.updateAdress(newUser.address.addressID, newUser.address);
+          newUser.address.addressID = addedAddress.addressID;
+        } else {
+          const addedAddress = await db.addAddress(newUser.address);
+          newUser.address.addressID = addedAddress.addressID;
+        }
+      }
+
       const updatedUser: user = await db.patchUser(id, newUser);
+
       res.status(200).send(`updated user with id "${updatedUser.userID}"`);
     } else {
       res.status(400).send(userValidator.errors);
@@ -110,6 +122,7 @@ async function deleteUser(req: Request, res: Response): Promise<void> {
   // check if user exists
   if (await userExists(id)) {
     const deletedUser = await db.deleteUser(id);
+    if (deletedUser?.address?.addressID) await db.deleteAddress(deletedUser.address.addressID);
 
     if (deletedUser) res.status(200).send(`deleted user with id "${deletedUser.userID}"`);
     else res.status(500).end();
