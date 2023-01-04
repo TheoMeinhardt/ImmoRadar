@@ -2,7 +2,17 @@
   <form @submit.prevent="updateProfile">
     <q-input label="Whats your Email?" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="profileInput" outlined v-model="email" />
     <q-input label="Phone Number" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="profileInput" outlined v-model="phone" />
-    <q-input label="Whats your Address?" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="profileInput" outlined />
+    <q-input label="Whats your Address?" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="profileInput" outlined v-model="address" />
+
+    <div class="twoInputsPerLine">
+      <q-input label="ZIP-Code" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="smallerProfileInput" outlined v-model="zip" />
+      <q-input label="City" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="smallerProfileInput" outlined v-model="city" />
+    </div>
+
+    <div class="twoInputsPerLine">
+      <q-input label="State" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="smallerProfileInput" outlined v-model="state" />
+      <q-input label="Country" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="smallerProfileInput" outlined v-model="country" />
+    </div>
 
     <div class="twoInputsPerLine">
       <q-input label="Firstname" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="smallerProfileInput" outlined v-model="fname" />
@@ -40,8 +50,11 @@ const fname = ref(userStore.user.firstname);
 const mname = ref(userStore.user.middlename);
 const lname = ref(userStore.user.lastname);
 const company = ref(userStore.user.company);
-
-console.log(userStore.user);
+const address = ref(userStore.user.address ? userStore.user.address.address : undefined);
+const zip = ref(userStore.user.address ? userStore.user.address.zip : undefined);
+const city = ref(userStore.user.address ? userStore.user.address.city : undefined);
+const state = ref(userStore.user.address ? userStore.user.address.state : undefined);
+const country = ref(userStore.user.address ? userStore.user.address.country : undefined);
 
 async function updateProfile() {
   submitInProgress.value = true;
@@ -53,6 +66,14 @@ async function updateProfile() {
       middlename: mname.value,
       lastname: lname.value,
       company: company.value,
+      address: {
+        addressID: userStore.user.address ? (userStore.user.address.addressID ? userStore.user.address.addressID : null) : null,
+        address: address.value,
+        zip: Number(zip.value),
+        city: city.value,
+        state: state.value,
+        country: country.value,
+      },
     });
 
     if (res.status === 200) {
