@@ -1,5 +1,19 @@
 <template>
-  <form @submit.prevent="updateProfile">
+  <div v-show="true" class="header text-center text-white">
+    <div class="headerProfilePic">
+      <q-img v-if="userStore.user.profilePic" :src="userStore.user.profilePic" class="profilePic"></q-img>
+      <div v-else class="userIconBigger">
+        <q-icon name="fa-regular fa-user" size="xl" />
+      </div>
+    </div>
+
+    <div class="headerText">
+      <span class="headerName text-h4">{{ userStore.user.username }}</span>
+      <span class="headerEmail text-body2 text-grey">{{ userStore.user.email }}</span>
+    </div>
+  </div>
+
+  <form @submit.prevent="updateProfile" class="userDetailsForm">
     <q-input label="Whats your Email?" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="profileInput" outlined v-model="email" />
     <q-input label="Phone Number" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="profileInput" outlined v-model="phone" />
     <q-input label="Whats your Address?" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="profileInput" outlined v-model="address" />
@@ -88,6 +102,133 @@ async function updateProfile() {
 </script>
 
 <style scoped>
+.header {
+  margin-top: 10vh;
+  width: 100%;
+
+  animation: showDetailsHeader 1s ease forwards;
+}
+
+@keyframes showDetailsHeader {
+  0% {
+    height: 20vh;
+  }
+  100% {
+    margin-top: 1vh;
+    height: 10vh;
+  }
+}
+
+.headerText {
+  display: inline-flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+
+  position: absolute;
+  top: 15%;
+  left: 17%;
+
+  width: fit-content;
+  height: 8vh;
+
+  animation: showDetailsHeaderText 1s ease forwards;
+}
+
+@keyframes showDetailsHeaderText {
+  0% {
+    margin: 0px;
+  }
+  100% {
+    transform: scale(0.6);
+
+    left: 25%;
+    top: 1.5%;
+
+    margin: 0px;
+    margin-top: 10px;
+  }
+}
+
+.headerName {
+  display: inline;
+}
+
+.headerEmail {
+  display: inline;
+}
+
+.headerProfilePic {
+  display: inline;
+  width: fit-content;
+
+  position: absolute;
+  left: 39%;
+  top: 0%;
+
+  animation: showDetailsHeaderProfilePic 1s ease forwards;
+}
+
+@keyframes showDetailsHeaderProfilePic {
+  0% {
+    left: 39%;
+    top: 0%;
+  }
+  100% {
+    margin-right: -2rem;
+    left: 12%;
+    top: 0%;
+  }
+}
+
+.profilePic {
+  display: inline;
+  width: 25vw;
+  border-radius: 999px;
+
+  animation: showDetailsProfilePic 1s ease forwards;
+}
+
+@keyframes showDetailsProfilePic {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0.5);
+  }
+}
+
+.userIconBigger {
+  border-radius: 999px;
+  background-color: #545975;
+  height: 25vw;
+  width: 25vw;
+  margin-left: auto;
+  margin-right: auto;
+
+  display: inline-flex;
+  flex-direction: row;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+
+  animation: showDetailsProfilePic 1s ease forwards;
+}
+
+.userDetailsForm {
+  animation: showDetailsForm 2s ease forwards;
+}
+
+@keyframes showDetailsForm {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 .profileInput {
   font-family: Quicksand Book;
   width: 80vw;
