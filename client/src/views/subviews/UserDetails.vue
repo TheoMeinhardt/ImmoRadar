@@ -14,29 +14,50 @@
   </div>
 
   <form @submit.prevent="updateProfile" class="userDetailsForm">
-    <q-input label="Whats your Email?" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="profileInput" outlined v-model="email" />
-    <q-input label="Phone Number" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="profileInput" outlined v-model="phone" />
-    <q-input label="Whats your Address?" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="profileInput" outlined v-model="address" />
+    <q-list class="text-white bg-secondary q-mt-lg">
+      <q-expansion-item :default-opened="true" :expand-icon-toggle="true" expand-icon-class="text-white" dense label="Personal Information">
+        <q-card class="bg-secondary">
+          <q-card-section class="q-pt-sm">
+            <q-input label="Whats your Email?" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="profileInput" outlined v-model="email" />
+            <q-input label="Phone Number" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="profileInput q-mt-md" outlined v-model="phone" />
+            <q-input label="Company" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="profileInput q-mt-md" outlined v-model="company" />
+          </q-card-section>
+        </q-card>
+      </q-expansion-item>
 
-    <div class="twoInputsPerLine">
-      <q-input label="ZIP-Code" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="smallerProfileInput" outlined v-model="zip" />
-      <q-input label="City" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="smallerProfileInput" outlined v-model="city" />
-    </div>
+      <q-expansion-item :default-opened="true" :expand-icon-toggle="true" expand-icon-class="text-white" dense label="Name">
+        <q-card class="bg-secondary">
+          <q-card-section>
+            <div class="twoInputsPerLine">
+              <q-input label="Firstname" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="smallerProfileInput" outlined v-model="fname" />
+              <q-input label="Middlename" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="smallerProfileInput" outlined v-model="mname" />
+            </div>
 
-    <div class="twoInputsPerLine">
-      <q-input label="State" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="smallerProfileInput" outlined v-model="state" />
-      <q-input label="Country" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="smallerProfileInput" outlined v-model="country" />
-    </div>
+            <q-input label="Lastname" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="profileInput q-mt-md" outlined v-model="lname" />
+          </q-card-section>
+        </q-card>
+      </q-expansion-item>
 
-    <div class="twoInputsPerLine">
-      <q-input label="Firstname" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="smallerProfileInput" outlined v-model="fname" />
-      <q-input label="Middlename" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="smallerProfileInput" outlined v-model="mname" />
-    </div>
+      <q-expansion-item :default-opened="true" :expand-icon-toggle="true" expand-icon-class="text-white" dense label="Address">
+        <q-card class="bg-secondary">
+          <q-card-section>
+            <q-input label="Whats your Address?" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="profileInput" outlined v-model="address" />
 
-    <q-input label="Lastname" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="profileInput" outlined v-model="lname" />
-    <q-input label="Company" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="profileInput" outlined v-model="company" />
+            <div class="twoInputsPerLine">
+              <q-input label="ZIP-Code" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="smallerProfileInput q-mt-md" outlined v-model="zip" />
+              <q-input label="City" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="smallerProfileInput q-mt-md" outlined v-model="city" />
+            </div>
 
-    <q-btn :disabled="submitInProgress" type="submit" color="primary" class="btn block updateButton" rounded>
+            <div class="twoInputsPerLine">
+              <q-input label="State" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="smallerProfileInput q-mt-md" outlined v-model="state" />
+              <q-input label="Country" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="smallerProfileInput q-mt-md" outlined v-model="country" />
+            </div>
+          </q-card-section>
+        </q-card>
+      </q-expansion-item>
+    </q-list>
+
+    <q-btn :disabled="submitInProgress" type="submit" color="primary" class="btn block q-mt-lg updateButton" rounded>
       <div v-if="!submitInProgress" class="text-subtitle1">Update Profile</div>
       <div v-else>
         <q-spinner-tail size="1em" thickness="5" />
@@ -44,6 +65,8 @@
       </div>
     </q-btn>
   </form>
+
+  <div style="height: 150px"></div>
 </template>
 
 <script setup>
@@ -232,8 +255,8 @@ async function updateProfile() {
 .profileInput {
   font-family: Quicksand Book;
   width: 80vw;
-  margin: auto;
-  margin-top: 2.5vh;
+  margin-left: auto;
+  margin-right: auto;
 
   border-radius: 5px 5px 0px 0px;
 }
@@ -249,7 +272,6 @@ async function updateProfile() {
 }
 
 .smallerProfileInput {
-  margin-top: 2.5vh;
   width: 38vw;
 
   font-family: Quicksand Book;
@@ -258,7 +280,6 @@ async function updateProfile() {
 .updateButton {
   width: 80vw;
   height: 5vh;
-  margin-top: 2.5vh;
 
   display: flex;
   flex-direction: row;
