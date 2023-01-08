@@ -13,6 +13,7 @@ import AddHouseView from '@/views/AddHouseView.vue';
 import AddHouseOne from '@/views/subviews/AddHouseOne.vue';
 import AddHouseTwo from '@/views/subviews/AddHouseTwo.vue';
 import AddHouseThree from '@/views/subviews/AddHouseThree.vue';
+import AddHouseFinal from '@/views/subviews/AddHouseFinal.vue';
 import UserOverview from '@/views/subviews/UserOverview.vue';
 
 const router = createRouter({
@@ -70,6 +71,11 @@ const router = createRouter({
           path: '/addhouse/addhousethree',
           name: 'AddHouseThree',
           component: AddHouseThree,
+        },
+        {
+          path: '/addhouse/addhousefinal',
+          name: 'AddHouseFinal',
+          component: AddHouseFinal,
         },
       ],
     },
