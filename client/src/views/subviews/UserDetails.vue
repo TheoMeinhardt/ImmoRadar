@@ -1,7 +1,7 @@
 <template>
   <div v-show="true" class="header text-center text-white">
     <div class="headerProfilePic">
-      <q-img v-if="userStore.user.profilePic" :src="userStore.user.profilePic" class="profilePic"></q-img>
+      <div v-if="userStore.user.profilePic" class="userIconBigger"><q-img :src="userStore.user.profilePic" class="profilePic"></q-img></div>
       <div v-else class="userIconBigger">
         <q-icon name="fa-regular fa-user" size="xl" />
       </div>
@@ -18,9 +18,9 @@
       <q-expansion-item :default-opened="true" :expand-icon-toggle="true" expand-icon-class="text-white" dense label="Personal Information">
         <q-card class="bg-secondary">
           <q-card-section class="q-pt-sm">
-            <q-input label="Whats your Email?" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="profileInput" outlined v-model="email" />
-            <q-input label="Phone Number" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="profileInput q-mt-md" outlined v-model="phone" />
-            <q-input label="Company" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="profileInput q-mt-md" outlined v-model="company" />
+            <q-input label="Email *" :rules="emailRules" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="profileInput" outlined v-model="email" />
+            <q-input label="Phone Number" :rules="phoneRules" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="profileInput q-mt-sm" outlined v-model="phone" />
+            <q-input label="Company" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="profileInput q-mt-sm" outlined v-model="company" />
           </q-card-section>
         </q-card>
       </q-expansion-item>
@@ -122,6 +122,25 @@ async function updateProfile() {
     console.log(err);
   }
 }
+
+//
+// Form validation
+//
+
+function validateEmail(value) {
+  const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(value).toLowerCase());
+}
+
+// write a function which validates an international phone number
+function validatePhoneNumber(value) {
+  const re = /^(\+|00)[1-9][0-9 \-().]{7,32}$/;
+
+  return re.test(String(value));
+}
+
+const emailRules = [(val) => val.length > 0 || 'You need to provide an Email!', (val) => validateEmail(val) || 'Provided email is not valid'];
+const phoneRules = [(val) => validatePhoneNumber(val) || 'Provided phone number is not valid'];
 </script>
 
 <style scoped>
@@ -149,12 +168,14 @@ async function updateProfile() {
   justify-content: center;
   align-items: center;
 
+  float: left;
+
   position: absolute;
   top: 15%;
-  left: 17%;
+  right: 17%;
 
-  width: fit-content;
   height: 8vh;
+  width: 15rem;
 
   animation: showDetailsHeaderText 1s ease forwards;
 }
@@ -166,7 +187,7 @@ async function updateProfile() {
   100% {
     transform: scale(0.6);
 
-    left: 25%;
+    right: 10%;
     top: 1.5%;
 
     margin: 0px;
@@ -174,12 +195,8 @@ async function updateProfile() {
   }
 }
 
-.headerName {
-  display: inline;
-}
-
-.headerEmail {
-  display: inline;
+.headerName .headerEmail {
+  display: inline-block;
 }
 
 .headerProfilePic {
@@ -199,18 +216,15 @@ async function updateProfile() {
     top: 0%;
   }
   100% {
-    margin-right: -2rem;
     left: 12%;
     top: 0%;
   }
 }
 
 .profilePic {
-  display: inline;
-  width: 25vw;
+  display: block;
+  width: 100%;
   border-radius: 999px;
-
-  animation: showDetailsProfilePic 1s ease forwards;
 }
 
 @keyframes showDetailsProfilePic {

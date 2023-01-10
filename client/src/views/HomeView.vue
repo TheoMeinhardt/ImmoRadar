@@ -16,3 +16,9 @@
 import TheMap from '../components/TheMap.vue';
 import NavBar from '../components/NavBar.vue';
 </script>
+
+<style>
+body {
+  zoom: 1;
+}
+</style>
