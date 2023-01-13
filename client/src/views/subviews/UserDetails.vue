@@ -9,11 +9,10 @@
 
     <div class="headerText">
       <span class="headerName text-h4">{{ userStore.user.username }}</span>
-      <span class="headerEmail text-body2 text-grey">{{ userStore.user.email }}</span>
     </div>
   </div>
 
-  <form @submit.prevent="updateProfile" class="userDetailsForm">
+  <q-form @submit="updateProfile" class="userDetailsForm">
     <q-list class="text-white bg-secondary q-mt-lg">
       <q-expansion-item :default-opened="true" :expand-icon-toggle="true" expand-icon-class="text-white" dense label="Personal Information">
         <q-card class="bg-secondary">
@@ -29,11 +28,11 @@
         <q-card class="bg-secondary">
           <q-card-section>
             <div class="twoInputsPerLine">
-              <q-input label="Firstname" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="smallerProfileInput" outlined v-model="fname" />
-              <q-input label="Middlename" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="smallerProfileInput" outlined v-model="mname" />
+              <q-input label="Firstname *" :rules="fnameRules" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="smallerProfileInput" outlined v-model="fname" />
+              <q-input label="Middlename" :rules="mnameRules" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="smallerProfileInput" outlined v-model="mname" />
             </div>
 
-            <q-input label="Lastname" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="profileInput q-mt-md" outlined v-model="lname" />
+            <q-input label="Lastname *" :rules="lnameRules" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="profileInput q-mt-sm" outlined v-model="lname" />
           </q-card-section>
         </q-card>
       </q-expansion-item>
@@ -41,16 +40,16 @@
       <q-expansion-item :default-opened="true" :expand-icon-toggle="true" expand-icon-class="text-white" dense label="Address">
         <q-card class="bg-secondary">
           <q-card-section>
-            <q-input label="Whats your Address?" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="profileInput" outlined v-model="address" />
+            <q-input label="Whats your Address?" :rules="addressRules" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="profileInput" outlined v-model="address" />
 
             <div class="twoInputsPerLine">
-              <q-input label="ZIP-Code" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="smallerProfileInput q-mt-md" outlined v-model="zip" />
-              <q-input label="City" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="smallerProfileInput q-mt-md" outlined v-model="city" />
+              <q-input label="ZIP-Code" :rules="zipRules" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="smallerProfileInput q-mt-sm" outlined v-model="zip" />
+              <q-input label="City" :rules="cityRules" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="smallerProfileInput q-mt-sm" outlined v-model="city" />
             </div>
 
             <div class="twoInputsPerLine">
-              <q-input label="State" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="smallerProfileInput q-mt-md" outlined v-model="state" />
-              <q-input label="Country" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="smallerProfileInput q-mt-md" outlined v-model="country" />
+              <q-input label="State" :rules="stateRules" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="smallerProfileInput q-mt-sm" outlined v-model="state" />
+              <q-input label="Country" :rules="countryRules" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="smallerProfileInput q-mt-sm" outlined v-model="country" />
             </div>
           </q-card-section>
         </q-card>
@@ -64,14 +63,14 @@
         <q-tooltip :offset="[0, 8]">QSpinnerTail</q-tooltip>
       </div>
     </q-btn>
-  </form>
+  </q-form>
 
   <div style="height: 150px"></div>
 </template>
 
 <script setup>
 import axios from 'axios';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { useUserStore } from '../../stores/user';
@@ -127,20 +126,88 @@ async function updateProfile() {
 // Form validation
 //
 
+const emailRules = [(val) => val.length > 0 || 'You need to provide an Email!', (val) => validateEmail(val) || 'Provided email is not valid'];
+const phoneRules = [
+  (val) => {
+    if (val.length >= 1) validatePhoneNumber(val) || 'Provided phone number is not valid';
+  },
+];
+
+const fnameRules = [(val) => val.length > 0 || 'Provide a Firstname', (val) => validateJustLetters(val) || 'Invalid name'];
+const mnameRules = [(val) => validateJustLetters(val) || 'Invalid name'];
+const lnameRules = [(val) => val.length > 0 || 'Provide a Surname', (val) => validateJustLetters(val) || 'Invalid name'];
+
+let partialAddress = false;
+
+// Checks if one of the address input's is filled with data. If one is, you have to fill out every other input.
+// Should prevent just submitting a zip for exapmple.
+watch([address, zip, city, state, country], ([newAdrs, newZip, newCity, newState, newCountry]) => {
+  partialAddress = newAdrs.length > 0 || newZip.length > 0 || newCity.length > 0 || newState.length > 0 || newCountry.length > 0 ? true : false;
+});
+
+const addressRules = [
+  (val) => {
+    if (partialAddress) {
+      if (!val.length > 0) return 'You need to provide an address!';
+      else if (!validateAddress(val)) return 'Provided address is not valid!';
+      else return true;
+    } else return true;
+  },
+];
+const zipRules = [
+  (val) => {
+    if (partialAddress) {
+      if (!val.length > 0) return 'Provide a ZIP-Code';
+      else if (isNaN(val) || Number(val) > 99950 || Number(val) < 501) return 'Invalid ZIP-Code';
+      else return true;
+    } else return true;
+  },
+];
+
+const cityRules = [
+  (val) => {
+    if (partialAddress) {
+      if (!val.length > 0) return 'Provide a City';
+      else return true;
+    } else return true;
+  },
+];
+const stateRules = [
+  (val) => {
+    if (partialAddress) {
+      if (!val.length > 0) return 'Provide a State';
+      else return true;
+    } else return true;
+  },
+];
+const countryRules = [
+  (val) => {
+    if (partialAddress) {
+      if (!val.length > 0) return 'Provide a Country';
+      else return true;
+    } else return true;
+  },
+];
+
+function validateJustLetters(value) {
+  const re = /^[A-Za-z]+$/;
+  return re.test(String(value));
+}
+
 function validateEmail(value) {
   const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(String(value).toLowerCase());
 }
 
-// write a function which validates an international phone number
 function validatePhoneNumber(value) {
   const re = /^(\+|00)[1-9][0-9 \-().]{7,32}$/;
-
   return re.test(String(value));
 }
 
-const emailRules = [(val) => val.length > 0 || 'You need to provide an Email!', (val) => validateEmail(val) || 'Provided email is not valid'];
-const phoneRules = [(val) => validatePhoneNumber(val) || 'Provided phone number is not valid'];
+function validateAddress(value) {
+  const re = /^[A-Za-z0-9ßäöü/'.\-\s,]*$/;
+  return re.test(String(value));
+}
 </script>
 
 <style scoped>
@@ -239,8 +306,8 @@ const phoneRules = [(val) => validatePhoneNumber(val) || 'Provided phone number 
 .userIconBigger {
   border-radius: 999px;
   background-color: #545975;
-  height: 25vw;
-  width: 25vw;
+  height: 7rem;
+  width: 7rem;
   margin-left: auto;
   margin-right: auto;
 
@@ -303,5 +370,10 @@ const phoneRules = [(val) => validatePhoneNumber(val) || 'Provided phone number 
 
 .q-field--outlined :deep(.q-field__control) {
   border-radius: 5px 5px 0px 0px !important;
+}
+
+.q-field--error :deep(.q-field__bottom) {
+  font-weight: bolder;
+  color: #dfdf36;
 }
 </style>

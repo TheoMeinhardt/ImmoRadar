@@ -10,6 +10,7 @@ export const useUserStore = defineStore('userStore', {
   },
   actions: {
     checkIfProfileNeedsUpdate() {
+      console.log(this.user);
       this.needProfileUpdate = !(this.user.username && this.user.firstname && this.user.lastname && this.user.phone);
     },
   },
