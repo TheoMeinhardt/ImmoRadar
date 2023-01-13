@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { verifyJwt } from '../authentication';
 
-function authenticated(req: Request, res: Response, next: NextFunction): void {
+function authorize(req: Request, res: Response, next: NextFunction): void {
   const token = req.headers.authorization;
 
   if (!token) res.status(400).send('No Authorization Token specified');
@@ -9,4 +9,4 @@ function authenticated(req: Request, res: Response, next: NextFunction): void {
   else res.status(401).send('Unauthorized');
 }
 
-export default authenticated;
+export default authorize;
