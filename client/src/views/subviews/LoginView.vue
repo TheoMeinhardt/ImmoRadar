@@ -58,6 +58,8 @@ async function submitLogin() {
       userStore.checkIfProfileNeedsUpdate();
 
       axios.defaults.headers.common['authorization'] = userStore.jwt;
+      console.log(userStore.jwt);
+      console.log(axios.defaults.headers.common);
 
       router.push('/');
     } else if (res.status === 200 && res.data === false) {
