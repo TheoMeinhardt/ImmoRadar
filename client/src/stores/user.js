@@ -6,11 +6,11 @@ export const useUserStore = defineStore('userStore', {
       jwt: String,
       user: Object,
       needProfileUpdate: Boolean,
+      isLoggedIn: false,
     };
   },
   actions: {
     checkIfProfileNeedsUpdate() {
-      console.log(this.user);
       this.needProfileUpdate = !(this.user.username && this.user.firstname && this.user.lastname && this.user.phone);
     },
   },

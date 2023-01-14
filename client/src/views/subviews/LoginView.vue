@@ -31,10 +31,13 @@
 import axios from 'axios';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+
 import { useUserStore } from '../../stores/user';
+import { useRealEstateStore } from '../../stores/realEstates';
 
 const router = useRouter();
 const userStore = useUserStore();
+const realEstateStore = useRealEstateStore();
 
 const email = ref('');
 const password = ref('');
@@ -55,12 +58,12 @@ async function submitLogin() {
       userStore.jwt = jwt;
       userStore.user = user;
       userStore.user.password = 'Fantasier nicht';
+      userStore.isLoggedIn = true;
       userStore.checkIfProfileNeedsUpdate();
 
       axios.defaults.headers.common['authorization'] = userStore.jwt;
-      console.log(userStore.jwt);
-      console.log(axios.defaults.headers.common);
 
+      realEstateStore.fetchAllRealEstateShort();
       router.push('/');
     } else if (res.status === 200 && res.data === false) {
       loginErrors.value = 'Invalid Email or Password!';
