@@ -6,7 +6,7 @@ dotenv.config();
 function signJWT(payload: jwt.JwtPayload): string {
   const options: jwt.SignOptions = {
     algorithm: 'HS256',
-    expiresIn: 900000,
+    expiresIn: 600000,
   };
 
   // eslint-disable-next-line no-param-reassign
