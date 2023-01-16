@@ -21,11 +21,6 @@ const stripe: Stripe = new Stripe(process.env.SECRET_KEY ? process.env.SECRET_KE
 // Controller for sending all Real Estates to the client
 async function getAllRealEstates(req: Request, res: Response): Promise<void> {
   const allRealEstates: realEstate[] = await db.getAllRealEstates();
-
-  for await (const re of allRealEstates) {
-    re.address = await db.getAddress(re.addressID);
-  }
-
   res.status(200).json(allRealEstates);
 }
 
@@ -35,8 +30,6 @@ async function getOneRealEstate(req: Request, res: Response): Promise<void> {
   const oneRealEstate = await db.getOneRealEstate(id);
 
   if (oneRealEstate) {
-    oneRealEstate.address = await db.getAddress(oneRealEstate.addressID);
-
     res.status(200).json(oneRealEstate);
   } else res.status(404).send('Not Found');
 }
@@ -46,8 +39,7 @@ async function getShortendRealEstates(req: Request, res: Response): Promise<void
   const longRealEstates: realEstate[] = await db.getAllRealEstates();
   const shortRealEstates: shortRealEstate[] = [];
 
-  for await (const { name, addressID, price, usableArea, rooms } of longRealEstates) {
-    const adrs = await db.getAddress(addressID);
+  for await (const { name, address: adrs, price, usableArea, rooms } of longRealEstates) {
     const geoinfo: mapquestRes = await addressGeocode(adrs as address);
 
     shortRealEstates.push({
@@ -99,7 +91,7 @@ async function patchRealEstate(req: Request, res: Response): Promise<void> {
 
   // check if real estate exists
   if (originalRealEstate) {
-    const originalAddress = await db.getAddress(originalRealEstate?.addressID);
+    const originalAddress = originalRealEstate.address;
 
     // create a new real estate object with the data from the original real estate and overwrite every property with the data from the real estate data object
     const patchedRealEstate: realEstate = { ...originalRealEstate, ...realEstateData };

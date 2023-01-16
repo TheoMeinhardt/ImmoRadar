@@ -14,7 +14,6 @@ const server = express();
 const PORT = process.env.PORT ?? 3000;
 
 const whitelist = [process.env.PROD === 'true' ? 'https://immoradar.onrender.com' : 'http://localhost:8080'];
-console.log(whitelist);
 const corsOptions: cors.CorsOptions = { origin: whitelist };
 
 server.use(cors(corsOptions));
