@@ -33,10 +33,14 @@ async function getUserById(req: Request, res: Response): Promise<void> {
 // Controller for adding an User with data from client to database
 async function addUser(req: Request, res: Response): Promise<void> {
   const newUser: user = req.body;
-  console.log(newUser);
 
   // JSON validation
   if (userValidator(newUser)) {
+    if (await db.getUserByEmail(newUser.email)) {
+      res.status(400).send('This email is already in use!');
+      return;
+    }
+
     newUser.password = await auth.hashString(newUser.password);
     const addedUser = await db.addUser(newUser);
     if (addedUser?.address) await db.addAddress(addedUser.address);
