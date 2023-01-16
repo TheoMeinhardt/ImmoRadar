@@ -3,21 +3,38 @@ import { ref } from 'vue';
 import NavBar from '@/components/NavBar.vue';
 
 const step = ref(1);
-const constructionYear = ref('');
+const estate = ref('');
 const address = ref('');
 const city = ref('');
-const estate = ref('');
+const constructionYear = ref('');
 const description = ref('Description');
-const estatePrice = ref('');
-const heatingPrice = ref('');
-const propArea = ref('');
-const useArea = ref('');
-const outArea = ref('');
+const estatePrice = ref(null);
+const heatingPrice = ref(null);
+const propArea = ref(null);
+const useArea = ref(null);
+const outArea = ref(null);
 const rooms = ref(null);
 const bathrooms = ref(null);
 const bedrooms = ref(null);
+const fgee = ref(null);
+const hwb = ref(null);
 const energyCertificate = ref(null); //ein File Object
+const heatingType = ref(null);
+const heatingCombustible = ref(null);
 const files = ref(null); //ein Array aus File Objects
+
+const heatingTypes = [
+  'Central Heating',
+  'Floor Heating',
+  'Electric Heating',
+  'Gas Heating',
+  'Wood Heating',
+  'Solar Heating',
+  'Heat Pump',
+  'Other',
+];
+
+const heatingCombustibles = ['Gas', 'Oil', 'Wood', 'Electricity', 'Solar', 'Heat Pump', 'Other'];
 
 const addRoom = () => {
   rooms.value++;
@@ -48,6 +65,11 @@ const removeBedroom = () => {
     bedrooms.value--;
   }
 };
+
+const sum = (num1, num2) => {
+  const res = num1 + num2;
+  return res;
+};
 </script>
 
 <template>
@@ -61,6 +83,15 @@ const removeBedroom = () => {
         flat
         header-nav="true"
       >
+        <div class="text-center">
+          <div
+            class="fontSize q-mt-md text-white"
+            style="font-family: Quicksand; text-align: center"
+          >
+            Create new real estate
+            <q-icon class="q-ml-sm" name="fa-solid fa-house-chimney-medical"></q-icon>
+          </div>
+        </div>
         <q-step
           :name="1"
           title=""
@@ -77,6 +108,7 @@ const removeBedroom = () => {
               :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }"
               class="q-my-md myInput"
               borderless
+              :rules="[(val) => !!val || 'Please enter a name']"
             ></q-input>
             <q-input
               v-model="address"
@@ -104,6 +136,11 @@ const removeBedroom = () => {
               :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }"
               class="q-my-md myInput"
               borderless
+              :rules="[
+                (val) => !!val || 'Please enter a construction year',
+                (val) => val.length === 4 || 'Please enter a valid year',
+                (val) => val < 2024 || 'Please enter a valid year',
+              ]"
             ></q-input>
             <q-editor
               v-model="description"
@@ -145,6 +182,7 @@ const removeBedroom = () => {
               :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }"
               class="q-my-md myInput"
               borderless
+              :rules="[(val) => !!val || 'Please enter a price']"
             ></q-input>
             <q-input
               v-model="heatingPrice"
@@ -153,6 +191,7 @@ const removeBedroom = () => {
               :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }"
               class="q-my-md myInput"
               borderless
+              :rules="[(val) => !!val || 'Please enter a price']"
             ></q-input>
             <p class="text-white q-mt-xl" style="font-family: Keep Calm">Area</p>
             <q-input
@@ -162,6 +201,12 @@ const removeBedroom = () => {
               :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }"
               class="q-my-md myInput"
               borderless
+              :rules="[
+                (val) =>
+                  val <= sum(Number(this.useArea), Number(this.outArea)) ||
+                  'Please enter a valid area',
+                (val) => val > 0 || 'Please enter a valid area',
+              ]"
             ></q-input>
             <q-input
               v-model="useArea"
@@ -170,6 +215,7 @@ const removeBedroom = () => {
               :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }"
               class="q-my-md myInput"
               borderless
+              :rules="[(val) => (val) => val > 0 || 'Please enter a valid area']"
             ></q-input>
             <q-input
               v-model="outArea"
@@ -178,6 +224,7 @@ const removeBedroom = () => {
               :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }"
               class="q-my-md myInput"
               borderless
+              :rules="[(val) => (val) => val > 0 || 'Please enter a valid area']"
             ></q-input>
           </div>
         </q-step>
@@ -208,6 +255,7 @@ const removeBedroom = () => {
                   class="mySpecialInput"
                   borderless
                   style="width: 30%"
+                  :rules="[(val) => !!val || 'Please enter a number']"
                 ></q-input>
                 <q-btn
                   @click="removeRoom"
@@ -235,6 +283,7 @@ const removeBedroom = () => {
                   class="mySpecialInput"
                   borderless
                   style="width: 30%"
+                  :rules="[(val) => !!val || 'Please enter a number']"
                 ></q-input>
                 <q-btn
                   @click="removeBathroom"
@@ -262,6 +311,7 @@ const removeBedroom = () => {
                   class="mySpecialInput"
                   borderless
                   style="width: 30%"
+                  :rules="[(val) => !!val || 'Please enter a number']"
                 ></q-input>
                 <q-btn
                   @click="removeBedroom"
@@ -274,56 +324,25 @@ const removeBedroom = () => {
               </div>
             </div>
             <p class="text-white q-mt-xl" style="font-family: Keep Calm">Heating</p>
-            <q-btn-dropdown class="myInput" label="Type" no-caps style="height: 54px; width: 100%">
-              <q-list>
-                <q-item clickable v-close-popup @click="onItemClick">
-                  <q-item-section>
-                    <q-item-label>Photos</q-item-label>
-                  </q-item-section>
-                </q-item>
-
-                <q-item clickable v-close-popup @click="onItemClick">
-                  <q-item-section>
-                    <q-item-label>Videos</q-item-label>
-                  </q-item-section>
-                </q-item>
-
-                <q-item clickable v-close-popup @click="onItemClick">
-                  <q-item-section>
-                    <q-item-label>Articles</q-item-label>
-                  </q-item-section>
-                </q-item>
-              </q-list>
-            </q-btn-dropdown>
-            <q-btn-dropdown
+            <q-select
+              v-model="heatingType"
+              :options="heatingTypes"
+              class="myInput"
+              label="Type"
+              borderless
+            >
+            </q-select>
+            <q-select
+              v-model="heatingCombustible"
+              :options="heatingCombustibles"
               class="q-my-md myInput"
               label="Combustible"
-              no-caps
-              style="height: 54px; width: 100%"
+              borderless
             >
-              <q-list>
-                <q-item clickable v-close-popup @click="onItemClick">
-                  <q-item-section>
-                    <q-item-label>Photos</q-item-label>
-                  </q-item-section>
-                </q-item>
-
-                <q-item clickable v-close-popup @click="onItemClick">
-                  <q-item-section>
-                    <q-item-label>Videos</q-item-label>
-                  </q-item-section>
-                </q-item>
-
-                <q-item clickable v-close-popup @click="onItemClick">
-                  <q-item-section>
-                    <q-item-label>Articles</q-item-label>
-                  </q-item-section>
-                </q-item>
-              </q-list>
-            </q-btn-dropdown>
+            </q-select>
             <div class="q-gutter-md row items-start">
               <q-input
-                v-model="outArea"
+                v-model="fgee"
                 bg-color="white"
                 label="fGEE"
                 :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }"
@@ -332,7 +351,7 @@ const removeBedroom = () => {
                 style="width: 45%"
               ></q-input>
               <q-input
-                v-model="outArea"
+                v-model="hwb"
                 bg-color="white"
                 label="HWB"
                 :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }"
