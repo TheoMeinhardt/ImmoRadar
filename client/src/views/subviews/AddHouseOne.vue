@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 
-const price = ref('');
+const constructionYear = ref('');
 const address = ref('');
 const city = ref('');
 const estate = ref('');
@@ -11,15 +11,17 @@ const description = ref('');
 <template>
   <div class="q-mx-md q-mt-xl">
     <div class="text-center">
-      <div><q-img src="@/assets/0-3.svg"></q-img></div>
-      <div class="text-h6 q-mt-md text-white" style="font-family: Quicksand; text-align: center">
-        Create new real estate <q-icon name="fa-solid fa-house-chimney-medical"></q-icon>
+      <div><q-img width="300px" src="@/assets/0-3.svg"></q-img></div>
+      <div class="fontSize q-mt-md text-white" style="font-family: Quicksand; text-align: center">
+        Create new real estate
+        <q-icon class="q-ml-sm" name="fa-solid fa-house-chimney-medical"></q-icon>
       </div>
     </div>
+    <p class="text-white q-mt-xl" style="font-family: Keep Calm">Basic information</p>
     <q-input
-      v-model="price"
+      v-model="estate"
       bg-color="white"
-      label="Price"
+      label="Name of the estate"
       :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }"
       class="q-my-md myInput"
       borderless
@@ -43,9 +45,9 @@ const description = ref('');
       borderless
     ></q-input>
     <q-input
-      v-model="estate"
+      v-model="constructionYear"
       bg-color="white"
-      label="Name of the estate"
+      label="Construction Year"
       style="font-family: Quicksand Book"
       :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }"
       class="q-my-md myInput"
@@ -76,5 +78,9 @@ const description = ref('');
   border-radius: 5px 5px 0px 0px;
   background-color: white;
   padding: 5px;
+}
+
+.fontSize {
+  font-size: 17px;
 }
 </style>
