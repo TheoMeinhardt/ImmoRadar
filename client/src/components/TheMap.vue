@@ -20,4 +20,16 @@ const realEstateStore = useRealEstateStore();
 
 const token = import.meta.env.VITE_MAPBOX_TOKEN;
 const map = ref();
+
+let intervalMSconsumed = 0;
+const showLocationIntervall = setInterval(() => {
+  const button = document.querySelector('.mapboxgl-ctrl-geolocate');
+  if (button) {
+    button.click();
+    clearInterval(showLocationIntervall);
+  }
+
+  if (intervalMSconsumed >= 8000) clearInterval(showLocationIntervall);
+  intervalMSconsumed += 500;
+}, 500);
 </script>
