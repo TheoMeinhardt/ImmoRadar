@@ -63,7 +63,7 @@ async function login(req: Request, res: Response): Promise<void> {
   if (await auth.checkPassword(password, existingUser?.password as string)) {
     const payload: JwtPayload = {
       iss: existingUser?.email,
-      aud: 'client',
+      aud: 'client/user',
     };
 
     const returnObj = {
@@ -75,6 +75,16 @@ async function login(req: Request, res: Response): Promise<void> {
   } else {
     res.status(200).send(false);
   }
+}
+
+// Controller which handles guests
+async function guestlogin(req: Request, res: Response): Promise<void> {
+  const payload: JwtPayload = {
+    iss: 'guest',
+    aud: 'client/guest',
+  };
+
+  res.status(200).json({ jwt: auth.signJWT(payload, jwtScope.apiguest) });
 }
 
 // ------
@@ -134,4 +144,4 @@ async function deleteUser(req: Request, res: Response): Promise<void> {
   }
 }
 
-export { getAllUsers, getUserById, addUser, login, updateUser, deleteUser };
+export { getAllUsers, getUserById, addUser, login, guestlogin, updateUser, deleteUser };

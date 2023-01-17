@@ -21,7 +21,7 @@
 
       <div>
         <span class="text-white text-caption q-my-sm block">or</span>
-        <span @click="$router.push('/')" class="text-white cursor-pointer block">proceed without logging in</span>
+        <span @click="submitGuestLogin" class="text-white cursor-pointer block">proceed without logging in</span>
       </div>
     </div>
   </form>
@@ -73,6 +73,17 @@ async function submitLogin() {
     if (err.request.status === 400) loginErrors.value = 'Invalid Email or Password!';
     submitInProgress.value = false;
   }
+}
+
+async function submitGuestLogin() {
+  const { jwt } = await (await axios.post('/user/guest')).data;
+
+  userStore.jwt = jwt;
+  axios.defaults.headers.common['authorization'] = userStore.jwt;
+
+  realEstateStore.fetchAllRealEstateShort();
+
+  router.push('/');
 }
 </script>
 
