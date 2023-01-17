@@ -2,7 +2,7 @@ import { JwtPayload } from 'jsonwebtoken';
 import { Request, Response } from 'express';
 
 import * as db from '../models';
-import { user } from '../types';
+import { user, jwtScope } from '../types';
 import { userValidator } from '../validators';
 import { userExists } from '../helpers';
 import * as auth from '../authentication';
@@ -63,12 +63,11 @@ async function login(req: Request, res: Response): Promise<void> {
   if (await auth.checkPassword(password, existingUser?.password as string)) {
     const payload: JwtPayload = {
       iss: existingUser?.email,
-      sub: 'login',
       aud: 'client',
     };
 
     const returnObj = {
-      jwt: auth.signJWT(payload),
+      jwt: auth.signJWT(payload, jwtScope.apiuser),
       user: existingUser,
     };
 

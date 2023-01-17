@@ -2,24 +2,25 @@ import asyncHandler from 'express-async-handler';
 import { Router, raw } from 'express';
 
 import { authorize } from '../middleware';
+import { jwtScope } from '../types';
 import { realEstateControllers } from '../controllers';
 import { postToWebhook, createCheckout, createPortal, checkoutSession } from '../controllers/stripeServer';
 
 const router = Router();
 
 // GETs
-router.get('/', authorize, asyncHandler(realEstateControllers.getAllRealEstates));
-router.get('/short', authorize, asyncHandler(realEstateControllers.getShortendRealEstates));
-router.get('/:id', authorize, asyncHandler(realEstateControllers.getOneRealEstate));
+router.get('/', authorize(jwtScope.apiguest), asyncHandler(realEstateControllers.getAllRealEstates));
+router.get('/short', authorize(jwtScope.apiguest), asyncHandler(realEstateControllers.getShortendRealEstates));
+router.get('/:id', authorize(jwtScope.apiguest), asyncHandler(realEstateControllers.getOneRealEstate));
 
 // POSTs
-router.post('/', authorize, asyncHandler(realEstateControllers.addRealEstate));
+router.post('/', authorize(jwtScope.apiuser), asyncHandler(realEstateControllers.addRealEstate));
 
 // PATCHs
-router.patch('/:id', authorize, asyncHandler(realEstateControllers.patchRealEstate));
+router.patch('/:id', authorize(jwtScope.apiuser), asyncHandler(realEstateControllers.patchRealEstate));
 
 // DELETEs
-router.delete('/:id', authorize, asyncHandler(realEstateControllers.deleteRealEstate));
+router.delete('/:id', authorize(jwtScope.apiuser), asyncHandler(realEstateControllers.deleteRealEstate));
 
 // STRIPE
 router.get('/checkout-session/:session_id', asyncHandler(checkoutSession));

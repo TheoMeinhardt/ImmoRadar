@@ -2,22 +2,23 @@ import asyncHandler from 'express-async-handler';
 import { Router } from 'express';
 
 import { authorize } from '../middleware';
+import { jwtScope } from '../types';
 import { userControllers } from '../controllers';
 
 const router = Router();
 
 // GETs
-router.get('/', authorize, asyncHandler(userControllers.getAllUsers));
-router.get('/:id', authorize, asyncHandler(userControllers.getUserById));
+router.get('/', authorize(jwtScope.apiadmin), asyncHandler(userControllers.getAllUsers));
+router.get('/:id', authorize(jwtScope.apiuser), asyncHandler(userControllers.getUserById));
 
 // POSTs
 router.post('/', asyncHandler(userControllers.addUser));
 router.post('/login', asyncHandler(userControllers.login));
 
 // PATCHs
-router.patch('/:id', authorize, asyncHandler(userControllers.updateUser));
+router.patch('/:id', authorize(jwtScope.apiuser), asyncHandler(userControllers.updateUser));
 
 // DELETEs
-router.delete('/:id', authorize, asyncHandler(userControllers.deleteUser));
+router.delete('/:id', authorize(jwtScope.apiuser), asyncHandler(userControllers.deleteUser));
 
 export default router;
