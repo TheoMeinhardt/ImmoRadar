@@ -24,6 +24,8 @@ server.use(express.json());
 server.use('/realestate', realEstatesRouter);
 server.use('/user', userRouter);
 
+server.get('/ok', (req, res) => res.status(200).end());
+
 server.use(errorHandler);
 server.use(notFoundHandler);
 
