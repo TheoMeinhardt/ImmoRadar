@@ -15,6 +15,7 @@ async function userMapper(dto: userDTO | userDTO[]): Promise<user | user[]> {
       email: d.email,
       profilePic: d.profile_pic ?? null,
       password: d.user_password,
+      sessionID: d.session_id,
     };
 
     return newUser;

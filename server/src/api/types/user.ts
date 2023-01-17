@@ -12,6 +12,7 @@ type userDTO = {
   email: string;
   profile_pic: string | null;
   user_password: string;
+  session_id: string | null;
 };
 
 type user = {
@@ -26,6 +27,7 @@ type user = {
   email: string;
   profilePic: string | null;
   password: string;
+  sessionID: string | null;
 };
 
 export { userDTO, user };
