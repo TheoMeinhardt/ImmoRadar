@@ -134,7 +134,14 @@ const phoneRules = [
 ];
 
 const fnameRules = [(val) => val.length > 0 || 'Provide a Firstname', (val) => validateJustLetters(val) || 'Invalid name'];
-const mnameRules = [(val) => validateJustLetters(val) || 'Invalid name'];
+const mnameRules = [
+  (val) => {
+    if (val.length > 0) {
+      if (validateJustLetters(val)) return true;
+      else return 'Invalid name';
+    } else return true;
+  },
+];
 const lnameRules = [(val) => val.length > 0 || 'Provide a Surname', (val) => validateJustLetters(val) || 'Invalid name'];
 
 let partialAddress = false;

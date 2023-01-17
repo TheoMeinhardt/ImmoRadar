@@ -26,6 +26,7 @@ const user = validator({
     email: { type: 'string' },
     profilePic: { type: ['string', 'null'] },
     password: { type: 'string' },
+    sessionID: { type: ['string', 'null'] },
   },
   required: ['username', 'email', 'password'],
   additionalProperties: false,
