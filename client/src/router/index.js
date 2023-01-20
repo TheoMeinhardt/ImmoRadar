@@ -15,6 +15,10 @@ import AddHouseTwo from '@/views/subviews/AddHouseTwo.vue';
 import AddHouseThree from '@/views/subviews/AddHouseThree.vue';
 import AddHouseFinal from '@/views/subviews/AddHouseFinal.vue';
 import UserOverview from '@/views/subviews/UserOverview.vue';
+import AddHouseOne from '@/views/subviews/AddHouseOne.vue';
+import AddHouseTwo from '@/views/subviews/AddHouseTwo.vue';
+import AddHouseThree from '@/views/subviews/AddHouseThree.vue';
+import AddHouseFinal from '@/views/subviews/AddHouseFinal.vue';
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
