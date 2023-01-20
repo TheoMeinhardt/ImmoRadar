@@ -7,7 +7,8 @@ const estate = ref('');
 const address = ref('');
 const city = ref('');
 const constructionYear = ref('');
-const description = ref('Description');
+const description = ref('');
+const state = ref('buyable');
 const estatePrice = ref(null);
 const heatingPrice = ref(null);
 const propArea = ref(null);
@@ -144,6 +145,7 @@ const sum = (num1, num2) => {
             ></q-input>
             <q-editor
               v-model="description"
+              placeholder="Description"
               bg-color="white"
               label="Description of the address"
               style="font-family: Quicksand Book"
@@ -152,18 +154,51 @@ const sum = (num1, num2) => {
               borderless
               type="textarea"
             ></q-editor>
-            <q-chip text-color="grey-6" style="font-family: Keep Calm">Buyable</q-chip>
-            <q-chip text-color="grey-6" style="font-family: Keep Calm">Rentable</q-chip>
+            <div class="text-center">
+              <q-chip
+                v-if="state == 'rentable'"
+                text-color="grey-6"
+                style="font-family: Keep Calm"
+                clickable
+                @click="state = 'buyable'"
+                >Buyable</q-chip
+              >
+              <q-chip
+                v-if="state == 'buyable'"
+                color="primary"
+                text-color="black"
+                style="font-family: Keep Calm"
+                >Buyable</q-chip
+              >
+              <q-chip
+                v-if="state == 'buyable'"
+                text-color="grey-6"
+                style="font-family: Keep Calm"
+                clickable
+                @click="state = 'rentable'"
+                >Rentable</q-chip
+              >
+              <q-chip
+                v-if="state == 'rentable'"
+                color="primary"
+                text-color="black"
+                style="font-family: Keep Calm"
+                >Rentable</q-chip
+              >
+            </div>
             <p class="text-white q-mt-md" style="font-family: Keep Calm">Assets</p>
-            <q-chip>Rentable</q-chip>
-            <q-chip>Rentable</q-chip>
-            <q-chip>Rentable</q-chip>
-            <q-chip>Rentable</q-chip>
-            <q-chip>Rentable</q-chip>
-            <q-chip>Rentable</q-chip>
-            <q-chip>Rentable</q-chip>
-            <q-chip>Rentable</q-chip>
-            <q-chip>Rentable</q-chip>
+            <div class="text-center">
+              <!-- werden später vom server geholt -->
+              <q-chip>Rentable</q-chip>
+              <q-chip>Rentable</q-chip>
+              <q-chip>Rentable</q-chip>
+              <q-chip>Rentable</q-chip>
+              <q-chip>Rentable</q-chip>
+              <q-chip>Rentable</q-chip>
+              <q-chip>Rentable</q-chip>
+              <q-chip>Rentable</q-chip>
+              <q-chip>Rentable</q-chip>
+            </div>
           </div></q-step
         >
         <q-step
@@ -378,6 +413,7 @@ const sum = (num1, num2) => {
           active-icon="none"
           ><div class="q-mx-md">
             <p class="text-white" style="font-family: Keep Calm">Images</p>
+            <q-file label="+" class="myFileInput" unelevated borderless></q-file>
             <p class="text-white" style="font-family: Keep Calm">Other Documents/Files</p>
             <q-file
               v-model="files"
@@ -397,7 +433,7 @@ const sum = (num1, num2) => {
                 style="width: 300px"
                 @click="$refs.stepper.next()"
                 color="primary"
-                :label="step === 5 ? 'Finish' : 'Next'"
+                :label="step === 4 ? 'Finish' : 'Next'"
               />
             </div>
           </q-stepper-navigation>
