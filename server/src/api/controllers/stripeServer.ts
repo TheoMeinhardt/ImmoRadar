@@ -4,6 +4,8 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+import { getSessionID, postSessionID, deleteSessionID } from '../models/session.js';
+
 const stripe: Stripe = new Stripe(process.env.SECRET_KEY ? process.env.SECRET_KEY : '', {
   apiVersion: '2022-08-01',
   appInfo: {
@@ -40,15 +42,6 @@ async function postToWebhook(req: Request, res: Response): Promise<void> {
   res.json({ received: true });
 }
 
-// async function createCustomer(req: Request, res: Response): Promise<void> {
-//   const customer = await stripe.customers.create({ email: req.body.email });
-
-//   // User und ID in Datenbank speichern
-//   res.cookie('customer', customer.id, { maxAge: 900000, httpOnly: true });
-
-//   res.send({ customer });
-// }
-
 async function createCheckout(req: Request, res: Response): Promise<void> {
   try {
     const prices = await stripe.prices.list({
@@ -75,7 +68,6 @@ async function createCheckout(req: Request, res: Response): Promise<void> {
 }
 
 async function createPortal(req: Request, res: Response): Promise<void> {
-  // VOn Datenbank holen
   const { session } = req.body;
   const session_id = session.id;
   const checkout_session = await stripe.checkout.sessions.retrieve(session_id);
@@ -89,10 +81,9 @@ async function createPortal(req: Request, res: Response): Promise<void> {
 }
 
 async function checkoutSession(req: Request, res: Response): Promise<void> {
-  console.log('checkout session');
   const { session_id } = req.params;
   console.log(session_id);
-  const session = await stripe.checkout.sessions.retrieve(session_id as any);
+  const session = await stripe.checkout.sessions.retrieve(session_id);
   res.status(200).send(session);
 }
 

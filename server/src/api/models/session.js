@@ -6,7 +6,7 @@ const dbGetSessionID = async ({ user_id }) => {
 };
 
 const dbPostSessionID = async ({ session_id, user_id }) => {
-  const { rows } = await query('INSERT INTO users(session_id) VALUES ($1) where user_id = $2', [
+  const { rows } = await query('UPDATE users set session_id = $1 where user_id = $2 returning *', [
     session_id,
     user_id,
   ]);
@@ -14,7 +14,10 @@ const dbPostSessionID = async ({ session_id, user_id }) => {
 };
 
 const dbDeleteSessionID = async ({ user_id }) => {
-  const { rows } = await query('UPDATE users SET session_id = NULL WHERE user_id = $2', [user_id]);
+  const { rows } = await query(
+    'UPDATE users SET session_id = NULL WHERE user_id = $2 returning *',
+    [user_id],
+  );
   return rows[0];
 };
 

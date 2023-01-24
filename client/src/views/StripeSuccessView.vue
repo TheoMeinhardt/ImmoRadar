@@ -39,9 +39,14 @@
 <script setup>
 import axios from 'axios';
 import { onMounted, ref } from 'vue';
+import { useUserStore } from '../../stores/user';
+
 const session_id = ref('');
 const jsonSession = ref();
 const returnSession = ref();
+
+const userStore = useUserStore();
+
 onMounted(async () => {
   var hash = location.hash;
   var sessionId = hash.match(/session_id=([^&]+)/)[1];
@@ -52,15 +57,33 @@ onMounted(async () => {
   // console.log(searchParams);
   // session_id.value = searchParams.get('session_id');
   // console.log(session_id.value);
+  try {
+    await axios.patch(`/users/stripe/${userStore.user.user_id}`, {
+      session_id: session_id.value,
+    });
+  } catch (error) {
+    console.log(error);
+    console.log('No session_id found!');
+  }
 
-  const session = await axios.get(`/realestate/checkout-session/${session_id.value}`);
-  returnSession.value = session.data;
-  jsonSession.value = JSON.stringify(session, null, 2);
+  // const session = await axios.get(`/realestate/checkout-session/${session_id.value}`);
+  // returnSession.value = session.data;
+  // jsonSession.value = JSON.stringify(session, null, 2);
 });
+
 async function createPortal() {
-  const { data } = await axios.post('/realestate/create-portal-session', {
-    session: returnSession.value,
-  });
+  const { data } = await axios.get(`/users/stripe/${userStore.user.user_id}`);
+  console.log(data);
+
+  const session = await axios.get(`/realestate/checkout-session/${data}`);
+  console.log(session.data);
+  returnSession.value = session.data;
+
+  
+
+  // const { data } = await axios.post('/realestate/create-portal-session', {
+  //   session: returnSession.value,
+  // });
   window.location = data;
 }
 </script>
