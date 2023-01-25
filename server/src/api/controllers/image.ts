@@ -1,15 +1,21 @@
 import { Request, Response } from 'express';
+import { existsSync } from 'fs';
 import { join } from 'path';
+
 import { image } from '../types';
 import * as db from '../models';
 
 //
-// GETs
-//
-
-//
 // POSTs
 //
+
+async function getImage(req: Request, res: Response) {
+  const path: string = req.body.path;
+
+  if (!path) res.status(400).send('No path specified!');
+  else if (!existsSync(join(__dirname, '..', '..', '..', ...path.split('//')))) res.status(404).send('Image not found!');
+  else res.status(200).sendFile(join(__dirname, '..', '..', '..', ...path.split('//')));
+}
 
 async function postUserProfilePic(req: Request, res: Response): Promise<void> {
   res.status(200).end();
@@ -26,13 +32,13 @@ async function postRealEstatePics(req: Request, res: Response): Promise<void> {
         reID: req.params.id,
       };
 
-      const addedImage = await db.postImage(newImage);
+      await db.postImage(newImage);
     }
 
     res.status(200).send(`Added ${files.length} images`);
   }
 
-  res.status(200).end();
+  res.status(400).send('No images specified');
 }
 
-export { postUserProfilePic, postRealEstatePics };
+export { getImage, postUserProfilePic, postRealEstatePics };

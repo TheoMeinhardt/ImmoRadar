@@ -39,6 +39,7 @@ type realEstate = {
   userID: string;
   provision: number;
   constructionYear: Date | null;
+  images: string[];
   heatingID: string | null;
   documentID: string | null;
 };
@@ -50,6 +51,7 @@ type shortRealEstate = {
   long: number;
   price: number | null;
   usableArea: number;
+  thumbnail: string;
   rooms: number;
 };
 

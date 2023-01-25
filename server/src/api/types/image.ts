@@ -1,3 +1,11 @@
+type imageDTO = {
+  image_id: string;
+  image: string;
+  name: string | null;
+  description: string | null;
+  re_id: string;
+};
+
 type image = {
   imageID: string;
   path: string;
@@ -6,4 +14,4 @@ type image = {
   reID: string;
 };
 
-export { image };
+export { imageDTO, image };

@@ -1,5 +1,5 @@
 import { realEstate, realEstateDTO } from '../../types';
-import { getAddress } from '../../models';
+import { getAddress, getImagesByRealEstate } from '../../models';
 
 async function realEstateMapper(dto: realEstateDTO | realEstateDTO[]): Promise<realEstate | realEstate[]> {
   const convertrealEstateDTOtoRealEstate = async (d: realEstateDTO): Promise<realEstate> => {
@@ -21,6 +21,7 @@ async function realEstateMapper(dto: realEstateDTO | realEstateDTO[]): Promise<r
       userID: d.user_id,
       provision: d.provision,
       constructionYear: d.construction_year ?? null,
+      images: (await getImagesByRealEstate(d.re_id)).map((img) => img.path),
       heatingID: d.heating_id ?? null,
       documentID: d.document_id ?? null,
     };
@@ -30,7 +31,6 @@ async function realEstateMapper(dto: realEstateDTO | realEstateDTO[]): Promise<r
 
   if (Array.isArray(dto)) {
     const newArr: realEstate[] = [];
-    // dto.forEach(async (re) => newArr.push(await convertrealEstateDTOtoRealEstate(re)));
     for await (const re of dto) {
       newArr.push(await convertrealEstateDTOtoRealEstate(re));
     }
