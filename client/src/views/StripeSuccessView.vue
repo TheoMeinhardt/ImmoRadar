@@ -39,7 +39,7 @@
 <script setup>
 import axios from 'axios';
 import { onMounted, ref } from 'vue';
-import { useUserStore } from '../../stores/user';
+import { useUserStore } from '../stores/user.js';
 
 const session_id = ref('');
 const jsonSession = ref();
@@ -79,12 +79,12 @@ async function createPortal() {
   console.log(session.data);
   returnSession.value = session.data;
 
-  
 
-  // const { data } = await axios.post('/realestate/create-portal-session', {
-  //   session: returnSession.value,
-  // });
-  window.location = data;
+
+  const portalResponse = await axios.post('/realestate/create-portal-session', {
+    session: returnSession.value,
+  });
+  window.location = portalResponse.data;
 }
 </script>
 <style scoped>

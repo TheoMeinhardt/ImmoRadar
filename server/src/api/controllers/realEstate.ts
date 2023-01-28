@@ -133,42 +133,6 @@ async function deleteRealEstate(req: Request, res: Response): Promise<void> {
   }
 }
 
-// --------------
-// Strip Bullshit
-// --------------
-
-async function postToWebhook(req: Request, res: Response): Promise<void> {
-  raw({ type: 'application/json' });
-  const sig = req.headers['stripe-signature'];
-  let event: any;
-  try {
-    event = stripe.webhooks.constructEvent(
-      req.body,
-      sig as string | string[] | Buffer,
-      process.env.END_POINT_SECRET ?? '',
-    );
-  } catch (err: any) {
-    res.status(400).send(`Webhook Error: ${err.message}`);
-  }
-
-  switch (event.type) {
-    case 'payment_intent.succeeded': {
-      const paymentIntent = event.data.object;
-      console.log(`${paymentIntent} was successful!`);
-      break;
-    }
-    case 'payment_method.attached': {
-      const paymentMethod = event.data.object;
-      console.log(`${paymentMethod} was attached to a Customer!`);
-      break;
-    }
-    default: {
-      console.log(`Unhandled event type ${event.type}`);
-    }
-  }
-  res.json({ received: true });
-}
-
 export {
   getAllRealEstates,
   getOneRealEstate,
@@ -176,5 +140,4 @@ export {
   addRealEstate,
   deleteRealEstate,
   patchRealEstate,
-  postToWebhook,
 };

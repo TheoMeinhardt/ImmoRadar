@@ -1,17 +1,16 @@
 import { Request, Response } from 'express';
 import Stripe from 'stripe';
 import dotenv from 'dotenv';
+// import { deleteSessionID } from '../controllers/session.js';
 
 dotenv.config();
-
-import { getSessionID, postSessionID, deleteSessionID } from '../models/session.js';
 
 const stripe: Stripe = new Stripe(process.env.SECRET_KEY ? process.env.SECRET_KEY : '', {
   apiVersion: '2022-08-01',
   appInfo: {
     name: 'immoradar',
     version: '0.0.1',
-    url: 'immoradar.at',
+    url: 'https://immoradar.onrender.com/',
   },
 });
 
@@ -25,14 +24,16 @@ async function postToWebhook(req: Request, res: Response): Promise<void> {
   }
 
   switch (event.type) {
-    case 'payment_intent.succeeded': {
-      const paymentIntent = event.data.object;
-      console.log('PaymentIntent was successful!');
+    case 'customer.subscription.created': {
+      const subscription = event.data.object;
+      // Then define and call a function to handle the event customer.subscription.created
       break;
     }
-    case 'payment_method.attached': {
-      const paymentMethod = event.data.object;
+    case 'customer.subscription.deleted': {
+      const subscription = event.data.object;
       console.log('PaymentMethod was attached to a Customer!');
+      // deleteSessionID();
+      console.log(subscription);
       break;
     }
     default: {
@@ -69,8 +70,8 @@ async function createCheckout(req: Request, res: Response): Promise<void> {
 
 async function createPortal(req: Request, res: Response): Promise<void> {
   const { session } = req.body;
-  const session_id = session.id;
-  const checkout_session = await stripe.checkout.sessions.retrieve(session_id);
+  // const session_id = session.id;
+  const checkout_session = session;
   const returnUrl = 'http://localhost:8080';
 
   const portalSession = await stripe.billingPortal.sessions.create({
