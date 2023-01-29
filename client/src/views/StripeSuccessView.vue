@@ -24,14 +24,14 @@
             Home
           </button>
         </div>
-        <div class="py-10 text-center">
+        <!-- <div class="py-10 text-center">
           <button
             @click="createPortal"
             class="px-12 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3"
           >
             Mangage Billing
           </button>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -42,50 +42,52 @@ import { onMounted, ref } from 'vue';
 import { useUserStore } from '../stores/user.js';
 
 const session_id = ref('');
-const jsonSession = ref();
-const returnSession = ref();
 
 const userStore = useUserStore();
 
 onMounted(async () => {
   var hash = location.hash;
   var sessionId = hash.match(/session_id=([^&]+)/)[1];
-  console.log(sessionId);
-  session_id.value = sessionId;
+  if (sessionId == '') {
+    console.log('Es wurde keine Bezahlung durchgeführt!');
+  } else {
+    console.log(sessionId);
+    session_id.value = sessionId;
+  }
 
   // const searchParams = new URLSearchParams(new URL(window.location).search);
   // console.log(searchParams);
   // session_id.value = searchParams.get('session_id');
   // console.log(session_id.value);
-  try {
-    await axios.patch(`/users/stripe/${userStore.user.user_id}`, {
-      session_id: session_id.value,
-    });
-  } catch (error) {
-    console.log(error);
-    console.log('No session_id found!');
-  }
 
-  // const session = await axios.get(`/realestate/checkout-session/${session_id.value}`);
-  // returnSession.value = session.data;
-  // jsonSession.value = JSON.stringify(session, null, 2);
+  const sessionID = await axios.get(`/users/stripe/${session_id.value}`);
+
+  if (sessionID.data == null) {
+    try {
+      await axios.patch(`/users/stripe/${userStore.user.user_id}`, {
+        session_id: session_id.value,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  } else {
+    console.log('You already paid for Premium!');
+  }
 });
 
-async function createPortal() {
-  const { data } = await axios.get(`/users/stripe/${userStore.user.user_id}`);
-  console.log(data);
+// async function createPortal() {
+//   const { data } = await axios.get(`/users/stripe/${userStore.user.user_id}`);
+//   console.log(data);
 
-  const session = await axios.get(`/realestate/checkout-session/${data}`);
-  console.log(session.data);
-  returnSession.value = session.data;
+//   const session = await axios.get(`/realestate/checkout-session/${data}`);
+//   console.log(session.data);
+//   returnSession.value = session.data;
 
-
-
-  const portalResponse = await axios.post('/realestate/create-portal-session', {
-    session: returnSession.value,
-  });
-  window.location = portalResponse.data;
-}
+//   const portalResponse = await axios.post('/realestate/create-portal-session', {
+//     session: returnSession.value,
+//   });
+//   window.location = portalResponse.data;
+// }
 </script>
 <style scoped>
 @import 'tailwindcss/base';

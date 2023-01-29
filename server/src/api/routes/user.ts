@@ -2,7 +2,7 @@ import asyncHandler from 'express-async-handler';
 import { Router } from 'express';
 
 import { userControllers } from '../controllers';
-import { getSessionID, postSessionID, deleteSessionID } from '../controllers/session.js';
+import { getSessionID, postSessionID } from '../controllers/session.js';
 
 const router = Router();
 
@@ -21,6 +21,6 @@ router.patch('/stripe/:id', asyncHandler(postSessionID));
 
 // DELETEs
 router.delete('/:id', asyncHandler(userControllers.deleteUser));
-router.delete('/stripe/:id', asyncHandler(deleteSessionID));
+// router.delete('/stripe/:id', asyncHandler(deleteSessionID));
 
 export default router;

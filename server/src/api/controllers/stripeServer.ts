@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import Stripe from 'stripe';
 import dotenv from 'dotenv';
-// import { deleteSessionID } from '../controllers/session.js';
 
 dotenv.config();
 
@@ -24,21 +23,18 @@ async function postToWebhook(req: Request, res: Response): Promise<void> {
   }
 
   switch (event.type) {
-    case 'customer.subscription.created': {
-      const subscription = event.data.object;
-      // Then define and call a function to handle the event customer.subscription.created
+    case 'payment_intent.succeeded':
+      const paymentIntent = event.data.object;
+      console.log('PaymentIntent was successful!');
+      console.log(paymentIntent);
       break;
-    }
-    case 'customer.subscription.deleted': {
-      const subscription = event.data.object;
+    case 'payment_method.attached':
+      const paymentMethod = event.data.object;
       console.log('PaymentMethod was attached to a Customer!');
-      // deleteSessionID();
-      console.log(subscription);
+      console.log(paymentMethod);
       break;
-    }
-    default: {
+    default:
       console.log(`Unhandled event type ${event.type}`);
-    }
   }
   res.json({ received: true });
 }
@@ -50,8 +46,7 @@ async function createCheckout(req: Request, res: Response): Promise<void> {
       expand: ['data.product'],
     });
     const session = await stripe.checkout.sessions.create({
-      mode: 'subscription',
-      billing_address_collection: 'auto',
+      mode: 'payment',
       line_items: [
         {
           price: prices.data[1].id,
@@ -68,24 +63,24 @@ async function createCheckout(req: Request, res: Response): Promise<void> {
   }
 }
 
-async function createPortal(req: Request, res: Response): Promise<void> {
-  const { session } = req.body;
-  // const session_id = session.id;
-  const checkout_session = session;
-  const returnUrl = 'http://localhost:8080';
+// async function createPortal(req: Request, res: Response): Promise<void> {
+//   const { session } = req.body;
+//   // const session_id = session.id;
+//   const checkout_session = session;
+//   const returnUrl = 'http://localhost:8080';
 
-  const portalSession = await stripe.billingPortal.sessions.create({
-    customer: checkout_session.customer as string,
-    return_url: returnUrl,
-  });
-  res.status(200).send(portalSession.url);
-}
+//   const portalSession = await stripe.billingPortal.sessions.create({
+//     customer: checkout_session.customer as string,
+//     return_url: returnUrl,
+//   });
+//   res.status(200).send(portalSession.url);
+// }
 
-async function checkoutSession(req: Request, res: Response): Promise<void> {
-  const { session_id } = req.params;
-  console.log(session_id);
-  const session = await stripe.checkout.sessions.retrieve(session_id);
-  res.status(200).send(session);
-}
+// async function checkoutSession(req: Request, res: Response): Promise<void> {
+//   const { session_id } = req.params;
+//   console.log(session_id);
+//   const session = await stripe.checkout.sessions.retrieve(session_id);
+//   res.status(200).send(session);
+// }
 
-export { postToWebhook, createCheckout, createPortal, checkoutSession };
+export { postToWebhook, createCheckout };

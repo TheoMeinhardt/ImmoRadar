@@ -1,4 +1,4 @@
-import { dbGetSessionID, dbPostSessionID, dbDeleteSessionID } from '../models/session.js';
+import { dbGetSessionID, dbPostSessionID } from '../models/session.js';
 
 const getSessionID = async (req, res) => {
   const { id } = req.params;
@@ -16,13 +16,13 @@ const postSessionID = async (req, res) => {
   return res.status(200).json(sessionID);
 };
 
-const deleteSessionID = async (req, res) => {
-  const { id } = req.params;
-  const user_id = id;
-  const sessionID = await dbGetSessionID(user_id);
-  if (sessionID == null) return res.status(404).send('User does not have session id!');
-  const deltedSessionID = await dbDeleteSessionID(user_id);
-  return res.status(200).json(deltedSessionID);
-};
+// const deleteSessionID = async (req, res) => {
+//   const { id } = req.params;
+//   const user_id = id;
+//   const sessionID = await dbGetSessionID(user_id);
+//   if (sessionID == null) return res.status(404).send('User does not have session id!');
+//   const deltedSessionID = await dbDeleteSessionID(user_id);
+//   return res.status(200).json(deltedSessionID);
+// };
 
-export { getSessionID, postSessionID, deleteSessionID };
+export { getSessionID, postSessionID };
