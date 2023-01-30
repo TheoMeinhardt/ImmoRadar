@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { dbGetSessionID, dbPatchSessionID } from '../models/session.js';
+import { dbGetSessionID, dbPatchSessionID } from '../models/session';
 
 async function getSessionID(req: Request, res: Response): Promise<void> {
   const { id } = req.params;
