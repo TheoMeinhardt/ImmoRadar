@@ -4,14 +4,17 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const stripe: Stripe = new Stripe(process.env.SECRET_KEY ? process.env.SECRET_KEY : '', {
-  apiVersion: '2022-08-01',
-  appInfo: {
-    name: 'immoradar',
-    version: '0.0.1',
-    url: 'https://immoradar.onrender.com/',
+const stripe: Stripe = new Stripe(
+  'sk_test_51LkOYYKr94hGO7PCiTzlKx8duhxgMbUypUcWf47njwy5dVir6eRltBlKxa7hrVjB8Dd1Eqb65PmKAwTYEE0wfFpw00PE0OM81E' as string,
+  {
+    apiVersion: '2022-08-01',
+    appInfo: {
+      name: 'immoradar',
+      version: '0.0.1',
+      url: 'immoradar.co.at',
+    },
   },
-});
+);
 
 async function postToWebhook(req: Request, res: Response): Promise<void> {
   let event: any;
@@ -23,21 +26,31 @@ async function postToWebhook(req: Request, res: Response): Promise<void> {
   }
 
   switch (event.type) {
-    case 'payment_intent.succeeded':
+    case 'payment_intent.succeeded': {
       const paymentIntent = event.data.object;
       console.log('PaymentIntent was successful!');
-      console.log(paymentIntent);
       break;
-    case 'payment_method.attached':
+    }
+    case 'payment_method.attached': {
       const paymentMethod = event.data.object;
       console.log('PaymentMethod was attached to a Customer!');
-      console.log(paymentMethod);
       break;
-    default:
+    }
+    default: {
       console.log(`Unhandled event type ${event.type}`);
+    }
   }
   res.json({ received: true });
 }
+
+// async function createCustomer(req: Request, res: Response): Promise<void> {
+//   const customer = await stripe.customers.create({ email: req.body.email });
+
+//   // User und ID in Datenbank speichern
+//   res.cookie('customer', customer.id, { maxAge: 900000, httpOnly: true });
+
+//   res.send({ customer });
+// }
 
 async function createCheckout(req: Request, res: Response): Promise<void> {
   try {
@@ -47,40 +60,42 @@ async function createCheckout(req: Request, res: Response): Promise<void> {
     });
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
+      billing_address_collection: 'auto',
       line_items: [
         {
-          price: prices.data[1].id,
+          price: prices.data[0].id,
           quantity: 1,
         },
       ],
-      success_url: 'http://localhost:8080/#/success?session_id={CHECKOUT_SESSION_ID}',
+      success_url: 'http://localhost:8080/success?session_id={CHECKOUT_SESSION_ID}',
       cancel_url: 'http://localhost:8080/cancel',
     });
     res.status(200).send(session);
-    console.log(session.url);
   } catch (error) {
     return console.error(error);
   }
 }
 
-// async function createPortal(req: Request, res: Response): Promise<void> {
-//   const { session } = req.body;
-//   // const session_id = session.id;
-//   const checkout_session = session;
-//   const returnUrl = 'http://localhost:8080';
+async function createPortal(req: Request, res: Response): Promise<void> {
+  // VOn Datenbank holen
+  const { session } = req.body;
+  const session_id = session.id;
+  const checkout_session = await stripe.checkout.sessions.retrieve(session_id);
+  const returnUrl = 'http://localhost:8080';
 
-//   const portalSession = await stripe.billingPortal.sessions.create({
-//     customer: checkout_session.customer as string,
-//     return_url: returnUrl,
-//   });
-//   res.status(200).send(portalSession.url);
-// }
+  const portalSession = await stripe.billingPortal.sessions.create({
+    customer: checkout_session.customer as string,
+    return_url: returnUrl,
+  });
+  res.status(200).send(portalSession.url);
+}
 
-// async function checkoutSession(req: Request, res: Response): Promise<void> {
-//   const { session_id } = req.params;
-//   console.log(session_id);
-//   const session = await stripe.checkout.sessions.retrieve(session_id);
-//   res.status(200).send(session);
-// }
+async function checkoutSession(req: Request, res: Response): Promise<void> {
+  console.log('checkout session');
+  const { session_id } = req.params;
+  console.log(session_id);
+  const session = await stripe.checkout.sessions.retrieve(session_id as any);
+  res.status(200).send(session);
+}
 
-export { postToWebhook, createCheckout };
+export { postToWebhook, createCheckout, createPortal, checkoutSession };
