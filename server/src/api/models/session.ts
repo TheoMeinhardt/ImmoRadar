@@ -1,27 +1,26 @@
 import pool from '../../config/dbconfig';
 
 const dbGetSessionID = async (userID: string) => {
-  const { rows } = await pool.query('SELECT session_id FROM users WHERE user_id=$1', [userID]);
+  const { rows } = await pool.query('SELECT session_id FROM users WHERE user_id = $1', [userID]);
   return rows[0];
 };
 
-const dbPatchSessionID = async (
-  { session_id: sessionID }: { session_id: string },
-  userID: string,
-) => {
+const dbPatchSessionID = async (session_id: string, userID: string) => {
+  console.log(session_id, userID);
   const { rows } = await pool.query(
     'UPDATE users set session_id = $1 where user_id = $2 returning *',
-    [sessionID, userID],
+    [session_id, userID],
   );
-  return rows[0];
+  return rows;
 };
 
-// const dbDeleteSessionID = async ({ user_id }) => {
-//   const { rows } = await query(
-//     'UPDATE users SET session_id = NULL WHERE user_id = $2 returning *',
-//     [user_id],
+// const dbDeleteSessionID = async (userID: string) => {
+//   console.log(userID);
+//   const { rows } = await pool.query(
+//     'UPDATE users set session_id = null where user_id = $1 returning *',
+//     [userID],
 //   );
-//   return rows[0];
+//   return rows;
 // };
 
 export { dbGetSessionID, dbPatchSessionID };

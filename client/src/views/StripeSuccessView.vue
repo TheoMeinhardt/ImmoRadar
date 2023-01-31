@@ -1,7 +1,6 @@
 <template>
-  <!-- component -->
-  <div class="bg-gray-100 h-screen">
-    <div class="dark:bg-gray-900 p-6 md:mx-auto">
+  <div>
+    <div class="dark:bg-gray-900 p-6 md:mx-auto" v-if="premium">
       <svg viewBox="0 0 24 24" class="text-green-600 w-16 h-16 mx-auto my-6">
         <path
           fill="currentColor"
@@ -24,18 +23,40 @@
             Home
           </button>
         </div>
-        <!-- <div class="py-10 text-center">
+      </div>
+    </div>
+    <div class="dark:bg-gray-900 p-6 md:mx-auto p-12" v-if="!premium">
+      <div class="text-center">
+        <h3 class="text-gray-200 md:text-2xl text-base font-semibold text-center">
+          Es wurde keine Zahlung durchgeführt!
+        </h3>
+        <p class="text-gray-300 my-2 font-medium">Wir sehen uns hoffentlich bald wieder!</p>
+        <p class="text-gray-300">Einen schönen Tag noch!</p>
+        <div class="py-10 text-center bi-align-bottom">
           <button
-            @click="createPortal"
+            onclick="window.location.href = '/';"
             class="px-12 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3"
           >
-            Mangage Billing
+            Home
           </button>
-        </div> -->
+        </div>
+      </div>
+    </div>
+    <div class="dark:bg-gray-900 p-6 md:mx-auto">
+      <div
+        v-if="alreadyBought"
+        class="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
+        role="alert"
+      >
+        <span class="font-medium"></span> Sieht so aus als hätten Sie unsere Premium Version bereits
+        gekauft!
       </div>
     </div>
   </div>
 </template>
+
+
+
 <script setup>
 import axios from 'axios';
 import { onMounted, ref } from 'vue';
@@ -45,12 +66,16 @@ const session_id = ref('');
 
 const userStore = useUserStore();
 
+const alreadyBought = ref(false);
+const premium = ref(false);
+
 onMounted(async () => {
   var hash = location.hash;
   var sessionId = hash.match(/session_id=([^&]+)/)[1];
   if (sessionId == '') {
     console.log('Es wurde keine Bezahlung durchgeführt!');
   } else {
+    premium.value = true;
     console.log(sessionId);
     session_id.value = sessionId;
   }
@@ -59,12 +84,15 @@ onMounted(async () => {
   // console.log(searchParams);
   // session_id.value = searchParams.get('session_id');
   // console.log(session_id.value);
+  // const id = userStore.user.user_id;
+  const id = '59f42a75-cb2a-4238-ad36-13edc598224d';
 
-  const sessionID = await axios.get(`/users/stripe/${session_id.value}`);
+  const sessionID = await axios.get(`/user/stripe/${id}`);
+  console.log(sessionID.data);
 
-  if (sessionID.data == null) {
+  if (sessionID.data === null) {
     try {
-      await axios.patch(`/users/stripe/${userStore.user.user_id}`, {
+      await axios.patch(`/user/stripe/${id}`, {
         session_id: session_id.value,
       });
     } catch (error) {
@@ -72,6 +100,7 @@ onMounted(async () => {
     }
   } else {
     console.log('You already paid for Premium!');
+    alreadyBought.value = true;
   }
 });
 

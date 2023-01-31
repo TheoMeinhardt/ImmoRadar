@@ -1,8 +1,7 @@
 import asyncHandler from 'express-async-handler';
 import { Router } from 'express';
 
-import { userControllers } from '../controllers';
-import { session } from '../controllers';
+import { userControllers, session } from '../controllers';
 
 const router = Router();
 
@@ -21,6 +20,5 @@ router.patch('/stripe/:id', asyncHandler(session.patchSessionID));
 
 // DELETEs
 router.delete('/:id', asyncHandler(userControllers.deleteUser));
-// router.delete('/stripe/:id', asyncHandler(deleteSessionID));
 
 export default router;
