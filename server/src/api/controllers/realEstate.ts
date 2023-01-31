@@ -1,6 +1,6 @@
 import { Request, Response, raw } from 'express';
 import Stripe from 'stripe';
-import { address, mapquestRes, realEstate, shortRealEstate } from '../types';
+import { address, geocodeRes, realEstate, shortRealEstate } from '../types';
 import { makeReadableAddress, addressGeocode } from '../helpers';
 import { realEstateValidator } from '../validators';
 import * as db from '../models';
@@ -40,13 +40,13 @@ async function getShortendRealEstates(req: Request, res: Response): Promise<void
   const shortRealEstates: shortRealEstate[] = [];
 
   for await (const { name, address: adrs, price, usableArea, rooms, images } of longRealEstates) {
-    const geoinfo: mapquestRes = await addressGeocode(adrs as address);
+    const geoinfo: geocodeRes = await addressGeocode(adrs as address);
 
     shortRealEstates.push({
       name,
       address: adrs ? makeReadableAddress(adrs) : undefined,
-      lat: geoinfo.results[0].locations[0].latLng.lat,
-      long: geoinfo.results[0].locations[0].latLng.lng,
+      lat: geoinfo.features[0].center[1],
+      long: geoinfo.features[0].center[0],
       price,
       thumbnail: images[0],
       usableArea,
