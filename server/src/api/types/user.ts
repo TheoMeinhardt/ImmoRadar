@@ -10,7 +10,7 @@ type userDTO = {
   email: string;
   profile_pic: string | null;
   user_password: string;
-  // sessio_id: string | null;
+  // session_id: string | null;
 };
 
 type user = {
@@ -25,7 +25,7 @@ type user = {
   email: string;
   profilePic: string | null;
   password: string;
-  // sessio_id: string | null;
+  // sessionID: string | null;
 };
 
 export { userDTO, user };

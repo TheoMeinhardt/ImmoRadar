@@ -8,7 +8,8 @@ const router = Router();
 // GETs
 router.get('/', asyncHandler(userControllers.getAllUsers));
 router.get('/:id', asyncHandler(userControllers.getUserById));
-router.get('/stripe/:id', asyncHandler(session.getSessionID));
+router.get('/stripe/user/:id', asyncHandler(session.getSessionID));
+router.get('/stripe/session/:session_id', asyncHandler(session.getUserBySession));
 
 // POSTs
 router.post('/', asyncHandler(userControllers.addUser));

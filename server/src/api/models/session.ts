@@ -5,6 +5,11 @@ const dbGetSessionID = async (userID: string) => {
   return rows[0];
 };
 
+const dbGetUserBySession = async (session_id: string) => {
+  const { rows } = await pool.query('SELECT user_id FROM users WHERE session_id = $1', [session_id]);
+  return rows[0];
+};
+
 const dbPatchSessionID = async (session_id: string, userID: string) => {
   console.log(session_id, userID);
   const { rows } = await pool.query(
@@ -23,4 +28,4 @@ const dbPatchSessionID = async (session_id: string, userID: string) => {
 //   return rows;
 // };
 
-export { dbGetSessionID, dbPatchSessionID };
+export { dbGetSessionID, dbPatchSessionID, dbGetUserBySession };

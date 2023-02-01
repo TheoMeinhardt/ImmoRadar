@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div>
     <div class="dark:bg-gray-900 p-6 md:mx-auto" v-if="premium">
       <svg viewBox="0 0 24 24" class="text-green-600 w-16 h-16 mx-auto my-6">
@@ -53,9 +53,46 @@
       </div>
     </div>
   </div>
+</template> -->
+
+<template>
+  <div class="isolate bg-white">
+    <main>
+      <div class="relative px-6 lg:px-8">
+        <div class="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
+          <div class="hidden sm:mb-8 sm:flex sm:justify-center"></div>
+          <div class="text-center">
+            <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+              Zahlung erfolgreich abgeschlossen!
+            </h1>
+            <p class="mt-6 text-lg leading-8 text-gray-600">
+              Herzlichen Glückwunsch! Sie sind nun Premium-Mitglied bei uns und können von nun an
+              unbegrenzt Immobilien hochladen ohne Werbung. Vielen Dank für Ihre Unterstützung und
+              genießen Sie Ihre verbesserte Erfahrung. Vielen Dank!
+            </p>
+            <div class="mt-10 flex items-center justify-center gap-x-6">
+              <a
+                href="#"
+                class="rounded-md bg-indigo-600 px-3.5 py-1.5 text-base font-semibold leading-7 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                >Zurpck zur Karte</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="p-6 md:mx-auto">
+        <div
+          v-if="!alreadyBought"
+          class="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
+          role="alert"
+        >
+          <span class="font-medium"></span> Sieht so aus als hätten Sie unsere Premium Version
+          bereits gekauft!
+        </div>
+      </div>
+    </main>
+  </div>
 </template>
-
-
 
 <script setup>
 import axios from 'axios';
@@ -72,36 +109,48 @@ const premium = ref(false);
 onMounted(async () => {
   var hash = location.hash;
   var sessionId = hash.match(/session_id=([^&]+)/)[1];
+  const id = '59f42a75-cb2a-4238-ad36-13edc598224d';
+  // const id = usterStore.user.id;
+
   if (sessionId == '') {
     console.log('Es wurde keine Bezahlung durchgeführt!');
-  } else {
-    premium.value = true;
-    console.log(sessionId);
-    session_id.value = sessionId;
-  }
-
-  // const searchParams = new URLSearchParams(new URL(window.location).search);
-  // console.log(searchParams);
-  // session_id.value = searchParams.get('session_id');
-  // console.log(session_id.value);
-  // const id = userStore.user.user_id;
-  const id = '59f42a75-cb2a-4238-ad36-13edc598224d';
-
-  const sessionID = await axios.get(`/user/stripe/${id}`);
-  console.log(sessionID.data);
-
-  if (sessionID.data === null) {
-    try {
-      await axios.patch(`/user/stripe/${id}`, {
-        session_id: session_id.value,
-      });
-    } catch (error) {
-      console.log(error);
+    const dbSessionID = await axios.get(`/user/stripe/user/${id}`);
+    if (dbSessionID.data != null) {
+      console.log('Hat schon Premium!');
+    } else {
+      console.log('Ist einfach auf /success gegangen!');
     }
   } else {
-    console.log('You already paid for Premium!');
-    alreadyBought.value = true;
+    const { data } = await axios.get(`/realestate/checkout-session/${sessionId}`);
+    const stripeSession = data;
+    if (stripeSession == null) {
+      console.log('Es gibt diese Session nicht!');
+    } else {
+      session_id.value = sessionId;
+
+      const dbSessionID = await axios.get(`/user/stripe/user/${id}`);
+
+      const userID = await axios.get(`/user/stripe/session/${session_id.value}`);
+
+      if (stripeSession.id === dbSessionID) {
+        console.log('Hat schon Premium!');
+      } else {
+        if (userID != id && userID != null) {
+          console.log('Nicht klauen!');
+        } else {
+          console.log('Zahlung wird gepseichert!');
+          await axios.patch(`/user/stripe/${id}`, {
+            session_id: session_id.value,
+          });
+        }
+      }
+    }
   }
+
+  // premium.value = true;
+  // console.log(sessionId);
+
+  console.log(sessionID.data);
 });
 
 // async function createPortal() {

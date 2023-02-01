@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { dbGetSessionID, dbPatchSessionID } from '../models/session';
+import { dbGetSessionID, dbPatchSessionID, dbGetUserBySession } from '../models/session';
 
 async function getSessionID(req: Request, res: Response): Promise<void> {
   const { id } = req.params;
@@ -7,6 +7,13 @@ async function getSessionID(req: Request, res: Response): Promise<void> {
   const sessionID = await dbGetSessionID(userID);
   if (!sessionID) res.status(404).send('Ressource not found');
   res.status(200).json(sessionID);
+}
+
+async function getUserBySession(req: Request, res: Response): Promise<void> {
+  const { session_id } = req.params;
+  const userID = await dbGetUserBySession(session_id);
+  if (!userID) res.status(404).send('Ressource not found');
+  res.status(200).json(userID);
 }
 
 async function patchSessionID(req: Request, res: Response): Promise<void> {
@@ -21,4 +28,4 @@ async function patchSessionID(req: Request, res: Response): Promise<void> {
   res.status(200).json(sessionID);
 }
 
-export { getSessionID, patchSessionID };
+export { getSessionID, patchSessionID, getUserBySession };

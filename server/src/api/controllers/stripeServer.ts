@@ -67,12 +67,12 @@ async function createCheckout(req: Request, res: Response): Promise<void> {
           quantity: 1,
         },
       ],
-      success_url: 'http://localhost:8080/success?session_id={CHECKOUT_SESSION_ID}',
+      success_url: 'http://localhost:8080/success',
       cancel_url: 'http://localhost:8080/cancel',
     });
     res.status(200).send(session);
   } catch (error) {
-    return console.error(error);
+    console.error(error);
   }
 }
 
@@ -95,7 +95,9 @@ async function checkoutSession(req: Request, res: Response): Promise<void> {
   const { session_id } = req.params;
   console.log(session_id);
   const session = await stripe.checkout.sessions.retrieve(session_id as any);
-  res.status(200).send(session);
+  console.log(session);
+  if (session) res.status(200).send(session);
+  res.status(404).json(null);
 }
 
 export { postToWebhook, createCheckout, createPortal, checkoutSession };
