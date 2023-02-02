@@ -12,7 +12,7 @@ async function getSessionID(req: Request, res: Response): Promise<void> {
 async function getUserBySession(req: Request, res: Response): Promise<void> {
   const { session_id } = req.params;
   const userID = await dbGetUserBySession(session_id);
-  if (!userID) res.status(404).send('Ressource not found');
+  if (!userID) res.status(200).json('data');
   res.status(200).json(userID);
 }
 

@@ -80,33 +80,37 @@ const invalidSessionID = ref(false);
 const triedToSteal = ref(false);
 const noPayment = ref(false);
 
+const dbSessionID = ref();
+
 onMounted(async () => {
   //Premium
-  // const id = 'bec5a04c-7bcf-42f5-8b6c-0765923ec6be';
+  const id = 'bec5a04c-7bcf-42f5-8b6c-0765923ec6be';
 
   //Kein Premium
-  const id = '575e72af-e14c-45e7-afa5-932a50d8400d';
+  // const id = '8153a1fc-e958-4658-9451-e55df5a4db45';
   // const id = usterStore.user.id;
 
   try {
     var hash = location.hash;
     var sessionHash = hash.match(/session_id=([^&]+)/);
+    const dbSession = await axios.get(`/user/stripe/user/${id}`);
+    dbSessionID.value = dbSession.data.session_id;
     if (sessionHash == null) {
       console.log('Es wurde keine Bezahlung durchgeführt!');
       noPayment.value = true;
+      if (dbSession.data.session_id != null) {
+        console.log('Hat schon Premium!');
+        noPayment.value = false;
+        alreadyBought.value = true;
+      } else {
+        console.log('Hat noch kein Premium, aber auch keine Session ID angegeben!');
+        alreadyBought.value = false;
+      }
     } else {
       var sessionId = sessionHash[1];
-
-      if (sessionId == undefined || null) {
-        console.log('Ungültige SessionID!');
-        const dbSessionID = await axios.get(`/user/stripe/user/${id}`);
-        console.log(dbSessionID.data);
-        if (dbSessionID.data.session_id != null) {
-          console.log('Hat schon Premium!');
-          alreadyBought.value = true;
-        } else {
-          console.log('Ist einfach auf /success gegangen!');
-        }
+      if (dbSessionID.value != null) {
+        console.log('Hat schon Premium!');
+        alreadyBought.value = true;
       } else {
         const { data } = await axios.get(`/realestate/checkout-session/${sessionId}`);
         console.log(data);
@@ -120,7 +124,7 @@ onMounted(async () => {
           const dbSessionID = await axios.get(`/user/stripe/user/${id}`);
 
           const userID = await axios.get(`/user/stripe/session/${session_id.value}`);
-          console.log(userID.data.user_id);
+          // console.log(userID.data.user_id);
 
           if (stripeSession.id === dbSessionID.data.session_id) {
             console.log('Hat schon Premium!');

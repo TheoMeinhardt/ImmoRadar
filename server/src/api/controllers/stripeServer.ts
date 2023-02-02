@@ -58,7 +58,7 @@ async function createCheckout(req: Request, res: Response): Promise<void> {
           quantity: 1,
         },
       ],
-      success_url: 'http://localhost:8080/success',
+      success_url: 'http://localhost:8080/#/success?session_id={CHECKOUT_SESSION_ID}',
       cancel_url: 'http://localhost:8080/cancel',
     });
     res.status(200).send(session);

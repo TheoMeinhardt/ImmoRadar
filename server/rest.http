@@ -2,9 +2,9 @@ GET http://localhost:3000/realestate/checkout-session/s_test_a18pXfNA81IYvZvSMzD
 ################################
 POST http://localhost:3000/realestate/create-checkout-session
 ################################
-GET http://localhost:3000/user/stripe/session/cs_test_a1TfAt7CigWorQ4TDemz0ZkN79x2cCSqpdDQWh5Z9JDSbERBK1yIcjnXRe
+GET http://localhost:3000/user/stripe/session/cs_test_a1de0c3Ggcn8SUky19RwrPsuUNbxd7xVvarC4bYQ7pSA3rZWPsJQP59TAF
 ################################
-GET http://localhost:3000/user/stripe/user/bec5a04c-7bcf-42f5-8b6c-0765923ec6be
+GET http://localhost:3000/user/stripe/user/8153a1fc-e958-4658-9451-e55df5a4db45
 ################################
 GET http://localhost:3000/user
 ################################
