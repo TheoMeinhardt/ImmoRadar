@@ -3,6 +3,25 @@ import { ref } from 'vue';
 import NavBar from '@/components/NavBar.vue';
 
 const step = ref(1);
+const stepperRef = ref(null);
+const estateRef = ref(null);
+const addressRef = ref(null);
+const cityRef = ref(null);
+const constructionYearRef = ref(null);
+const descriptionRef = ref(null);
+const estatePriceRef = ref(null);
+const heatingPriceRef = ref(null);
+const propAreaRef = ref(null);
+const useAreaRef = ref(null);
+const outAreaRef = ref(null);
+const roomsRef = ref(null);
+const bathroomsRef = ref(null);
+const bedroomsRef = ref(null);
+const heatingTypeRef = ref(null);
+const heatingCombustibleRef = ref(null);
+const fgeeRef = ref(null);
+const hwbRef = ref(null);
+
 const estate = ref('');
 const address = ref('');
 const city = ref('');
@@ -71,14 +90,22 @@ const sum = (num1, num2) => {
   const res = num1 + num2;
   return res;
 };
+
+// function onContinueStep() {
+//   switch (step.value) {
+//     case 1:
+
+//   }
+// }
 </script>
 
 <template>
   <q-layout>
+    <!-- TODO validation nach jedem Next -->
     <q-page-container>
       <q-stepper
         v-model="step"
-        ref="stepper"
+        ref="stepperRef"
         style="background-color: #4b506e"
         animated
         flat
@@ -96,7 +123,7 @@ const sum = (num1, num2) => {
         <q-step
           :name="1"
           title=""
-          icon="img:./src/assets/1.svg"
+          icon="img:/images/1.svg"
           active-color="primary"
           active-icon="none"
         >
@@ -109,12 +136,12 @@ const sum = (num1, num2) => {
               :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }"
               class="q-my-md myInput"
               borderless
-              :rules="[(val) => !!val || 'Please enter a name']"
             ></q-input>
             <q-input
               v-model="address"
+              ref="addressRef"
               bg-color="white"
-              label="Whats the address"
+              label="Whats the address*"
               style="font-family: Quicksand Book"
               :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }"
               class="q-my-md myInput"
@@ -122,8 +149,9 @@ const sum = (num1, num2) => {
             ></q-input>
             <q-input
               v-model="city"
+              ref="cityRef"
               bg-color="white"
-              label="City and PLZ"
+              label="City and PLZ*"
               style="font-family: Quicksand Book"
               :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }"
               class="q-my-md myInput"
@@ -131,6 +159,7 @@ const sum = (num1, num2) => {
             ></q-input>
             <q-input
               v-model="constructionYear"
+              ref="constructionYearRef"
               bg-color="white"
               label="Construction Year"
               style="font-family: Quicksand Book"
@@ -138,9 +167,8 @@ const sum = (num1, num2) => {
               class="q-my-md myInput"
               borderless
               :rules="[
-                (val) => !!val || 'Please enter a construction year',
                 (val) => val.length === 4 || 'Please enter a valid year',
-                (val) => val < 2024 || 'Please enter a valid year',
+                (val) => 1800 <= val <= 2023 || 'Please enter a valid year',
               ]"
             ></q-input>
             <q-editor
@@ -186,9 +214,9 @@ const sum = (num1, num2) => {
                 >Rentable</q-chip
               >
             </div>
-            <p class="text-white q-mt-md" style="font-family: Keep Calm">Assets</p>
+            <p class="text-white q-mt-md" style="font-family: Keep Calm">Assets*</p>
             <div class="text-center">
-              <!-- werden später vom server geholt -->
+              <!-- TODO assets vom server holen -->
               <q-chip>Rentable</q-chip>
               <q-chip>Rentable</q-chip>
               <q-chip>Rentable</q-chip>
@@ -204,7 +232,7 @@ const sum = (num1, num2) => {
         <q-step
           :name="2"
           title=""
-          icon="img:./src/assets/2.svg"
+          icon="img:/images/2.svg"
           active-color="primary"
           active-icon="none"
         >
@@ -212,8 +240,9 @@ const sum = (num1, num2) => {
             <p class="text-white" style="font-family: Keep Calm">Expenses</p>
             <q-input
               v-model="estatePrice"
+              ref="estatePriceRef"
               bg-color="white"
-              label="Price"
+              label="Price*"
               :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }"
               class="q-my-md myInput"
               borderless
@@ -221,8 +250,9 @@ const sum = (num1, num2) => {
             ></q-input>
             <q-input
               v-model="heatingPrice"
+              ref="heatingPriceRef"
               bg-color="white"
-              label="Heating"
+              label="Heating*"
               :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }"
               class="q-my-md myInput"
               borderless
@@ -231,8 +261,9 @@ const sum = (num1, num2) => {
             <p class="text-white q-mt-xl" style="font-family: Keep Calm">Area</p>
             <q-input
               v-model="propArea"
+              ref="propAreaRef"
               bg-color="white"
-              label="Property area"
+              label="Property area*"
               :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }"
               class="q-my-md myInput"
               borderless
@@ -245,8 +276,9 @@ const sum = (num1, num2) => {
             ></q-input>
             <q-input
               v-model="useArea"
+              ref="useAreaRef"
               bg-color="white"
-              label="Useable area"
+              label="Useable area*"
               :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }"
               class="q-my-md myInput"
               borderless
@@ -255,25 +287,25 @@ const sum = (num1, num2) => {
             <q-input
               v-model="outArea"
               bg-color="white"
-              label="Outside area"
+              label="Outside area*"
               :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }"
               class="q-my-md myInput"
               borderless
-              :rules="[(val) => (val) => val > 0 || 'Please enter a valid area']"
             ></q-input>
           </div>
         </q-step>
         <q-step
           :name="3"
           title=""
-          icon="img:./src/assets/3.svg"
+          icon="img:/images/3.svg"
           active-color="primary"
           active-icon="none"
         >
           <div class="q-mx-md">
             <p class="text-white" style="font-family: Keep Calm">Rooms</p>
             <div class="q-gutter-md row items-start">
-              <div class="q-gutter-none row items-start">
+              <!-- TODO styling von Room Inputs -->
+              <div class="q-gutter-none row items-start" style="width: 200px">
                 <q-btn
                   @click="addRoom"
                   class="mySpecialInput leftBtn"
@@ -284,8 +316,9 @@ const sum = (num1, num2) => {
                 >
                 <q-input
                   v-model="rooms"
+                  ref="roomsRef"
                   bg-color="white"
-                  label="Rooms"
+                  label="Rooms*"
                   :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }"
                   class="mySpecialInput"
                   borderless
@@ -301,7 +334,7 @@ const sum = (num1, num2) => {
                   >-</q-btn
                 >
               </div>
-              <div class="q-gutter-none row items-start">
+              <div class="q-gutter-none row items-start" style="width: 200px">
                 <q-btn
                   @click="addBathroom"
                   class="mySpecialInput leftBtn"
@@ -312,8 +345,9 @@ const sum = (num1, num2) => {
                 >
                 <q-input
                   v-model="bathrooms"
+                  ref="bathroomsRef"
                   bg-color="white"
-                  label="Bathroom"
+                  label="Bathroom*"
                   :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }"
                   class="mySpecialInput"
                   borderless
@@ -329,7 +363,7 @@ const sum = (num1, num2) => {
                   >-</q-btn
                 >
               </div>
-              <div class="q-gutter-none row items-start">
+              <div class="q-gutter-none row items-start" style="width: 200px">
                 <q-btn
                   @click="addBedroom"
                   class="mySpecialInput leftBtn"
@@ -340,8 +374,9 @@ const sum = (num1, num2) => {
                 >
                 <q-input
                   v-model="bedrooms"
+                  ref="bedroomsRef"
                   bg-color="white"
-                  label="Bedrooms"
+                  label="Bedrooms*"
                   :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }"
                   class="mySpecialInput"
                   borderless
@@ -361,6 +396,7 @@ const sum = (num1, num2) => {
             <p class="text-white q-mt-xl" style="font-family: Keep Calm">Heating</p>
             <q-select
               v-model="heatingType"
+              ref="heatingTypeRef"
               :options="heatingTypes"
               class="myInput"
               label="Type"
@@ -369,6 +405,7 @@ const sum = (num1, num2) => {
             </q-select>
             <q-select
               v-model="heatingCombustible"
+              ref="heatingCombustibleRef"
               :options="heatingCombustibles"
               class="q-my-md myInput"
               label="Combustible"
@@ -378,6 +415,7 @@ const sum = (num1, num2) => {
             <div class="q-gutter-md row items-start">
               <q-input
                 v-model="fgee"
+                ref="fgeeRef"
                 bg-color="white"
                 label="fGEE"
                 :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }"
@@ -387,6 +425,7 @@ const sum = (num1, num2) => {
               ></q-input>
               <q-input
                 v-model="hwb"
+                ref="hwbRef"
                 bg-color="white"
                 label="HWB"
                 :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }"
@@ -408,10 +447,11 @@ const sum = (num1, num2) => {
         <q-step
           :name="4"
           title=""
-          icon="img:./src/assets/4.svg"
+          icon="img:/images/4.svg"
           active-color="primary"
           active-icon="none"
           ><div class="q-mx-md">
+            <!-- TODO Image selector -->
             <p class="text-white" style="font-family: Keep Calm">Images</p>
             <q-file label="+" class="myFileInput" unelevated borderless></q-file>
             <p class="text-white" style="font-family: Keep Calm">Other Documents/Files</p>
@@ -431,6 +471,7 @@ const sum = (num1, num2) => {
               <q-btn
                 rounded
                 style="width: 300px"
+                type="submit"
                 @click="$refs.stepper.next()"
                 color="primary"
                 :label="step === 4 ? 'Finish' : 'Next'"
