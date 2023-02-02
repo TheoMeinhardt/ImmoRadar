@@ -9,7 +9,7 @@
             </h1>
             <p class="mt-6 text-lg leading-8 text-gray-600">
               Willkommen auf unserer Seite! Sie haben noch kein Premium-Konto. Als Premium-Mitglied
-              genießen Sie viele Vorteile wie unbegrenztes Hochladen von Immobilien und keine
+              genießen Sie Vorteile wie unbegrenztes Hochladen von Immobilien und keine
               Werbung. Upgraden Sie jetzt auf Premium und profitieren Sie von allen Vorteilen.
               Klicken Sie hier, um jetzt zu bezahlen.
             </p>
