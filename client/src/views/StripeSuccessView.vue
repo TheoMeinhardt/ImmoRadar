@@ -3,23 +3,23 @@
     <main>
       <div class="relative px-6 lg:px-8">
         <div class="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
-          <div class="hidden sm:mb-8 sm:flex sm:justify-center"></div>
-          <div class="text-center">
-            <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+          <div class="flex flex-row flex-nowrap items-center">
+            <p class="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
               Zahlung erfolgreich abgeschlossen!
-            </h1>
-            <p class="mt-6 text-lg leading-8 text-gray-600">
-              Herzlichen Glückwunsch! Sie sind nun Premium-Mitglied bei uns und können von nun an
-              unbegrenzt Immobilien hochladen ohne Werbung. Vielen Dank für Ihre Unterstützung und
-              genießen Sie Ihre verbesserte Erfahrung. Vielen Dank!
             </p>
-            <div class="mt-10 flex items-center justify-center gap-x-6">
-              <a
-                href="#"
-                class="rounded-md bg-indigo-600 px-3.5 py-1.5 text-base font-semibold leading-7 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                >Zurück zur Karte</a
-              >
-            </div>
+            <i class="fa-solid fa-check fa-5x" style="color: green"></i>
+          </div>
+          <p class="mt-6 text-lg leading-8 text-gray-600">
+            Herzlichen Glückwunsch! Sie sind nun Premium-Mitglied bei uns und können von nun an
+            unbegrenzt Immobilien hochladen ohne Werbung. Vielen Dank für Ihre Unterstützung und
+            genießen Sie Ihre verbesserte Erfahrung. Vielen Dank!
+          </p>
+          <div class="mt-10 flex items-center justify-center gap-x-6">
+            <a
+              href="#"
+              class="rounded-md bg-indigo-600 px-3.5 py-1.5 text-base font-semibold leading-7 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >Zurück zur Karte</a
+            >
           </div>
         </div>
       </div>
