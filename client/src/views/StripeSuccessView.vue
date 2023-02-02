@@ -30,7 +30,7 @@
           role="alert"
         >
           <span class="font-medium">Info:</span> Sieht so aus, als hätten Sie unsere Premium Version
-          bereits gekauft!
+          bereits gekauft - Dankeschön!
         </div>
       </div>
       <div class="p-6 md:mx-auto">
