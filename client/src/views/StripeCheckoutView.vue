@@ -10,15 +10,16 @@
             <p class="mt-6 text-lg leading-8 text-gray-600">
               Willkommen auf unserer Seite! Sie haben noch kein Premium-Konto. Als Premium-Mitglied
               genießen Sie viele Vorteile wie unbegrenztes Hochladen von Immobilien und keine
-              Werbung. Upgraden Sie jetzt auf Premium und profitieren Sie von allen Vorteilen. Klicken
-              Sie hier, um jetzt zu bezahlen.
+              Werbung. Upgraden Sie jetzt auf Premium und profitieren Sie von allen Vorteilen.
+              Klicken Sie hier, um jetzt zu bezahlen.
             </p>
             <div class="mt-10 flex items-center justify-center gap-x-6">
-              <a
-                href="#"
+              <button
+                @click="createCheckout"
                 class="rounded-md bg-indigo-600 px-3.5 py-1.5 text-base font-semibold leading-7 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                >Jetzt upgraden</a
               >
+                Jetzt upgraden
+              </button>
               <a href="#" class="text-base font-semibold leading-7 text-gray-900"
                 >Zurück zur Karte <span aria-hidden="true">→</span></a
               >
