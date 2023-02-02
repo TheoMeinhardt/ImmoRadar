@@ -88,6 +88,8 @@ onMounted(async () => {
 
   //Kein Premium
   // const id = '8153a1fc-e958-4658-9451-e55df5a4db45';
+
+  // Eigentlicher User
   // const id = usterStore.user.id;
 
   try {
