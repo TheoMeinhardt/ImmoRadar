@@ -43,15 +43,6 @@ async function postToWebhook(req: Request, res: Response): Promise<void> {
   res.json({ received: true });
 }
 
-// async function createCustomer(req: Request, res: Response): Promise<void> {
-//   const customer = await stripe.customers.create({ email: req.body.email });
-
-//   // User und ID in Datenbank speichern
-//   res.cookie('customer', customer.id, { maxAge: 900000, httpOnly: true });
-
-//   res.send({ customer });
-// }
-
 async function createCheckout(req: Request, res: Response): Promise<void> {
   try {
     const prices = await stripe.prices.list({
@@ -91,13 +82,14 @@ async function createPortal(req: Request, res: Response): Promise<void> {
 }
 
 async function checkoutSession(req: Request, res: Response): Promise<void> {
-  console.log('checkout session');
-  const { session_id } = req.params;
-  console.log(session_id);
-  const session = await stripe.checkout.sessions.retrieve(session_id as any);
-  console.log(session);
-  if (session) res.status(200).send(session);
-  res.status(404).json(null);
+  try {
+    const { session_id } = req.params;
+    const session = await stripe.checkout.sessions.retrieve(session_id as any);
+    res.status(200).send(session);
+  } catch (error: any) {
+    console.error(`ERROR: ${error.type}`);
+    res.status(200).json(error.type);
+  }
 }
-
+// StripeInvalidRequestError
 export { postToWebhook, createCheckout, createPortal, checkoutSession };

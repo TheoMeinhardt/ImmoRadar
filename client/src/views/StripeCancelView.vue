@@ -1,22 +1,32 @@
 <template>
-  <section class="flex items-center h-full sm:p-16 dark:bg-gray-900 dark:text-gray-100">
-    <div
-      class="container flex flex-col items-center justify-center px-5 mx-auto my-8 space-y-8 text-center sm:max-w-md"
-    >
-      <img
-        src="https://www.maxpixel.net/static/photo/640/Locked-Prohibited-No-Delete-Blocked-Cancel-Abort-146096.png"
-        alt="red cancel cross"
-        width="200"
-      />
-      <p class="text-3xl">Zahlung abgebrochen!</p>
-      <a
-        rel="noopener noreferrer"
-        href="http://localhost:8080"
-        class="px-8 py-3 font-semibold rounded dark:bg-violet-400 dark:text-gray-900"
-        >Home</a
-      >
-    </div>
-  </section>
+  <div class="isolate bg-white">
+    <main>
+      <div class="relative px-6 lg:px-8">
+        <div class="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
+          <div class="hidden sm:mb-8 sm:flex sm:justify-center"></div>
+          <div class="text-center">
+            <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+              Zahlung abgebrochen!
+            </h1>
+            <p class="mt-6 text-lg leading-8 text-gray-600">
+              Es tut uns leid, dass Sie Ihre Zahlung für Premium abgebrochen haben. Wir hoffen,
+              dass Sie trotzdem positive Erfahrungen mit unserer Plattform haben. Falls Sie
+              Fragen haben oder es ein Problem gab, zögern Sie nicht uns zu kontaktieren. Wir
+              schätzen Ihre Unterstützung und hoffen, dass Sie uns in der Zukunft weiterhin nutzen
+              werden.
+            </p>
+            <div class="mt-10 flex items-center justify-center gap-x-6">
+              <a
+                href="#"
+                class="rounded-md bg-indigo-600 px-3.5 py-1.5 text-base font-semibold leading-7 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                >Zurück zur Karte</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
 </template>
 <style scoped>
 @import 'tailwindcss/base';

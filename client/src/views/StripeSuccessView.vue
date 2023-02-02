@@ -1,60 +1,3 @@
-<!-- <template>
-  <div>
-    <div class="dark:bg-gray-900 p-6 md:mx-auto" v-if="premium">
-      <svg viewBox="0 0 24 24" class="text-green-600 w-16 h-16 mx-auto my-6">
-        <path
-          fill="currentColor"
-          d="M12,0A12,12,0,1,0,24,12,12.014,12.014,0,0,0,12,0Zm6.927,8.2-6.845,9.289a1.011,1.011,0,0,1-1.43.188L5.764,13.769a1,1,0,1,1,1.25-1.562l4.076,3.261,6.227-8.451A1,1,0,1,1,18.927,8.2Z"
-        ></path>
-      </svg>
-      <div class="text-center">
-        <h3 class="text-gray-200 md:text-2xl text-base font-semibold text-center">
-          Zahlung abgeschlossen!
-        </h3>
-        <p class="text-gray-300 my-2 font-medium">
-          Vielen Dank, dass Sie Ihre sichere Online-Zahlung abgeschlossen haben.
-        </p>
-        <p class="text-gray-300">Einen schönen Tag noch!</p>
-        <div class="py-10 text-center">
-          <button
-            onclick="window.location.href = '/';"
-            class="px-12 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3"
-          >
-            Home
-          </button>
-        </div>
-      </div>
-    </div>
-    <div class="dark:bg-gray-900 p-6 md:mx-auto p-12" v-if="!premium">
-      <div class="text-center">
-        <h3 class="text-gray-200 md:text-2xl text-base font-semibold text-center">
-          Es wurde keine Zahlung durchgeführt!
-        </h3>
-        <p class="text-gray-300 my-2 font-medium">Wir sehen uns hoffentlich bald wieder!</p>
-        <p class="text-gray-300">Einen schönen Tag noch!</p>
-        <div class="py-10 text-center bi-align-bottom">
-          <button
-            onclick="window.location.href = '/';"
-            class="px-12 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3"
-          >
-            Home
-          </button>
-        </div>
-      </div>
-    </div>
-    <div class="dark:bg-gray-900 p-6 md:mx-auto">
-      <div
-        v-if="alreadyBought"
-        class="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
-        role="alert"
-      >
-        <span class="font-medium"></span> Sieht so aus als hätten Sie unsere Premium Version bereits
-        gekauft!
-      </div>
-    </div>
-  </div>
-</template> -->
-
 <template>
   <div class="isolate bg-white">
     <main>
@@ -74,7 +17,7 @@
               <a
                 href="#"
                 class="rounded-md bg-indigo-600 px-3.5 py-1.5 text-base font-semibold leading-7 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                >Zurpck zur Karte</a
+                >Zurück zur Karte</a
               >
             </div>
           </div>
@@ -82,12 +25,41 @@
       </div>
       <div class="p-6 md:mx-auto">
         <div
-          v-if="!alreadyBought"
+          v-if="alreadyBought"
           class="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
           role="alert"
         >
-          <span class="font-medium"></span> Sieht so aus als hätten Sie unsere Premium Version
+          <span class="font-medium">Info:</span> Sieht so aus, als hätten Sie unsere Premium Version
           bereits gekauft!
+        </div>
+      </div>
+      <div class="p-6 md:mx-auto">
+        <div
+          v-if="noPayment"
+          class="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
+          role="alert"
+        >
+          <span class="font-medium">Info:</span> Es ist gerade keine Zahlung getätigt worden!
+        </div>
+      </div>
+      <div class="p-6 md:mx-auto">
+        <div
+          v-if="invalidSessionID"
+          class="p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300"
+          role="alert"
+        >
+          <span class="font-medium">Vorsicht:</span> Diese Session ID ist ungültig und kann nicht
+          zur Bezahlung verwendet werden!
+        </div>
+      </div>
+      <div class="p-6 md:mx-auto">
+        <div
+          v-if="triedToSteal"
+          class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+          role="alert"
+        >
+          <span class="font-medium">Warnung:</span> Sieht aus, als hätten Sie gerade versucht
+          Premium zu ergaunern!
         </div>
       </div>
     </main>
@@ -104,68 +76,73 @@ const session_id = ref('');
 const userStore = useUserStore();
 
 const alreadyBought = ref(false);
-const premium = ref(false);
+const invalidSessionID = ref(false);
+const triedToSteal = ref(false);
+const noPayment = ref(false);
 
 onMounted(async () => {
-  var hash = location.hash;
-  var sessionId = hash.match(/session_id=([^&]+)/)[1];
-  const id = '59f42a75-cb2a-4238-ad36-13edc598224d';
+  //Premium
+  // const id = 'bec5a04c-7bcf-42f5-8b6c-0765923ec6be';
+
+  //Kein Premium
+  const id = '575e72af-e14c-45e7-afa5-932a50d8400d';
   // const id = usterStore.user.id;
 
-  if (sessionId == '') {
-    console.log('Es wurde keine Bezahlung durchgeführt!');
-    const dbSessionID = await axios.get(`/user/stripe/user/${id}`);
-    if (dbSessionID.data != null) {
-      console.log('Hat schon Premium!');
+  try {
+    var hash = location.hash;
+    var sessionHash = hash.match(/session_id=([^&]+)/);
+    if (sessionHash == null) {
+      console.log('Es wurde keine Bezahlung durchgeführt!');
+      noPayment.value = true;
     } else {
-      console.log('Ist einfach auf /success gegangen!');
-    }
-  } else {
-    const { data } = await axios.get(`/realestate/checkout-session/${sessionId}`);
-    const stripeSession = data;
-    if (stripeSession == null) {
-      console.log('Es gibt diese Session nicht!');
-    } else {
-      session_id.value = sessionId;
+      var sessionId = sessionHash[1];
 
-      const dbSessionID = await axios.get(`/user/stripe/user/${id}`);
-
-      const userID = await axios.get(`/user/stripe/session/${session_id.value}`);
-
-      if (stripeSession.id === dbSessionID) {
-        console.log('Hat schon Premium!');
-      } else {
-        if (userID != id && userID != null) {
-          console.log('Nicht klauen!');
+      if (sessionId == undefined || null) {
+        console.log('Ungültige SessionID!');
+        const dbSessionID = await axios.get(`/user/stripe/user/${id}`);
+        console.log(dbSessionID.data);
+        if (dbSessionID.data.session_id != null) {
+          console.log('Hat schon Premium!');
+          alreadyBought.value = true;
         } else {
-          console.log('Zahlung wird gepseichert!');
-          await axios.patch(`/user/stripe/${id}`, {
-            session_id: session_id.value,
-          });
+          console.log('Ist einfach auf /success gegangen!');
+        }
+      } else {
+        const { data } = await axios.get(`/realestate/checkout-session/${sessionId}`);
+        console.log(data);
+        const stripeSession = data;
+        if (stripeSession.id == null || stripeSession.id == undefined) {
+          console.log('Es gibt diese Session nicht!');
+          invalidSessionID.value = true;
+        } else {
+          session_id.value = sessionId;
+
+          const dbSessionID = await axios.get(`/user/stripe/user/${id}`);
+
+          const userID = await axios.get(`/user/stripe/session/${session_id.value}`);
+          console.log(userID.data.user_id);
+
+          if (stripeSession.id === dbSessionID.data.session_id) {
+            console.log('Hat schon Premium!');
+            alreadyBought.value = true;
+          } else {
+            if (userID.data.user_id != id && userID.data.user_id != null) {
+              console.log('Nicht klauen!');
+              triedToSteal.value = true;
+            } else {
+              console.log('Zahlung wird gepseichert!');
+              await axios.patch(`/user/stripe/${id}`, {
+                session_id: session_id.value,
+              });
+            }
+          }
         }
       }
     }
+  } catch (error) {
+    console.error(error);
   }
-
-  // premium.value = true;
-  // console.log(sessionId);
-
-  console.log(sessionID.data);
 });
-
-// async function createPortal() {
-//   const { data } = await axios.get(`/users/stripe/${userStore.user.user_id}`);
-//   console.log(data);
-
-//   const session = await axios.get(`/realestate/checkout-session/${data}`);
-//   console.log(session.data);
-//   returnSession.value = session.data;
-
-//   const portalResponse = await axios.post('/realestate/create-portal-session', {
-//     session: returnSession.value,
-//   });
-//   window.location = portalResponse.data;
-// }
 </script>
 <style scoped>
 @import 'tailwindcss/base';
