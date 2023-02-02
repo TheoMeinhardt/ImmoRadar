@@ -1,24 +1,32 @@
-import multer from 'multer';
-import { join } from 'path';
+import { PutObjectCommand, PutObjectCommandInput } from '@aws-sdk/client-s3';
+import { UploadedFile } from 'express-fileupload';
 import { randomUUID } from 'crypto';
+import s3Client from '../../config/awsS3';
 
-const storageRealEstate = multer.diskStorage({
-  destination: join(__dirname, '..', '..', '..', 'upload', 'images', 'realestate'),
-  filename(req, file, callback) {
-    const name: string = randomUUID();
-    callback(null, name);
-  },
-});
+async function uploadRealEstateImages(files: UploadedFile[]): Promise<string[] | false> {
+  try {
+    const idArray: string[] = [];
 
-const storageUser = multer.diskStorage({
-  destination: join(__dirname, '..', '..', '..', 'upload', 'images', 'user'),
-  filename(req, file, callback) {
-    const name: string = randomUUID();
-    callback(null, name);
-  },
-});
+    for await (const file of files) {
+      const imageID = randomUUID();
 
-const uploadRealEstatePics = multer({ storage: storageRealEstate });
-const uploadUserProfilePic = multer({ storage: storageUser });
+      const params: PutObjectCommandInput = {
+        Bucket: 'immoradar-upload',
+        Key: `images/realestate/${imageID}`,
+        Body: file.data as Buffer,
+        ContentType: 'image/jpeg',
+        ACL: 'private',
+      };
 
-export { uploadRealEstatePics, uploadUserProfilePic };
+      await s3Client.send(new PutObjectCommand(params));
+      idArray.push(imageID);
+    }
+
+    return idArray;
+  } catch (err: any) {
+    console.log(err);
+    return false;
+  }
+}
+
+export { uploadRealEstateImages };

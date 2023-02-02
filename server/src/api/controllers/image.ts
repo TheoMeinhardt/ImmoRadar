@@ -1,8 +1,7 @@
 import { Request, Response } from 'express';
-import { existsSync } from 'fs';
-import { join } from 'path';
 
 import { image } from '../types';
+import { uploadRealEstateImages, getFile } from '../helpers';
 import * as db from '../models';
 
 //
@@ -10,11 +9,10 @@ import * as db from '../models';
 //
 
 async function getImage(req: Request, res: Response) {
-  const path: string = req.body.path;
+  const path = req.body.path;
+  const img = await getFile(path);
 
-  if (!path) res.status(400).send('No path specified!');
-  else if (!existsSync(join(__dirname, '..', '..', '..', ...path.split('//')))) res.status(404).send('Image not found!');
-  else res.status(200).sendFile(join(__dirname, '..', '..', '..', ...path.split('//')));
+  res.status(200).send(`data:image/jpg;base64,${img}`);
 }
 
 async function postUserProfilePic(req: Request, res: Response): Promise<void> {
@@ -22,20 +20,30 @@ async function postUserProfilePic(req: Request, res: Response): Promise<void> {
 }
 
 async function postRealEstatePics(req: Request, res: Response): Promise<void> {
-  if (req.files) {
-    const files = req.files as Express.Multer.File[];
+  if (req.files?.realestate) {
+    const files = Array.isArray(req.files.realestate) ? req.files.realestate : [req.files.realestate];
 
-    for await (const el of files) {
+    const idArray: string[] | false = await uploadRealEstateImages(files);
+
+    if (idArray === false) {
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    const promises = [];
+    for (let i = 0; i < idArray.length; i += 1) {
       const newImage: image = {
-        imageID: el.filename,
-        path: join('upload', 'images', 'realestate', el.filename),
+        imageID: idArray[i],
+        path: `images/realestate/${idArray[i]}`,
         reID: req.params.id,
       };
 
-      await db.postImage(newImage);
+      promises.push(db.postImage(newImage));
     }
+    await Promise.all(promises);
 
     res.status(200).send(`Added ${files.length} images`);
+    return;
   }
 
   res.status(400).send('No images specified');

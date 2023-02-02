@@ -1,3 +1,4 @@
+import fileUpload from 'express-fileupload';
 import express from 'express';
 import morgan from 'morgan';
 import helmet from 'helmet';
@@ -19,6 +20,7 @@ const corsOptions: cors.CorsOptions = { origin: whitelist };
 server.use(cors(corsOptions));
 server.use(morgan('dev'));
 server.use(helmet());
+server.use(fileUpload());
 server.use(express.json());
 
 server.use('/realestate', realEstatesRouter);

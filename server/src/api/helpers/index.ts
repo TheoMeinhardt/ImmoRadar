@@ -1,5 +1,6 @@
 export * from './fileSave';
 
+export { default as getFile } from './fileGet';
 export { default as userExists } from './checkIfUserExists';
 export { default as makeReadableAddress } from './readableAddressGenerator';
 export { default as addressGeocode } from './geocode';

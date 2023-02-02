@@ -49,12 +49,12 @@ onMounted(async () => {
       '/image',
       {
         path: props.realEstate.thumbnail,
-      },
-      { responseType: 'arraybuffer' }
+      }
+      // { responseType: 'arraybuffer' }
     );
-
-    let base64String = Buffer.from(new Uint8Array(res.data)).toString('base64');
-    thumbnail.value = 'data:image/jpg;base64,' + base64String;
+    thumbnail.value = res.data;
+    // let base64String = Buffer.from(res.data).toString('base64');
+    // thumbnail.value = 'data:image/jpg;base64,' + base64String;
   } catch (err) {
     console.log(err);
   }
