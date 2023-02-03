@@ -128,7 +128,6 @@ function onContinueStep() {
 
 <template>
   <q-layout>
-    <!-- TODO validation nach jedem Next -->
     <q-page-container>
       <q-stepper
         v-model="step"
