@@ -4,16 +4,13 @@ import NavBar from '@/components/NavBar.vue';
 
 const step = ref(1);
 const stepperRef = ref(null);
-const estateRef = ref(null);
 const addressRef = ref(null);
 const cityRef = ref(null);
 const constructionYearRef = ref(null);
-const descriptionRef = ref(null);
 const estatePriceRef = ref(null);
 const heatingPriceRef = ref(null);
 const propAreaRef = ref(null);
 const useAreaRef = ref(null);
-const outAreaRef = ref(null);
 const roomsRef = ref(null);
 const bathroomsRef = ref(null);
 const bedroomsRef = ref(null);
@@ -91,12 +88,42 @@ const sum = (num1, num2) => {
   return res;
 };
 
-// function onContinueStep() {
-//   switch (step.value) {
-//     case 1:
-
-//   }
-// }
+function onContinueStep() {
+  switch (step.value) {
+    case 1:
+      addressRef.value.validate();
+      cityRef.value.validate();
+      if (!addressRef.value.hasError && !cityRef.value.hasError) {
+        stepperRef.value.next();
+      }
+      break;
+    case 2:
+      estatePriceRef.value.validate();
+      heatingPriceRef.value.validate();
+      propAreaRef.value.validate();
+      useAreaRef.value.validate();
+      if (
+        !estatePriceRef.value.hasError &&
+        !heatingPriceRef.value.hasError &&
+        !propAreaRef.value.hasError &&
+        !useAreaRef.value.hasError
+      ) {
+        stepperRef.value.next();
+      }
+      break;
+    case 3:
+      roomsRef.value.validate();
+      bathroomsRef.value.validate();
+      bedroomsRef.value.validate();
+      if (!roomsRef.value.hasError && !bathroomsRef.value.hasError && !bedroomsRef.value.hasError) {
+        stepperRef.value.next();
+      }
+      break;
+    default:
+      alert('Form submitted');
+      break;
+  }
+}
 </script>
 
 <template>
@@ -146,6 +173,7 @@ const sum = (num1, num2) => {
               :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }"
               class="q-my-md myInput"
               borderless
+              :rules="[(val) => val.length > 0 || 'Please enter a valid address']"
             ></q-input>
             <q-input
               v-model="city"
@@ -156,6 +184,7 @@ const sum = (num1, num2) => {
               :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }"
               class="q-my-md myInput"
               borderless
+              :rules="[(val) => val.length > 0 || 'Please enter a valid city']"
             ></q-input>
             <q-input
               v-model="constructionYear"
@@ -472,7 +501,7 @@ const sum = (num1, num2) => {
                 rounded
                 style="width: 300px"
                 type="submit"
-                @click="$refs.stepper.next()"
+                @click="onContinueStep"
                 color="primary"
                 :label="step === 4 ? 'Finish' : 'Next'"
               />
