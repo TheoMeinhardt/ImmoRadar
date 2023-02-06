@@ -19,7 +19,9 @@ function signJWT(payload: jwt.JwtPayload, scope: jwtScope): string {
 
 function verifyJwt(token: string): jwt.JwtPayload | undefined {
   try {
-    return jwt.verify(token, process.env.SECRET_JWT_KEY ?? '') as jwt.JwtPayload;
+    const decodedToken = jwt.verify(token, process.env.SECRET_JWT_KEY ?? '') as jwt.JwtPayload;
+
+    return decodedToken;
   } catch (err: any) {
     console.log(err);
     return undefined;

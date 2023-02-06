@@ -5,7 +5,7 @@ import helmet from 'helmet';
 import dotenv from 'dotenv';
 import cors from 'cors';
 
-import { realEstatesRouter, imageRouter, userRouter } from '../api/routes';
+import { realEstatesRouter, imageRouter, userRouter, assetRouter } from '../api/routes';
 import { notFoundHandler, errorHandler } from '../api/middleware';
 
 dotenv.config();
@@ -24,6 +24,7 @@ server.use(fileUpload());
 server.use(express.json());
 
 server.use('/realestate', realEstatesRouter);
+server.use('/asset', assetRouter);
 server.use('/image', imageRouter);
 server.use('/user', userRouter);
 

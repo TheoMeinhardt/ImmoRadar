@@ -6,9 +6,15 @@ function authorize(scope: jwtScope): any {
   return (req: Request, res: Response, next: NextFunction): void => {
     const token = req.headers.authorization;
 
-    if (!token) res.status(400).send('No Authorization Token specified');
-    else {
+    if (!token) {
+      res.status(400).send('No Authorization Token specified');
+    } else {
       const payload = verifyJwt(token);
+
+      if (Date.now() >= (payload?.exp as number)) {
+        res.status(401).send('Token expired');
+        return;
+      }
 
       if (payload?.sub) {
         if (Object.keys(jwtScope).indexOf(payload.sub) - 3 >= scope) {

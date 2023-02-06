@@ -1,4 +1,4 @@
-import { address } from './index';
+import { address, asset } from './index';
 
 type realEstateDTO = {
   re_id: string;
@@ -40,6 +40,7 @@ type realEstate = {
   provision: number;
   constructionYear: Date | null;
   images: string[];
+  assets: asset[];
   heatingID: string | null;
   documentID: string | null;
 };

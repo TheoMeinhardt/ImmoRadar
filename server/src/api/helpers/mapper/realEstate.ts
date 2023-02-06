@@ -1,5 +1,5 @@
 import { realEstate, realEstateDTO } from '../../types';
-import { getAddress, getImagesByRealEstate } from '../../models';
+import { getAddress, getImagesByRealEstate, getAssetsByRealEstate } from '../../models';
 
 async function realEstateMapper(dto: realEstateDTO | realEstateDTO[]): Promise<realEstate | realEstate[]> {
   const convertrealEstateDTOtoRealEstate = async (d: realEstateDTO): Promise<realEstate> => {
@@ -22,6 +22,7 @@ async function realEstateMapper(dto: realEstateDTO | realEstateDTO[]): Promise<r
       provision: d.provision,
       constructionYear: d.construction_year ?? null,
       images: (await getImagesByRealEstate(d.re_id)).map((img) => img.path),
+      assets: await getAssetsByRealEstate(d.re_id),
       heatingID: d.heating_id ?? null,
       documentID: d.document_id ?? null,
     };

@@ -9,3 +9,4 @@ export { default as realEstateMapper } from './mapper/realEstate';
 export { default as userMapper } from './mapper/user';
 export { default as addressMapper } from './mapper/address';
 export { default as imageMapper } from './mapper/image';
+export { default as assetMapper } from './mapper/asset';
