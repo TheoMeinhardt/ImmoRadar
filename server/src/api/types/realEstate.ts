@@ -46,6 +46,7 @@ type realEstate = {
 };
 
 type shortRealEstate = {
+  reID: string;
   name: string;
   address?: string;
   lat: number;
