@@ -14,35 +14,35 @@ import UserOverview from '@/views/subviews/UserOverview.vue';
 import EstateView from '@/views/EstateView.vue';
 
 const router = createRouter({
-	history: createWebHashHistory(import.meta.env.BASE_URL),
-	routes: [
-		{
-			path: '/',
-			name: 'home',
-			component: () => import('@/views/HomeView.vue'),
-		},
-		{
-			path: '/about',
-			name: 'about',
-			component: AboutView,
-		},
-		{
-			path: '/user',
-			name: 'user',
-			component: UserView,
-			children: [
-				{
-					path: '',
-					name: 'userOverview',
-					component: UserOverview,
-				},
-				{
-					path: '/user/details',
-					name: 'userDetails',
-					component: () => import('../views/subviews/UserDetails.vue'),
-				},
-			],
-		},
+  history: createWebHashHistory(import.meta.env.BASE_URL),
+  routes: [
+    {
+      path: '/',
+      name: 'home',
+      component: () => import('@/views/HomeView.vue'),
+    },
+    {
+      path: '/about',
+      name: 'about',
+      component: AboutView,
+    },
+    {
+      path: '/user',
+      name: 'user',
+      component: UserView,
+      children: [
+        {
+          path: '',
+          name: 'userOverview',
+          component: UserOverview,
+        },
+        {
+          path: '/user/details',
+          name: 'userDetails',
+          component: () => import('../views/subviews/UserDetails.vue'),
+        },
+      ],
+    },
 
     {
       path: '/search',
