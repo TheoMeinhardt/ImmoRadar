@@ -1,10 +1,24 @@
 <template>
   <div>
-    <q-icon @click="showBadge" v-if="badgeHidden" class="shadow-1" name="fa-solid fa-house" color="primary" size="xs"></q-icon>
+    <q-icon
+      @click="showBadge"
+      v-if="badgeHidden"
+      class="shadow-1"
+      name="fa-solid fa-house"
+      color="primary"
+      size="xs"
+    ></q-icon>
 
     <Transition name="expandBadgeTransition" @after-leave="badgeHidden = true">
       <div v-if="expand">
-        <q-btn @click="expand = false" round color="primary" class="closeIcon" icon="fa-solid fa-close" text-color="white" />
+        <q-btn
+          @click="expand = false"
+          round
+          color="primary"
+          class="closeIcon"
+          icon="fa-solid fa-close"
+          text-color="white"
+        />
 
         <div class="badge bg-secondary q-pa-sm q-ma-md text-white">
           <img :src="thumbnail" />
@@ -14,6 +28,14 @@
           <span class="text-body1 block q-mt-sm">{{ realEstate.price }}€</span>
           <span class="text-caption block">{{ realEstate.usableArea }}m²</span>
           <span class="text-caption block">{{ realEstate.rooms }} Rooms</span>
+          <q-card-actions vertical align="center">
+            <router-link
+              :to="`/estateview/${realEstate.reID}`"
+              style="text-decoration: underline; color: white"
+              :reID="realEstate.reID"
+              >View More...</router-link
+            >
+          </q-card-actions>
         </div>
       </div>
     </Transition>
@@ -49,7 +71,7 @@ onMounted(async () => {
       '/image',
       {
         path: props.realEstate.thumbnail,
-      }
+      },
       // { responseType: 'arraybuffer' }
     );
     thumbnail.value = res.data;
