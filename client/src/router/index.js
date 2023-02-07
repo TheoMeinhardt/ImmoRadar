@@ -11,37 +11,38 @@ import UserView from '@/views/UserView.vue';
 import SearchView from '@/views/SearchView.vue';
 import AddHouseView from '@/views/AddHouseView.vue';
 import UserOverview from '@/views/subviews/UserOverview.vue';
+import EstateView from '@/views/EstateView.vue';
 
 const router = createRouter({
-  history: createWebHashHistory(import.meta.env.BASE_URL),
-  routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: () => import('@/views/HomeView.vue'),
-    },
-    {
-      path: '/about',
-      name: 'about',
-      component: AboutView,
-    },
-    {
-      path: '/user',
-      name: 'user',
-      component: UserView,
-      children: [
-        {
-          path: '',
-          name: 'userOverview',
-          component: UserOverview,
-        },
-        {
-          path: '/user/details',
-          name: 'userDetails',
-          component: () => import('../views/subviews/UserDetails.vue'),
-        },
-      ],
-    },
+	history: createWebHashHistory(import.meta.env.BASE_URL),
+	routes: [
+		{
+			path: '/',
+			name: 'home',
+			component: () => import('@/views/HomeView.vue'),
+		},
+		{
+			path: '/about',
+			name: 'about',
+			component: AboutView,
+		},
+		{
+			path: '/user',
+			name: 'user',
+			component: UserView,
+			children: [
+				{
+					path: '',
+					name: 'userOverview',
+					component: UserOverview,
+				},
+				{
+					path: '/user/details',
+					name: 'userDetails',
+					component: () => import('../views/subviews/UserDetails.vue'),
+				},
+			],
+		},
 
     {
       path: '/search',
@@ -80,6 +81,12 @@ const router = createRouter({
       path: '/checkout',
       name: 'checkout',
       component: CheckoutView,
+    },
+    {
+      path: '/estateview/:reID',
+      name: 'estateview',
+      component: EstateView,
+      props: true,
     },
     { path: '/:catchAll(.*)', component: NotFound },
   ],

@@ -5,6 +5,7 @@ export const useRealEstateStore = defineStore('realEstateStore', {
   state: () => {
     return {
       realEstatesShort: Array,
+      wholeRealEstate: Object,
       allAssets: Array,
       maxUsableArea: Number,
     };
@@ -61,6 +62,11 @@ export const useRealEstateStore = defineStore('realEstateStore', {
     async forwardGeocode(str) {
       const { data } = await axios.get(`https://api.mapbox.com/geocoding/v5/mapbox.places/${str}.json?access_token=${import.meta.env.VITE_MAPBOX_TOKEN}`);
       return data.features[0] ? data : undefined;
+    },
+
+    async fetchWholeRealEstate(reID) {
+      const { data } = await axios.get(`/realestate/${reID}`);
+      this.wholeRealEstate = data;
     },
   },
 });
