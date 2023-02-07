@@ -1,10 +1,24 @@
 <template>
   <div>
-    <q-icon @click="showBadge" v-if="badgeHidden" class="shadow-1" name="fa-solid fa-house" color="primary" size="xs"></q-icon>
+    <q-icon
+      @click="showBadge"
+      v-if="badgeHidden"
+      class="shadow-1"
+      name="fa-solid fa-house"
+      color="primary"
+      size="xs"
+    ></q-icon>
 
     <Transition name="expandBadgeTransition" @after-leave="badgeHidden = true">
       <div v-if="expand">
-        <q-btn @click="expand = false" round color="primary" class="closeIcon" icon="fa-solid fa-close" text-color="white" />
+        <q-btn
+          @click="expand = false"
+          round
+          color="primary"
+          class="closeIcon"
+          icon="fa-solid fa-close"
+          text-color="white"
+        />
 
         <div class="badge bg-secondary q-pa-sm q-ma-md text-white">
           <q-img v-if="!thumbnailLoading" :src="thumbnail" loading="lazy" />
