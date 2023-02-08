@@ -17,4 +17,11 @@ async function getAssetsByRealEstate(reID: string): Promise<asset[]> {
   return assetMapper(rows) as asset[];
 }
 
-export { getAssets, getAssetsByRealEstate };
+async function postAssetToRealEstate(assetID: string, reID: string): Promise<void> {
+  const text = 'INSERT INTO real_estate_asset (re_id, asset_id) VALUES ($1, $2)';
+  const params = [reID, assetID];
+
+  await pool.query(text, params);
+}
+
+export { getAssets, getAssetsByRealEstate, postAssetToRealEstate };

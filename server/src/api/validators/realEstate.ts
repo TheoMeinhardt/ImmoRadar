@@ -31,11 +31,36 @@ const realEstate = validator({
     price: { type: 'string' },
     userID: { type: 'string' },
     provision: { type: 'number' },
+    assets: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          assetID: { type: 'string' },
+          name: { type: 'string' },
+          icon: { type: 'string' },
+        },
+        required: ['assetID'],
+        additionalProperties: false,
+      },
+    },
+    heating: {
+      type: 'object',
+      properties: {
+        heatingID: { type: 'string' },
+        type: { type: 'string' },
+        combustible: { type: 'string' },
+        heatingCert: { type: 'string' },
+        heatingRequirement: { type: 'number' },
+        fgee: { type: 'number' },
+      },
+      required: ['type', 'combustible'],
+      additionalProperties: false,
+    },
     constructionYear: { type: ['number', 'null'] },
-    heatingID: { type: 'string' },
     documentID: { type: ['string', 'null'] },
   },
-  required: ['name', 'description', 'address', 'usableArea', 'rooms', 'bathrooms', 'bedrooms', 'buyable', 'userID', 'provision'],
+  required: ['name', 'description', 'address', 'usableArea', 'rooms', 'bathrooms', 'bedrooms', 'buyable', 'userID', 'provision', 'heating'],
   additionalProperties: false,
 });
 
