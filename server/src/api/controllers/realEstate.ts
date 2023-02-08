@@ -1,6 +1,6 @@
 import { Request, Response, raw } from 'express';
 import Stripe from 'stripe';
-import { address, geocodeRes, realEstate, shortRealEstate } from '../types';
+import { address, geocodeRes, heating, realEstate, shortRealEstate } from '../types';
 import { makeReadableAddress, addressGeocode } from '../helpers';
 import { realEstateValidator } from '../validators';
 import * as db from '../models';
@@ -71,12 +71,20 @@ async function addRealEstate(req: Request, res: Response): Promise<void> {
   if (!realEstateValidator.errors && newRealEstate.address) {
     const addedAddress: address = await db.addAddress(newRealEstate.address);
     newRealEstate.address.addressID = addedAddress.addressID;
+    const addedHeating: heating = await db.postHeating(newRealEstate.heating);
+    newRealEstate.heatingID = addedHeating.heatingID;
+
     const addedRealEstate: realEstate = await db.addRealEstate(newRealEstate);
+
+    for await (const asst of newRealEstate.assets) {
+      await db.postAssetToRealEstate(asst.assetID, addedRealEstate.reID);
+    }
 
     if (!addedRealEstate) res.status(500).send(addRealEstate);
     else if (!addedAddress) res.status(500).send(addedAddress);
     res.status(200).end();
   } else {
+    console.log(realEstateValidator.errors);
     res.status(400).send(realEstateValidator.errors);
   }
 }

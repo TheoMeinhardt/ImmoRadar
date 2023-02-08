@@ -18,4 +18,12 @@ async function getHeatingByID(id: string): Promise<heating> {
   return (await heatingMapper(rows[0])) as heating;
 }
 
-export { getHeatingByRealEstate, getHeatingByID };
+async function postHeating(newHeating: heating): Promise<heating> {
+  const text = 'INSERT INTO heating (combustible, energy_certificate, heating_requirement, fgee, type) VALUES ($1, $2, $3, $4, $5) RETURNING *';
+  const params = [newHeating.combustible, false, newHeating.heatingRequirement, newHeating.fgee, newHeating.type];
+
+  const { rows }: { rows: heatingDTO[] } = await pool.query(text, params);
+  return (await heatingMapper(rows[0])) as heating;
+}
+
+export { getHeatingByRealEstate, getHeatingByID, postHeating };
