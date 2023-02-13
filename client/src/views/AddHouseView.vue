@@ -38,6 +38,7 @@ const hwb = ref(null);
 const energyCertificate = ref(null); //ein File Object
 const heatingType = ref(null);
 const heatingCombustible = ref(null);
+const images = ref(null);
 const files = ref(null); //ein Array aus File Objects
 
 const heatingTypes = [
@@ -332,8 +333,7 @@ function onContinueStep() {
           <div class="q-mx-md">
             <p class="text-white" style="font-family: Keep Calm">Rooms</p>
             <div class="q-gutter-md row items-start">
-              <!-- TODO styling von Room Inputs -->
-              <div class="q-gutter-none row items-start" style="width: 200px">
+              <div class="q-gutter-none row items-start" style="width: 150px">
                 <q-btn
                   @click="addRoom"
                   class="mySpecialInput leftBtn"
@@ -346,13 +346,16 @@ function onContinueStep() {
                   v-model="rooms"
                   ref="roomsRef"
                   bg-color="white"
+                  label-slot
                   label="Rooms*"
                   :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }"
                   class="mySpecialInput"
                   borderless
                   style="width: 30%"
                   :rules="[(val) => !!val || 'Please enter a number']"
-                ></q-input>
+                >
+                  <template v-slot:label> <q-icon name="fa-solid fa-door-open"></q-icon></template>
+                </q-input>
                 <q-btn
                   @click="removeRoom"
                   class="mySpecialInput rightBtn"
@@ -362,7 +365,7 @@ function onContinueStep() {
                   >-</q-btn
                 >
               </div>
-              <div class="q-gutter-none row items-start" style="width: 200px">
+              <div class="q-gutter-none row items-start" style="width: 150px">
                 <q-btn
                   @click="addBathroom"
                   class="mySpecialInput leftBtn"
@@ -376,12 +379,15 @@ function onContinueStep() {
                   ref="bathroomsRef"
                   bg-color="white"
                   label="Bathroom*"
+                  label-slot
                   :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }"
                   class="mySpecialInput"
                   borderless
                   style="width: 30%"
                   :rules="[(val) => !!val || 'Please enter a number']"
-                ></q-input>
+                >
+                  <template v-slot:label><q-icon name="fa-solid fa-bath"></q-icon></template>
+                </q-input>
                 <q-btn
                   @click="removeBathroom"
                   class="mySpecialInput rightBtn"
@@ -391,7 +397,7 @@ function onContinueStep() {
                   >-</q-btn
                 >
               </div>
-              <div class="q-gutter-none row items-start" style="width: 200px">
+              <div class="q-gutter-none row items-start" style="width: 150px">
                 <q-btn
                   @click="addBedroom"
                   class="mySpecialInput leftBtn"
@@ -405,12 +411,15 @@ function onContinueStep() {
                   ref="bedroomsRef"
                   bg-color="white"
                   label="Bedrooms*"
+                  label-slot
                   :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }"
                   class="mySpecialInput"
                   borderless
                   style="width: 30%"
                   :rules="[(val) => !!val || 'Please enter a number']"
-                ></q-input>
+                >
+                <template v-slot:label><q-icon name="fa-solid fa-bed"></q-icon></template>
+                </q-input>
                 <q-btn
                   @click="removeBedroom"
                   class="mySpecialInput rightBtn"
@@ -479,9 +488,16 @@ function onContinueStep() {
           active-color="primary"
           active-icon="none"
           ><div class="q-mx-md">
-            <!-- TODO Image selector -->
+            <!-- FIXME Image selector -->
             <p class="text-white" style="font-family: Keep Calm">Images</p>
-            <q-file label="+" class="myFileInput" unelevated borderless></q-file>
+            <q-file
+              v-model="images"
+              label="+ Add"
+              class="myFileInput q-mb-md"
+              unelevated
+              borderless
+              multiple
+            ></q-file>
             <p class="text-white" style="font-family: Keep Calm">Other Documents/Files</p>
             <q-file
               v-model="files"
