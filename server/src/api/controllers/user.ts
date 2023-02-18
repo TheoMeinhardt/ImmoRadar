@@ -2,7 +2,7 @@ import { JwtPayload } from 'jsonwebtoken';
 import { Request, Response } from 'express';
 
 import * as db from '../models';
-import { user } from '../types';
+import { user, jwtScope } from '../types';
 import { userValidator } from '../validators';
 import { userExists } from '../helpers';
 import * as auth from '../authentication';
@@ -33,12 +33,17 @@ async function getUserById(req: Request, res: Response): Promise<void> {
 // Controller for adding an User with data from client to database
 async function addUser(req: Request, res: Response): Promise<void> {
   const newUser: user = req.body;
-  console.log(newUser);
 
   // JSON validation
   if (userValidator(newUser)) {
+    if (await db.getUserByEmail(newUser.email)) {
+      res.status(400).send('This email is already in use!');
+      return;
+    }
+
     newUser.password = await auth.hashString(newUser.password);
     const addedUser = await db.addUser(newUser);
+    if (addedUser?.address) await db.addAddress(addedUser.address);
 
     if (!addedUser) res.status(500).end();
     res.status(200).end();
@@ -58,12 +63,11 @@ async function login(req: Request, res: Response): Promise<void> {
   if (await auth.checkPassword(password, existingUser?.password as string)) {
     const payload: JwtPayload = {
       iss: existingUser?.email,
-      sub: 'login',
-      aud: 'client',
+      aud: 'client/user',
     };
 
     const returnObj = {
-      jwt: auth.signJWT(payload),
+      jwt: auth.signJWT(payload, jwtScope.apiuser),
       user: existingUser,
     };
 
@@ -71,6 +75,16 @@ async function login(req: Request, res: Response): Promise<void> {
   } else {
     res.status(200).send(false);
   }
+}
+
+// Controller which handles guests
+async function guestlogin(req: Request, res: Response): Promise<void> {
+  const payload: JwtPayload = {
+    iss: 'guest',
+    aud: 'client/guest',
+  };
+
+  res.status(200).json({ jwt: auth.signJWT(payload, jwtScope.apiguest) });
 }
 
 // ------
@@ -89,7 +103,18 @@ async function updateUser(req: Request, res: Response): Promise<void> {
 
     // JSON validation
     if (userValidator(newUser)) {
+      if (newUser.address) {
+        if (newUser.address.addressID) {
+          const addedAddress = await db.updateAdress(newUser.address.addressID, newUser.address);
+          newUser.address.addressID = addedAddress.addressID;
+        } else {
+          const addedAddress = await db.addAddress(newUser.address);
+          newUser.address.addressID = addedAddress.addressID;
+        }
+      }
+
       const updatedUser: user = await db.patchUser(id, newUser);
+
       res.status(200).send(`updated user with id "${updatedUser.userID}"`);
     } else {
       res.status(400).send(userValidator.errors);
@@ -110,6 +135,7 @@ async function deleteUser(req: Request, res: Response): Promise<void> {
   // check if user exists
   if (await userExists(id)) {
     const deletedUser = await db.deleteUser(id);
+    if (deletedUser?.address?.addressID) await db.deleteAddress(deletedUser.address.addressID);
 
     if (deletedUser) res.status(200).send(`deleted user with id "${deletedUser.userID}"`);
     else res.status(500).end();
@@ -118,4 +144,4 @@ async function deleteUser(req: Request, res: Response): Promise<void> {
   }
 }
 
-export { getAllUsers, getUserById, addUser, login, updateUser, deleteUser };
+export { getAllUsers, getUserById, addUser, login, guestlogin, updateUser, deleteUser };

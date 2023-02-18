@@ -1,6 +1,6 @@
 import { Request, Response, raw } from 'express';
 import Stripe from 'stripe';
-import { address, mapquestRes, realEstate, shortRealEstate } from '../types';
+import { address, geocodeRes, heating, realEstate, shortRealEstate } from '../types';
 import { makeReadableAddress, addressGeocode } from '../helpers';
 import { realEstateValidator } from '../validators';
 import * as db from '../models';
@@ -21,11 +21,6 @@ const stripe: Stripe = new Stripe(process.env.SECRET_KEY ? process.env.SECRET_KE
 // Controller for sending all Real Estates to the client
 async function getAllRealEstates(req: Request, res: Response): Promise<void> {
   const allRealEstates: realEstate[] = await db.getAllRealEstates();
-
-  for await (const re of allRealEstates) {
-    re.address = await db.getAddress(re.addressID);
-  }
-
   res.status(200).json(allRealEstates);
 }
 
@@ -35,8 +30,6 @@ async function getOneRealEstate(req: Request, res: Response): Promise<void> {
   const oneRealEstate = await db.getOneRealEstate(id);
 
   if (oneRealEstate) {
-    oneRealEstate.address = await db.getAddress(oneRealEstate.addressID);
-
     res.status(200).json(oneRealEstate);
   } else res.status(404).send('Not Found');
 }
@@ -46,16 +39,17 @@ async function getShortendRealEstates(req: Request, res: Response): Promise<void
   const longRealEstates: realEstate[] = await db.getAllRealEstates();
   const shortRealEstates: shortRealEstate[] = [];
 
-  for await (const { name, addressID, price, usableArea, rooms } of longRealEstates) {
-    const adrs = await db.getAddress(addressID);
-    const geoinfo: mapquestRes = await addressGeocode(adrs as address);
+  for await (const { reID, name, address: adrs, price, usableArea, rooms, images } of longRealEstates) {
+    const geoinfo: geocodeRes = await addressGeocode(adrs as address);
 
     shortRealEstates.push({
+      reID,
       name,
       address: adrs ? makeReadableAddress(adrs) : undefined,
-      lat: geoinfo.results[0].locations[0].latLng.lat,
-      long: geoinfo.results[0].locations[0].latLng.lng,
+      lat: geoinfo.features[0].center[1],
+      long: geoinfo.features[0].center[0],
       price,
+      thumbnail: images[0],
       usableArea,
       rooms,
     });
@@ -77,12 +71,20 @@ async function addRealEstate(req: Request, res: Response): Promise<void> {
   if (!realEstateValidator.errors && newRealEstate.address) {
     const addedAddress: address = await db.addAddress(newRealEstate.address);
     newRealEstate.address.addressID = addedAddress.addressID;
+    const addedHeating: heating = await db.postHeating(newRealEstate.heating);
+    newRealEstate.heatingID = addedHeating.heatingID;
+
     const addedRealEstate: realEstate = await db.addRealEstate(newRealEstate);
+
+    for await (const asst of newRealEstate.assets) {
+      await db.postAssetToRealEstate(asst.assetID, addedRealEstate.reID);
+    }
 
     if (!addedRealEstate) res.status(500).send(addRealEstate);
     else if (!addedAddress) res.status(500).send(addedAddress);
     res.status(200).end();
   } else {
+    console.log(realEstateValidator.errors);
     res.status(400).send(realEstateValidator.errors);
   }
 }
@@ -99,7 +101,7 @@ async function patchRealEstate(req: Request, res: Response): Promise<void> {
 
   // check if real estate exists
   if (originalRealEstate) {
-    const originalAddress = await db.getAddress(originalRealEstate?.addressID);
+    const originalAddress = originalRealEstate.address;
 
     // create a new real estate object with the data from the original real estate and overwrite every property with the data from the real estate data object
     const patchedRealEstate: realEstate = { ...originalRealEstate, ...realEstateData };

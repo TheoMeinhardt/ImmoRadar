@@ -50,18 +50,18 @@ async function submitRegister() {
       submitInProgress.value = false;
       registerErrors.value = 'Passwords do not match!';
     } else {
-      const { data } = await axios.post('/user', {
+      await axios.post('/user', {
         username: username.value,
         email: email.value,
         password: password.value,
       });
 
-      console.log(data);
       router.push('/form');
     }
   } catch (err) {
-    registerErrors.value = 'There was an Error!';
     submitInProgress.value = false;
+    if (err.response.data) registerErrors.value = err.response.data;
+    else registerErrors.value = 'There was an Error!';
   }
 }
 

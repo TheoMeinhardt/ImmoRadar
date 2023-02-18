@@ -1,11 +1,12 @@
 import axios from 'axios';
 import dotenv from 'dotenv';
-import { address, mapquestRes } from '../types';
+import { address, geocodeRes } from '../types';
 
 dotenv.config();
 
-async function coordinatesFromAddress(adrs: address): Promise<mapquestRes> {
-  const { data } = await axios.get(`http://www.mapquestapi.com/geocoding/v1/address?key=${'3CUJqq3AgXKh96JdS1h9gPQSLTwPvpOi'}&location=${adrs.address},${adrs.zip} ${adrs.city},${adrs.country}`);
+async function coordinatesFromAddress(adrs: address): Promise<geocodeRes> {
+  const { data } = await axios.get(`https://api.mapbox.com/geocoding/v5/mapbox.places/${adrs.address} ${adrs.zip} ${adrs.city} ${adrs.country}.json?access_token=${process.env.MAPBOX_ACCESS_TOKEN}`);
+
   return data;
 }
 

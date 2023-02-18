@@ -7,7 +7,7 @@
         <q-btn @click="expand = false" round color="primary" class="closeIcon" icon="fa-solid fa-close" text-color="white" />
 
         <div class="badge bg-secondary q-pa-sm q-ma-md text-white">
-          <img src="https://via.placeholder.com/200x150" />
+          <img :src="thumbnail" />
           <span class="text-h5 block">{{ realEstate.name }}</span>
           <span class="text-caption block">{{ realEstate.address.split(',')[0] }}</span>
           <span class="text-caption block seperator">{{ realEstate.address.split(',')[1] }}</span>
@@ -21,10 +21,12 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import axios from 'axios';
+import { ref, onMounted } from 'vue';
 
 const expand = ref(false);
 const badgeHidden = ref(true);
+const thumbnail = ref();
 
 const props = defineProps({
   map: Object,
@@ -40,6 +42,23 @@ function showBadge() {
     essential: true,
   });
 }
+
+onMounted(async () => {
+  try {
+    const res = await axios.post(
+      '/image',
+      {
+        path: props.realEstate.thumbnail,
+      }
+      // { responseType: 'arraybuffer' }
+    );
+    thumbnail.value = res.data;
+    // let base64String = Buffer.from(res.data).toString('base64');
+    // thumbnail.value = 'data:image/jpg;base64,' + base64String;
+  } catch (err) {
+    console.log(err);
+  }
+});
 </script>
 
 <style scoped>
@@ -58,6 +77,7 @@ function showBadge() {
 
 img {
   border-radius: 7.5px;
+  width: 100%;
 }
 
 .seperator {
