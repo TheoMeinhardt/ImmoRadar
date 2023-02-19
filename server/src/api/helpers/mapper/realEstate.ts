@@ -1,13 +1,15 @@
 import { realEstate, realEstateDTO } from '../../types';
+import { getAddress, getImagesByRealEstate, getAssetsByRealEstate, getHeatingByID } from '../../models';
 
-function realEstateMapper(dto: realEstateDTO | realEstateDTO[]): realEstate | realEstate[] {
-  const convertrealEstateDTOtoRealEstate = (d: realEstateDTO): realEstate => {
+async function realEstateMapper(dto: realEstateDTO | realEstateDTO[]): Promise<realEstate | realEstate[]> {
+  const convertrealEstateDTOtoRealEstate = async (d: realEstateDTO): Promise<realEstate> => {
     const newRealEstate: realEstate = {
       reID: d.re_id,
       name: d.name,
       subname: d.subname ?? null,
       description: d.description,
       addressID: d.address_id,
+      address: await getAddress(d.address_id),
       propertyArea: d.property_area ?? null,
       usableArea: d.usable_area,
       outsideArea: d.outside_area ?? null,
@@ -19,7 +21,10 @@ function realEstateMapper(dto: realEstateDTO | realEstateDTO[]): realEstate | re
       userID: d.user_id,
       provision: d.provision,
       constructionYear: d.construction_year ?? null,
+      images: (await getImagesByRealEstate(d.re_id)).map((img) => img.path),
+      assets: await getAssetsByRealEstate(d.re_id),
       heatingID: d.heating_id ?? null,
+      heating: await getHeatingByID(d.heating_id),
       documentID: d.document_id ?? null,
     };
 
@@ -28,7 +33,9 @@ function realEstateMapper(dto: realEstateDTO | realEstateDTO[]): realEstate | re
 
   if (Array.isArray(dto)) {
     const newArr: realEstate[] = [];
-    dto.forEach((re) => newArr.push(convertrealEstateDTOtoRealEstate(re)));
+    for await (const re of dto) {
+      newArr.push(await convertrealEstateDTOtoRealEstate(re));
+    }
     return newArr;
   }
 

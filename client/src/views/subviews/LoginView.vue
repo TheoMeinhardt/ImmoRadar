@@ -11,7 +11,7 @@
     </div>
 
     <div style="font-family: Keep Calm; text-align: center">
-      <q-btn :disabled="submitInProgress" type="submit" color="primary" class="btn block" rounded style="width: 300px" align="center">
+      <q-btn :disabled="submitInProgress" type="submit" rounded color="light-blue-3" style="width: 300px" align="center" class="btn block">
         <div v-if="!submitInProgress">Login</div>
         <div v-else>
           <q-spinner-tail size="1em" thickness="5" />
@@ -21,7 +21,7 @@
 
       <div>
         <span class="text-white text-caption q-my-sm block">or</span>
-        <span @click="$router.push('/')" class="text-white cursor-pointer block">proceed without logging in</span>
+        <span @click="submitGuestLogin" class="text-white cursor-pointer block">proceed without logging in</span>
       </div>
     </div>
   </form>
@@ -31,10 +31,13 @@
 import axios from 'axios';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+
 import { useUserStore } from '../../stores/user';
+import { useRealEstateStore } from '../../stores/realEstates';
 
 const router = useRouter();
 const userStore = useUserStore();
+const realEstateStore = useRealEstateStore();
 
 const email = ref('');
 const password = ref('');
@@ -55,10 +58,12 @@ async function submitLogin() {
       userStore.jwt = jwt;
       userStore.user = user;
       userStore.user.password = 'Fantasier nicht';
+      userStore.isLoggedIn = true;
       userStore.checkIfProfileNeedsUpdate();
 
       axios.defaults.headers.common['authorization'] = userStore.jwt;
 
+      realEstateStore.fetchAllRealEstateShort();
       router.push('/');
     } else if (res.status === 200 && res.data === false) {
       loginErrors.value = 'Invalid Email or Password!';
@@ -68,6 +73,17 @@ async function submitLogin() {
     if (err.request.status === 400) loginErrors.value = 'Invalid Email or Password!';
     submitInProgress.value = false;
   }
+}
+
+async function submitGuestLogin() {
+  const { jwt } = await (await axios.post('/user/guest')).data;
+
+  userStore.jwt = jwt;
+  axios.defaults.headers.common['authorization'] = userStore.jwt;
+
+  realEstateStore.fetchAllRealEstateShort();
+
+  router.push('/');
 }
 </script>
 

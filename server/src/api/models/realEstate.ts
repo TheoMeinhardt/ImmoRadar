@@ -6,7 +6,7 @@ async function getAllRealEstates(): Promise<realEstate[]> {
   const text: string = 'select * from real_estate;';
   const { rows }: { rows: realEstateDTO[] } = await pool.query(text, []);
 
-  return realEstateMapper(rows) as realEstate[];
+  return (await realEstateMapper(rows)) as realEstate[];
 }
 
 async function getOneRealEstate(id: string): Promise<realEstate | undefined> {
@@ -14,7 +14,7 @@ async function getOneRealEstate(id: string): Promise<realEstate | undefined> {
   const params: any[] = [id];
   const { rows }: { rows: realEstateDTO[] } = await pool.query(text, params);
 
-  return rows[0] ? (realEstateMapper(rows[0]) as realEstate) : undefined;
+  return rows[0] ? ((await realEstateMapper(rows[0])) as realEstate) : undefined;
 }
 
 async function addRealEstate(newRealEstate: realEstate): Promise<realEstate> {
@@ -22,7 +22,7 @@ async function addRealEstate(newRealEstate: realEstate): Promise<realEstate> {
   const params: any[] = [newRealEstate.name, newRealEstate.subname, newRealEstate.description, newRealEstate.address?.addressID, newRealEstate.propertyArea, newRealEstate.usableArea, newRealEstate.outsideArea, newRealEstate.rooms, newRealEstate.bathrooms, newRealEstate.bedrooms, newRealEstate.buyable, newRealEstate.price, newRealEstate.userID, newRealEstate.provision, newRealEstate.heatingID, newRealEstate.documentID];
   const { rows }: { rows: realEstateDTO[] } = await pool.query(text, params);
 
-  return realEstateMapper(rows[0]) as realEstate;
+  return (await realEstateMapper(rows[0])) as realEstate;
 }
 
 async function patchRealEstate(reID: string, newRealEstate: realEstate): Promise<realEstate> {
@@ -30,7 +30,7 @@ async function patchRealEstate(reID: string, newRealEstate: realEstate): Promise
   const params: any[] = [newRealEstate.name, newRealEstate.subname, newRealEstate.description, newRealEstate.addressID, newRealEstate.propertyArea, newRealEstate.usableArea, newRealEstate.outsideArea, newRealEstate.rooms, newRealEstate.bathrooms, newRealEstate.bedrooms, newRealEstate.buyable, newRealEstate.price, newRealEstate.userID, newRealEstate.provision, newRealEstate.heatingID, newRealEstate.documentID, reID];
 
   const { rows }: { rows: realEstateDTO[] } = await pool.query(text, params);
-  return realEstateMapper(rows[0]) as realEstate;
+  return (await realEstateMapper(rows[0])) as realEstate;
 }
 
 async function deleteRealEstate(reID: string): Promise<realEstate | undefined> {
@@ -38,7 +38,7 @@ async function deleteRealEstate(reID: string): Promise<realEstate | undefined> {
   const params: any[] = [reID];
 
   const { rows }: { rows: realEstateDTO[] } = await pool.query(text, params);
-  return rows[0] ? (realEstateMapper(rows[0]) as realEstate) : undefined;
+  return rows[0] ? ((await realEstateMapper(rows[0])) as realEstate) : undefined;
 }
 
 export { getAllRealEstates, getOneRealEstate, addRealEstate, patchRealEstate, deleteRealEstate };

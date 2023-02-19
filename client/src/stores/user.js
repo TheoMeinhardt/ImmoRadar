@@ -6,6 +6,7 @@ export const useUserStore = defineStore('userStore', {
       jwt: String,
       user: Object,
       needProfileUpdate: Boolean,
+      isLoggedIn: false,
     };
   },
   actions: {

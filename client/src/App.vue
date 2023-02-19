@@ -18,8 +18,8 @@ axios.defaults.baseURL = import.meta.env.DEV ? 'http://localhost:3000' : 'https:
 console.log(`${import.meta.env.MODE} mode`);
 
 onMounted(async () => {
-  realEstateStore.fetchAllRealEstateShort();
-  if (typeof userStore.jwt !== 'string') router.push('/form');
+  if (!userStore.isLoggedIn) router.push('/form');
+  else realEstateStore.fetchAllRealEstateShort();
 });
 </script>
 
