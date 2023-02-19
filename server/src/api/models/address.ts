@@ -19,16 +19,31 @@ async function getAddress(id: string): Promise<address | undefined> {
 }
 
 async function addAddress(newAddress: address): Promise<address> {
-  const text = 'insert into address (address_id, address, zip_code, city, state, country) values (default, $1, $2, $3, $4, $5) returning *';
-  const params = [newAddress.address, newAddress.zip, newAddress.city, newAddress.state, newAddress.country];
+  const text =
+    'insert into address (address_id, address, zip_code, city, state, country) values (default, $1, $2, $3, $4, $5) returning *';
+  const params = [
+    newAddress.address,
+    newAddress.zip,
+    newAddress.city,
+    newAddress.state,
+    newAddress.country,
+  ];
 
   const { rows }: { rows: addressDTO[] } = await pool.query(text, params);
   return addressMapper(rows[0]) as address;
 }
 
 async function updateAdress(id: string, newAddress: address): Promise<address> {
-  const text = 'update address set address = $1, zip_code = $2, city = $3, state = $4, country = $5 where address_id = $6 returning *';
-  const params = [newAddress.address, newAddress.zip, newAddress.city, newAddress.state, newAddress.country, id];
+  const text =
+    'update address set address = $1, zip_code = $2, city = $3, state = $4, country = $5 where address_id = $6 returning *';
+  const params = [
+    newAddress.address,
+    newAddress.zip,
+    newAddress.city,
+    newAddress.state,
+    newAddress.country,
+    id,
+  ];
 
   const { rows }: { rows: addressDTO[] } = await pool.query(text, params);
   return addressMapper(rows[0]) as address;
