@@ -11,12 +11,28 @@ async function dBgetPostsByRealEstate(re_id) {
   return rows;
 }
 
+async function dBgetPostByPostID(post_id) {
+  const { rows } = await query(
+    'SELECT posts.*, user.user_id, user.name FROM posts JOIN user ON posts.user_id = user.user_id WHERE post_id = $1',
+    [post_id],
+  );
+  return rows[0];
+}
+
 async function dBgetCommentsByPost(post_id) {
   const { rows } = await query(
     'SELECT comments.*, user.user_id, user.name FROM comments join user on comments.user_id = user.user_id where post_id = $1',
     [post_id],
   );
   return rows;
+}
+
+async function dBgetCommentByCommentID(comment_id) {
+  const { rows } = await query(
+    'SELECT comments.*, user.user_id, user.name FROM comments JOIN user ON comments.user_id = user.user_id WHERE comment_id = $1',
+    [comment_id],
+  );
+  return rows[0];
 }
 
 async function dBgetLikesFromPost(post_id) {
@@ -47,9 +63,9 @@ async function dBpostComment(content, user_id, post_id) {
   return rows;
 }
 
-//  -------------- Patches/UPDATES --------------
+//  -------------- PATCHES/UPDATES --------------
 
-async function dBPatchPost(title, content, post_id) {
+async function dBpatchPost(title, content, post_id) {
   const { rows } = await query(
     'update posts set title = $1, content = $2 where post_id = $3 RETURNING *',
     [title, content, post_id],
@@ -57,7 +73,7 @@ async function dBPatchPost(title, content, post_id) {
   return rows;
 }
 
-async function dBPatchComment(content, comment_id) {
+async function dBpatchComment(content, comment_id) {
   const { rows } = await query(
     'update comments set content = $1 where comment_id = $2 RETURNING *',
     [content, comment_id],
@@ -72,20 +88,22 @@ async function dBdeletePost(post_id) {
   return rows;
 }
 
-async function dBDeleteComment(comment_id) {
+async function dBdeleteComment(comment_id) {
   const { rows } = await query('delete from comments where comment_id = $1', [comment_id]);
   return rows;
 }
 
 export {
   dBgetPostsByRealEstate,
+  dBgetPostByPostID,
   dBgetCommentsByPost,
+  dBgetCommentByCommentID,
   dBgetLikesFromPost,
   dBgetLikesFromComments,
   dBpostPosts,
   dBpostComment,
-  dBPatchPost,
-  dBPatchComment,
+  dBpatchPost,
+  dBpatchComment,
   dBdeletePost,
-  dBDeleteComment,
+  dBdeleteComment,
 };
