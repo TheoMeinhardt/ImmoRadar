@@ -4,17 +4,16 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const stripe: Stripe = new Stripe(
-  'sk_test_51LkOYYKr94hGO7PCiTzlKx8duhxgMbUypUcWf47njwy5dVir6eRltBlKxa7hrVjB8Dd1Eqb65PmKAwTYEE0wfFpw00PE0OM81E' as string,
-  {
-    apiVersion: '2022-08-01',
-    appInfo: {
-      name: 'immoradar',
-      version: '0.0.1',
-      url: 'immoradar.co.at',
-    },
+const SECRET_KEY = process.env.SECRET_KEY;
+
+const stripe: Stripe = new Stripe(SECRET_KEY as string, {
+  apiVersion: '2022-08-01',
+  appInfo: {
+    name: 'immoradar',
+    version: '0.0.1',
+    url: 'immoradar.co.at',
   },
-);
+});
 
 async function postToWebhook(req: Request, res: Response): Promise<void> {
   let event: any;
