@@ -4,17 +4,16 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const stripe: Stripe = new Stripe(
-  'sk_test_51LkOYYKr94hGO7PCiTzlKx8duhxgMbUypUcWf47njwy5dVir6eRltBlKxa7hrVjB8Dd1Eqb65PmKAwTYEE0wfFpw00PE0OM81E' as string,
-  {
-    apiVersion: '2022-08-01',
-    appInfo: {
-      name: 'immoradar',
-      version: '0.0.1',
-      url: 'immoradar.co.at',
-    },
+const SECRET_KEY = process.env.SECRET_KEY;
+
+const stripe: Stripe = new Stripe(SECRET_KEY as string, {
+  apiVersion: '2022-08-01',
+  appInfo: {
+    name: 'immoradar',
+    version: '0.0.1',
+    url: 'immoradar.co.at',
   },
-);
+});
 
 async function postToWebhook(req: Request, res: Response): Promise<void> {
   let event: any;
@@ -84,12 +83,16 @@ async function createPortal(req: Request, res: Response): Promise<void> {
 async function checkoutSession(req: Request, res: Response): Promise<void> {
   try {
     const { session_id } = req.params;
-    const session = await stripe.checkout.sessions.retrieve(session_id as any);
-    res.status(200).send(session);
+    const stripeSession = await stripe.checkout.sessions.retrieve(session_id);
+    if (stripeSession === null || stripeSession === undefined) {
+      res.status(400).json('Invalid session ID');
+      return;
+    }
+    res.status(200).json(stripeSession);
   } catch (error: any) {
-    console.error(`ERROR: ${error.type}`);
     res.status(200).json(error.type);
   }
 }
+
 // StripeInvalidRequestError
 export { postToWebhook, createCheckout, createPortal, checkoutSession };
