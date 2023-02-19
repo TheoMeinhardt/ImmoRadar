@@ -19,7 +19,7 @@ console.log(`${import.meta.env.MODE} mode`);
 
 onMounted(async () => {
   realEstateStore.fetchAllRealEstateShort();
-  // if (typeof userStore.jwt !== 'string') router.push('/form');
+  if (typeof userStore.jwt !== 'string') router.push('/form');
 });
 </script>
 
