@@ -4,7 +4,7 @@ import { Router, raw } from 'express';
 import { authorize } from '../middleware';
 import { jwtScope } from '../types';
 import { realEstateControllers } from '../controllers';
-import { postToWebhook, createCheckout, checkoutSession } from '../controllers/stripeServer';
+import { postToWebhook, createCheckout } from '../controllers/stripeServer';
 
 const router = Router();
 
@@ -23,7 +23,7 @@ router.patch('/:id', authorize(jwtScope.apiuser), asyncHandler(realEstateControl
 router.delete('/:id', authorize(jwtScope.apiuser), asyncHandler(realEstateControllers.deleteRealEstate));
 
 // STRIPE
-router.get('/checkout-session/:session_id', asyncHandler(checkoutSession));
+// router.get('/checkout-session/:session_id', asyncHandler(checkoutSession));
 router.post('/webhook', raw({ type: 'application/json' }), asyncHandler(postToWebhook));
 router.post('/create-checkout-session', asyncHandler(createCheckout));
 // router.post('/create-portal-session', asyncHandler(createPortal));

@@ -95,59 +95,70 @@ onMounted(async () => {
   try {
     var hash = location.hash;
     var sessionHash = hash.match(/session_id=([^&]+)/);
-    const dbSession = await axios.get(`/user/stripe/user/${id}`);
-    dbSessionID.value = dbSession.data.session_id;
-    if (sessionHash == null) {
+
+    if (sessionHash === null) {
       console.log('Es wurde keine Bezahlung durchgeführt!');
       noPayment.value = true;
-      if (dbSession.data.session_id != null) {
-        console.log('Hat schon Premium!');
-        noPayment.value = false;
-        alreadyBought.value = true;
-      } else {
-        console.log('Hat noch kein Premium, aber auch keine Session ID angegeben!');
-        alreadyBought.value = false;
-      }
     } else {
-      var sessionId = sessionHash[1];
-      if (dbSessionID.value != null) {
-        console.log('Hat schon Premium!');
-        alreadyBought.value = true;
-      } else {
-        const { data } = await axios.get(`/realestate/checkout-session/${sessionId}`);
-        console.log(data);
-        const stripeSession = data;
-        if (stripeSession.id == null || stripeSession.id == undefined) {
-          console.log('Es gibt diese Session nicht!');
-          invalidSessionID.value = true;
-        } else {
-          session_id.value = sessionId;
-
-          const dbSessionID = await axios.get(`/user/stripe/user/${id}`);
-
-          const userID = await axios.get(`/user/stripe/session/${session_id.value}`);
-          // console.log(userID.data.user_id);
-
-          if (stripeSession.id === dbSessionID.data.session_id) {
-            console.log('Hat schon Premium!');
-            alreadyBought.value = true;
-          } else {
-            if (userID.data.user_id != id && userID.data.user_id != null) {
-              console.log('Nicht klauen!');
-              triedToSteal.value = true;
-            } else {
-              console.log('Zahlung wird gepseichert!');
-              await axios.patch(`/user/stripe/${id}`, {
-                session_id: session_id.value,
-              });
-            }
-          }
-        }
-      }
+      let sessionId = sessionHash[1];
+      const { data } = await axios.patch(`/user/stripe/${id}`, {
+        session_id: sessionId,
+      });
+      console.log(data);
     }
   } catch (error) {
     console.error(error);
   }
+
+  // const dbSession = await axios.get(`/user/stripe/user/${id}`);
+  // dbSessionID.value = dbSession.data.session_id;
+  // if (sessionHash == null) {
+  //   console.log('Es wurde keine Bezahlung durchgeführt!');
+  //   noPayment.value = true;
+  //   if (dbSession.data.session_id != null) {
+  //     console.log('Hat schon Premium!');
+  //     noPayment.value = false;
+  //     alreadyBought.value = true;
+  //   } else {
+  //     console.log('Hat noch kein Premium, aber auch keine Session ID angegeben!');
+  //     alreadyBought.value = false;
+  //   }
+  // } else {
+  //   let sessionId2 = sessionHash[1];
+  //   if (dbSessionID.value != null) {
+  //     console.log('Hat schon Premium!');
+  //     alreadyBought.value = true;
+  //   } else {
+  //     const { data } = await axios.get(`/realestate/checkout-session/${sessionId}`);
+  //     console.log(data);
+  //     const stripeSession = data;
+  //     if (stripeSession.id == null || stripeSession.id == undefined) {
+  //       console.log('Es gibt diese Session nicht!');
+  //       invalidSessionID.value = true;
+  //     } else {
+  //       session_id.value = sessionId;
+
+  //       const dbSessionID = await axios.get(`/user/stripe/user/${id}`);
+
+  //       const userID = await axios.get(`/user/stripe/session/${session_id.value}`);
+  //       // console.log(userID.data.user_id);
+
+  //       if (stripeSession.id === dbSessionID.data.session_id) {
+  //         console.log('Hat schon Premium!');
+  //         alreadyBought.value = true;
+  //       } else {
+  //         if (userID.data.user_id != id && userID.data.user_id != null) {
+  //           console.log('Nicht klauen!');
+  //           triedToSteal.value = true;
+  //         } else {
+  //           console.log('Zahlung wird gepseichert!');
+  //           await axios.patch(`/user/stripe/${id}`, {
+  //             session_id: session_id.value,
+  //           });
+  //         }
+  //       }
+  //     }
+  // }
 });
 </script>
 <style scoped>

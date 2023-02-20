@@ -3,15 +3,16 @@ import { Router } from 'express';
 
 import { authorize } from '../middleware';
 import { jwtScope } from '../types';
-import { userControllers, session } from '../controllers';
+import { userControllers } from '../controllers';
+import { getSessionID, getUserBySession, patchSessionID } from '../controllers/stripeServer';
 
 const router = Router();
 
 // GETs
 router.get('/', authorize(jwtScope.apiadmin), asyncHandler(userControllers.getAllUsers));
 router.get('/:id', authorize(jwtScope.apiuser), asyncHandler(userControllers.getUserById));
-router.get('/stripe/user/:id', asyncHandler(session.getSessionID));
-router.get('/stripe/session/:session_id', asyncHandler(session.getUserBySession));
+router.get('/stripe/user/:id', asyncHandler(getSessionID));
+router.get('/stripe/session/:session_id', asyncHandler(getUserBySession));
 
 // POSTs
 router.post('/', asyncHandler(userControllers.addUser));
@@ -20,7 +21,7 @@ router.post('/guest', asyncHandler(userControllers.guestlogin));
 
 // PATCHs
 router.patch('/:id', authorize(jwtScope.apiuser), asyncHandler(userControllers.updateUser));
-router.patch('/stripe/:id', asyncHandler(session.patchSessionID));
+router.patch('/stripe/:id', asyncHandler(patchSessionID));
 
 // DELETEs
 router.delete('/:id', authorize(jwtScope.apiuser), asyncHandler(userControllers.deleteUser));
