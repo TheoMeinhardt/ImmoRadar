@@ -11,6 +11,16 @@
           icon="fa-solid fa-arrow-left"
         ></q-btn>
       </div>
+      <div class="mapbutton">
+        <q-btn
+          to="/"
+          class="q-ma-md"
+          round
+          flat
+          style="background-color: #00000080; color: white"
+          icon="fa-solid fa-location-dot"
+        ></q-btn>
+      </div>
       <q-img
         :src="images[0]"
         style="width: 100%; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px"
@@ -49,7 +59,12 @@
       >
 
       <div v-for="i in images.slice(1)" :key="i" class="row inline">
-        <q-img :src="i" class="q-ma-sm" style="width: 100px; height: 100px; border-radius: 20px">
+        <q-img
+          :src="i"
+          class="q-ma-sm"
+          style="width: 100px; height: 100px; border-radius: 20px"
+          @click="carousel = true"
+        >
         </q-img>
       </div>
 
@@ -117,29 +132,37 @@
       </div>
 
       <span class="text-h5 block q-mb-md"><b>Heating</b></span>
-      <div class="row inline text-center">
+      <div class="row text-center">
         <div class="text-h6 q-ma-md q-mr-md col">
-          <span>{{ realEstateStore.wholeRealEstate.propertyArea }}m²</span>
+          <span>{{ realEstateStore.wholeRealEstate.heating.heatingRequirement }}€</span>
           <div>
             <p class="text-body2">Heating Cost</p>
           </div>
         </div>
 
-        <div class="text-h6 q-ma-md col">
-          <span>{{ realEstateStore.wholeRealEstate.usableArea }}m²</span>
+        <div class="text-h6 q-ma-md col text-capitalize">
+          <span>{{ realEstateStore.wholeRealEstate.heating.type }}</span>
           <div>
             <p class="text-body2">Heating Type</p>
           </div>
         </div>
 
-        <div class="text-h6 q-ma-md col">
-          <span>{{ realEstateStore.wholeRealEstate.heatingID }}</span>
+        <div class="text-h6 q-ma-md col text-capitalize">
+          <span>{{ realEstateStore.wholeRealEstate.heating.combustible }}</span>
           <div>
             <p class="text-body2">Combustible</p>
           </div>
         </div>
       </div>
     </div>
+
+    <q-dialog v-model="carousel">
+      <div>
+        <q-carousel swipeable animated v-model="slide" thumbnails infinite style="width: 300px">
+          <q-carousel-slide v-for="i in images" :key="i" :name="i" :img-src="i" />
+        </q-carousel>
+      </div>
+    </q-dialog>
 
     <q-page-sticky position="bottom" :offset="[18, 18]">
       <NavBar></NavBar>
@@ -161,6 +184,8 @@ const props = defineProps({
 const realEstateStore = useRealEstateStore();
 const images = ref([]);
 const finishedLoading = ref(false);
+const carousel = ref(false);
+const slide = ref(1);
 
 onMounted(async () => {
   await realEstateStore.fetchWholeRealEstate(props.reID);
@@ -185,11 +210,24 @@ onMounted(async () => {
   color: white;
 }
 
+.fa-location-dot {
+  color: white;
+}
 .returnbutton {
   position: absolute;
   z-index: 999;
 
   top: 0px;
   left: 0px;
+}
+.mapbutton {
+  position: absolute;
+  z-index: 999;
+
+  top: 55px;
+  left: 0px;
+}
+:deep(.q-carousel) {
+  z-index: 999;
 }
 </style>
