@@ -112,34 +112,55 @@ async function getUserBySession(req: Request, res: Response): Promise<void> {
 
 async function patchSessionID(req: Request, res: Response): Promise<void> {
   const { id } = req.params;
+  console.log(id);
   const { session_id } = req.body;
+  console.log(session_id);
   const userID = id;
 
   if (!session_id) {
+    console.log('No session_id provided');
+
     res.status(400).json({ error: 'No session_id provided' });
+    return;
   }
 
   try {
     // Check if the Stripe session exists
     const stripeSession = await stripe.checkout.sessions.retrieve(session_id);
+    console.log(stripeSession);
   } catch (error) {
-    res.status(404).json({ error: 'Session not found' });
+    console.log('Session not found');
+    res.status(200).json({ error: 'Session not found' });
+    return;
+  }
+
+  // Check if user exists in database
+  const existingUser1 = await dbGetUserBySession(userID);
+  if (existingUser1) {
+    console.log('User not found');
+    res.status(200).json({ error: 'User not found' });
+    return;
   }
 
   // Check if the user already has a session_id
   const existingSession = await dbGetSessionID(userID);
   if (existingSession) {
-    res.status(400).json({ error: 'User already has a session_id' });
+    console.log('User already has a session_id');
+    res.status(200).json({ error: 'User already has a session_id' });
+    return;
   }
 
   // Check if the session_id is already associated with another user
-  const existingUser = await dbGetUserBySession(session_id);
-  if (existingUser) {
-    res.status(400).json({ error: 'Session_id already associated with another user' });
+  const existingUser2 = await dbGetUserBySession(session_id);
+  if (existingUser2) {
+    console.log('Session_id already associated with another user');
+    res.status(200).json({ error: 'Session_id already associated with another user' });
+    return;
   }
 
   // If all checks pass, update the user's session_id
   const updatedSessionID = await dbPatchSessionID(session_id, userID);
+  console.log('OK');
   res.status(200).json(updatedSessionID);
 }
 

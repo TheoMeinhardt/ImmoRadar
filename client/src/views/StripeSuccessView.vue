@@ -84,17 +84,17 @@ const dbSessionID = ref();
 
 onMounted(async () => {
   //Premium
-  const id = 'bec5a04c-7bcf-42f5-8b6c-0765923ec6be';
+  // const id = '575e72af-e14c-45e7-afa5-932a50d8400d';
 
-  //Kein Premium
-  // const id = '8153a1fc-e958-4658-9451-e55df5a4db45';
+  // Kein Premium
+  const id = '8153a1fc-e958-4658-9451-e55df5a4db45';
 
   // Eigentlicher User
   // const id = usterStore.user.id;
 
   try {
-    var hash = location.hash;
-    var sessionHash = hash.match(/session_id=([^&]+)/);
+    let hash = location.hash;
+    let sessionHash = hash.match(/session_id=([^&]+)/);
 
     if (sessionHash === null) {
       console.log('Es wurde keine Bezahlung durchgeführt!');
@@ -105,6 +105,10 @@ onMounted(async () => {
         session_id: sessionId,
       });
       console.log(data);
+      if (data.error === 'User already has a session_id') alreadyBought.value = true;
+      if (data.error === 'Session_id already associated with another user')
+        triedToSteal.value = true;
+      if (data.error === 'Session not found') invalidSessionID.value = true;
     }
   } catch (error) {
     console.error(error);
