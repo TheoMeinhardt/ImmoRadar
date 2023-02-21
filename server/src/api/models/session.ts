@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import pool from '../../config/dbconfig';
 
 const dbGetSessionID = async (userID: string) => {
