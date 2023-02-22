@@ -63,31 +63,34 @@ async function getPostsAndComments(req, res) {
 
 async function postPost(req, res) {
   try {
-    const { title, content, user_id, re_id } = req.body;
+    const { id: re_id } = req.params;
+    const { title, content, user_id } = req.body;
 
     const result = await dbPostPost(title, content, user_id, re_id);
-    res.status(200).json(result);
+    return res.status(200).json(result);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Server error' });
+    return res.status(500).json({ error: 'Server error' });
   }
 }
 
 async function postComment(req, res) {
   try {
-    const { content, user_id, post_id } = req.body;
+    const { post_id } = req.params;
+    const { content, user_id } = req.body;
 
     const result = await dbPostComment(content, user_id, post_id);
-    res.status(200).json(result);
+    return res.status(200).json(result);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Server error' });
+    return res.status(500).json({ error: 'Server error' });
   }
 }
 
 async function likePost(req, res) {
   try {
-    const { user_id, post_id } = req.body;
+    const { post_id } = req.params;
+    const { user_id } = req.body;
 
     // Check if post exists
     const postExists = await dbGetPostByPostID(post_id);
@@ -102,10 +105,10 @@ async function likePost(req, res) {
     }
 
     const result = await dbLikePost(user_id, post_id);
-    res.status(200).json(result);
+    return res.status(200).json(result);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Server error' });
+    return res.status(500).json({ error: 'Server error' });
   }
 }
 
@@ -126,10 +129,10 @@ async function likeComment(req, res) {
     }
 
     const result = await dbLikeComment(user_id, comment_id);
-    res.status(200).json(result);
+    return res.status(200).json(result);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Server error' });
+    return res.status(500).json({ error: 'Server error' });
   }
 }
 
@@ -154,7 +157,7 @@ async function patchPost(req, res) {
   return res.status(200).json(updatedPost);
 }
 
-async function dBPatchComment(req, res) {
+async function patchComment(req, res) {
   const { content, user_id } = req.body;
   const { comment_id } = req.params;
 
@@ -192,10 +195,10 @@ async function unlikePost(req, res) {
     }
 
     const result = await dbUnlikePost(user_id, post_id);
-    res.status(200).json(result);
+    return res.status(200).json(result);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Server error' });
+    return res.status(500).json({ error: 'Server error' });
   }
 }
 
@@ -216,11 +219,43 @@ async function unlikeComment(req, res) {
     }
 
     const result = await dbUnlikeComment(user_id, comment_id);
-    res.status(200).json(result);
+    return res.status(200).json(result);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Server error' });
+    return res.status(500).json({ error: 'Server error' });
   }
+}
+
+async function deletePost(req, res) {
+  const { post_id } = req.params;
+  const { user_id } = req.body;
+  const post = await dbGetPostByPostID(post_id);
+  if (!post) {
+    res.status(404).json({ message: 'Post not found' });
+    return;
+  }
+  if (post.user_id !== user_id) {
+    res.status(403).json({ message: 'You are not authorized to delete this post' });
+    return;
+  }
+  await dbDeletePost(post_id);
+  res.status(200).json({ message: 'Post deleted successfully' });
+}
+
+async function deleteComment(req, res) {
+  const { comment_id } = req.params;
+  const { user_id } = req.body;
+  const comment = await dbGetCommentByCommentID(comment_id);
+  if (!comment) {
+    res.status(404).json({ message: 'Comment not found' });
+    return;
+  }
+  if (comment.user_id !== user_id) {
+    res.status(403).json({ message: 'You are not authorized to delete this comment' });
+    return;
+  }
+  await dbDeleteComment(comment_id);
+  res.status(200).json({ message: 'Comment deleted successfully' });
 }
 
 export {
@@ -228,9 +263,11 @@ export {
   postPost,
   postComment,
   patchPost,
-  dBPatchComment,
+  patchComment,
   likePost,
   unlikePost,
   likeComment,
   unlikeComment,
+  deletePost,
+  deleteComment,
 };
