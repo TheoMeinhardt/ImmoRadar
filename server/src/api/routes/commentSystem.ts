@@ -1,18 +1,6 @@
 import asyncHandler from 'express-async-handler';
 import { Router } from 'express';
-import {
-  getPostsAndComments,
-  postPost,
-  postComment,
-  patchPost,
-  patchComment,
-  likePost,
-  unlikePost,
-  likeComment,
-  unlikeComment,
-  deletePost,
-  deleteComment,
-} from '../controllers/commentSystem.js';
+import { getPostsAndComments, postPost, postComment, patchPost, patchComment, likePost, unlikePost, likeComment, unlikeComment, deletePost, deleteComment } from '../controllers/commentSystem.js';
 
 const router = Router();
 

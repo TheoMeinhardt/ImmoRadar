@@ -1,25 +1,6 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-await-in-loop */
-import {
-  dbCheckLikeExistsOnPost,
-  dbCheckLikeExistsOnComment,
-  dbGetPostsByRealEstate,
-  dbGetPostByPostID,
-  dbGetCommentsByPost,
-  dbGetCommentByCommentID,
-  dbGetLikesFromPost,
-  dbGetLikesFromComments,
-  dbPostPost,
-  dbLikePost,
-  dbPostComment,
-  dbLikeComment,
-  dbPatchPost,
-  dbPatchComment,
-  dbDeletePost,
-  dbUnlikePost,
-  dbDeleteComment,
-  dbUnlikeComment,
-} from '../models/commentSystem.js';
+import { dbCheckLikeExistsOnPost, dbCheckLikeExistsOnComment, dbGetPostsByRealEstate, dbGetPostByPostID, dbGetCommentsByPost, dbGetCommentByCommentID, dbGetLikesFromPost, dbGetLikesFromComments, dbPostPost, dbLikePost, dbPostComment, dbLikeComment, dbPatchPost, dbPatchComment, dbDeletePost, dbUnlikePost, dbDeleteComment, dbUnlikeComment } from '../models/commentSystem.js';
 
 //  -------------- GETS --------------
 
@@ -40,17 +21,13 @@ async function getPostsAndComments(req, res) {
     for (let j = 0; j < comments.length; j += 1) {
       const comment = comments[j];
       const likesForComment = await dbGetLikesFromComments(comment.comment_id);
-      if (
-        !postCommentResult[post.post_id].comments.find((c) => c.comment_id === comment.comment_id)
-      ) {
+      if (!postCommentResult[post.post_id].comments.find((c) => c.comment_id === comment.comment_id)) {
         postCommentResult[post.post_id].comments.push({
           ...comment,
           likes: likesForComment[0].count,
         });
       } else {
-        const commentIndex = postCommentResult[post.post_id].comments.findIndex(
-          (c) => c.comment_id === comment.comment_id,
-        );
+        const commentIndex = postCommentResult[post.post_id].comments.findIndex((c) => c.comment_id === comment.comment_id);
         postCommentResult[post.post_id].comments[commentIndex].likes = likesForComment[0].count;
       }
     }
@@ -258,16 +235,4 @@ async function deleteComment(req, res) {
   res.status(200).json({ message: 'Comment deleted successfully' });
 }
 
-export {
-  getPostsAndComments,
-  postPost,
-  postComment,
-  patchPost,
-  patchComment,
-  likePost,
-  unlikePost,
-  likeComment,
-  unlikeComment,
-  deletePost,
-  deleteComment,
-};
+export { getPostsAndComments, postPost, postComment, patchPost, patchComment, likePost, unlikePost, likeComment, unlikeComment, deletePost, deleteComment };
