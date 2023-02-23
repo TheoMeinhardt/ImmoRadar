@@ -1,70 +1,71 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-await-in-loop */
+import { Request, Response } from 'express';
 import { dbCheckLikeExistsOnPost, dbCheckLikeExistsOnComment, dbGetPostsByRealEstate, dbGetPostByPostID, dbGetCommentsByPost, dbGetCommentByCommentID, dbGetLikesFromPost, dbGetLikesFromComments, dbPostPost, dbLikePost, dbPostComment, dbLikeComment, dbPatchPost, dbPatchComment, dbDeletePost, dbUnlikePost, dbDeleteComment, dbUnlikeComment } from '../models/commentSystem.js';
 
 //  -------------- GETS --------------
 
-async function getPostsAndComments(req, res) {
-  const { re_id } = req.params;
-  const posts = await dbGetPostsByRealEstate(re_id);
+async function getPostsAndComments(req: Request, res: Response): Promise<void> {
+  const { reID } = req.params;
+  const posts = await dbGetPostsByRealEstate(reID);
 
-  const postCommentResult = {};
+  // const postCommentResult = {};
 
-  for (let i = 0; i < posts.length; i += 1) {
-    const post = posts[i];
-    const comments = await dbGetCommentsByPost(post.post_id);
-    const likesForPost = await dbGetLikesFromPost(post.post_id);
-    if (!postCommentResult[post.post_id]) {
-      postCommentResult[post.post_id] = { ...post, comments: [] };
-    }
-    postCommentResult[post.post_id].likes = likesForPost[0].count;
-    for (let j = 0; j < comments.length; j += 1) {
-      const comment = comments[j];
-      const likesForComment = await dbGetLikesFromComments(comment.comment_id);
-      if (!postCommentResult[post.post_id].comments.find((c) => c.comment_id === comment.comment_id)) {
-        postCommentResult[post.post_id].comments.push({
-          ...comment,
-          likes: likesForComment[0].count,
-        });
-      } else {
-        const commentIndex = postCommentResult[post.post_id].comments.findIndex((c) => c.comment_id === comment.comment_id);
-        postCommentResult[post.post_id].comments[commentIndex].likes = likesForComment[0].count;
-      }
-    }
-  }
+  // for (let i = 0; i < posts.length; i += 1) {
+  //   const post = posts[i];
+  //   const comments = await dbGetCommentsByPost(post.post_id);
+  //   const likesForPost = await dbGetLikesFromPost(post.post_id);
+  //   if (!postCommentResult[post.post_id]) {
+  //     postCommentResult[post.post_id] = { ...post, comments: [] };
+  //   }
+  //   postCommentResult[post.post_id].likes = likesForPost[0].count;
+  //   for (let j = 0; j < comments.length; j += 1) {
+  //     const comment = comments[j];
+  //     const likesForComment = await dbGetLikesFromComments(comment.comment_id);
+  //     if (!postCommentResult[post.post_id].comments.find((c) => c.comment_id === comment.comment_id)) {
+  //       postCommentResult[post.post_id].comments.push({
+  //         ...comment,
+  //         likes: likesForComment[0].count,
+  //       });
+  //     } else {
+  //       const commentIndex = postCommentResult[post.post_id].comments.findIndex((c) => c.comment_id === comment.comment_id);
+  //       postCommentResult[post.post_id].comments[commentIndex].likes = likesForComment[0].count;
+  //     }
+  //   }
+  // }
 
-  res.status(200).json(Object.values(postCommentResult));
+  res.status(200).json(posts);
 }
 
 //  -------------- POSTS --------------
 
-async function postPost(req, res) {
+async function postPost(req: Request, res: Response): Promise<void> {
   try {
     const { id: re_id } = req.params;
     const { title, content, user_id } = req.body;
 
     const result = await dbPostPost(title, content, user_id, re_id);
-    return res.status(200).json(result);
+    res.status(200).json(result);
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ error: 'Server error' });
   }
 }
 
-async function postComment(req, res) {
+async function postComment(req: Request, res: Response): Promise<void> {
   try {
     const { post_id } = req.params;
     const { content, user_id } = req.body;
 
     const result = await dbPostComment(content, user_id, post_id);
-    return res.status(200).json(result);
+    res.status(200).json(result);
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ error: 'Server error' });
   }
 }
 
-async function likePost(req, res) {
+async function likePost(req: Request, res: Response): Promise<void> {
   try {
     const { post_id } = req.params;
     const { user_id } = req.body;
@@ -72,146 +73,146 @@ async function likePost(req, res) {
     // Check if post exists
     const postExists = await dbGetPostByPostID(post_id);
     if (!postExists) {
-      return res.status(404).json({ error: 'Post not found' });
+      res.status(404).json({ error: 'Post not found' });
     }
 
     // Check if like already exists
     const likeExists = await dbCheckLikeExistsOnPost(user_id, post_id);
     if (likeExists) {
-      return res.status(400).json({ error: 'Like already exists' });
+      res.status(400).json({ error: 'Like already exists' });
     }
 
     const result = await dbLikePost(user_id, post_id);
-    return res.status(200).json(result);
+    res.status(200).json(result);
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ error: 'Server error' });
   }
 }
 
-async function likeComment(req, res) {
+async function likeComment(req: Request, res: Response): Promise<void> {
   try {
     const { user_id, comment_id } = req.body;
 
     // Check if comment exists
     const commentExists = await dbGetCommentByCommentID(comment_id);
     if (!commentExists) {
-      return res.status(404).json({ error: 'Comment not found' });
+      res.status(404).json({ error: 'Comment not found' });
     }
 
     // Check if like already exists
     const likeExists = await dbCheckLikeExistsOnComment(user_id, comment_id);
     if (likeExists) {
-      return res.status(400).json({ error: 'Like already exists' });
+      res.status(400).json({ error: 'Like already exists' });
     }
 
     const result = await dbLikeComment(user_id, comment_id);
-    return res.status(200).json(result);
+    res.status(200).json(result);
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ error: 'Server error' });
   }
 }
 
 //  -------------- PATCHES/UPDATES --------------
 
-async function patchPost(req, res) {
+async function patchPost(req: Request, res: Response): Promise<void> {
   const { title, content, user_id } = req.body;
   const { post_id } = req.params;
 
-  const post = await dbGetPostByPostID(post_id);
+  const postById = await dbGetPostByPostID(post_id);
 
-  if (!post) {
-    return res.status(404).json({ message: 'Post not found' });
+  if (!postById) {
+    res.status(404).json({ message: 'Post not found' });
   }
 
-  if (post.user_id !== user_id) {
-    return res.status(401).json({ message: 'Not authorized to edit this post' });
+  if (postById.userID !== user_id) {
+    res.status(401).json({ message: 'Not authorized to edit this post' });
   }
 
   const updatedPost = await dbPatchPost(title, content, post_id);
 
-  return res.status(200).json(updatedPost);
+  res.status(200).json(updatedPost);
 }
 
-async function patchComment(req, res) {
+async function patchComment(req: Request, res: Response): Promise<void> {
   const { content, user_id } = req.body;
   const { comment_id } = req.params;
 
   const comment = await dbGetCommentByCommentID(comment_id);
 
   if (!comment) {
-    return res.status(404).json({ message: 'Comment not found' });
+    res.status(404).json({ message: 'Comment not found' });
   }
 
-  if (comment.user_id !== user_id) {
-    return res.status(401).json({ message: 'Not authorized to edit this comment' });
+  if (comment.userID !== user_id) {
+    res.status(401).json({ message: 'Not authorized to edit this comment' });
   }
 
   const updatedComment = await dbPatchComment(content, comment_id);
 
-  return res.status(200).json(updatedComment);
+  res.status(200).json(updatedComment);
 }
 
 //  -------------- DELETES --------------
 
-async function unlikePost(req, res) {
+async function unlikePost(req: Request, res: Response): Promise<void> {
   try {
     const { user_id, post_id } = req.body;
 
     // Check if post exists
     const postExists = await dbGetPostByPostID(post_id);
     if (!postExists) {
-      return res.status(404).json({ error: 'Post not found' });
+      res.status(404).json({ error: 'Post not found' });
     }
 
     // Check if like exists
     const likeExists = await dbCheckLikeExistsOnPost(user_id, post_id);
     if (!likeExists) {
-      return res.status(400).json({ error: 'Like does not exist' });
+      res.status(400).json({ error: 'Like does not exist' });
     }
 
     const result = await dbUnlikePost(user_id, post_id);
-    return res.status(200).json(result);
+    res.status(200).json(result);
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ error: 'Server error' });
   }
 }
 
-async function unlikeComment(req, res) {
+async function unlikeComment(req: Request, res: Response): Promise<void> {
   try {
     const { user_id, comment_id } = req.body;
 
     // Check if comment exists
     const commentExists = await dbGetCommentByCommentID(comment_id);
     if (!commentExists) {
-      return res.status(404).json({ error: 'Comment not found' });
+      res.status(404).json({ error: 'Comment not found' });
     }
 
     // Check if like exists
     const likeExists = await dbCheckLikeExistsOnComment(user_id, comment_id);
     if (!likeExists) {
-      return res.status(400).json({ error: 'Like does not exist' });
+      res.status(400).json({ error: 'Like does not exist' });
     }
 
     const result = await dbUnlikeComment(user_id, comment_id);
-    return res.status(200).json(result);
+    res.status(200).json(result);
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ error: 'Server error' });
   }
 }
 
-async function deletePost(req, res) {
+async function deletePost(req: Request, res: Response): Promise<void> {
   const { post_id } = req.params;
   const { user_id } = req.body;
-  const post = await dbGetPostByPostID(post_id);
-  if (!post) {
+  const postByID = await dbGetPostByPostID(post_id);
+  if (!postByID) {
     res.status(404).json({ message: 'Post not found' });
     return;
   }
-  if (post.user_id !== user_id) {
+  if (postByID.userID !== user_id) {
     res.status(403).json({ message: 'You are not authorized to delete this post' });
     return;
   }
@@ -219,7 +220,7 @@ async function deletePost(req, res) {
   res.status(200).json({ message: 'Post deleted successfully' });
 }
 
-async function deleteComment(req, res) {
+async function deleteComment(req: Request, res: Response): Promise<void> {
   const { comment_id } = req.params;
   const { user_id } = req.body;
   const comment = await dbGetCommentByCommentID(comment_id);
@@ -227,7 +228,7 @@ async function deleteComment(req, res) {
     res.status(404).json({ message: 'Comment not found' });
     return;
   }
-  if (comment.user_id !== user_id) {
+  if (comment.userID !== user_id) {
     res.status(403).json({ message: 'You are not authorized to delete this comment' });
     return;
   }
