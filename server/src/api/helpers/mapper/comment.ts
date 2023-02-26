@@ -10,6 +10,7 @@ async function commentMapper(dto: commentDTO | commentDTO[]): Promise<comment | 
       likes: await dbGetLikesFromComments(d.comment_id),
       postID: d.post_id,
       userID: d.user_id,
+      userName: d.name,
     };
 
     return newComment;

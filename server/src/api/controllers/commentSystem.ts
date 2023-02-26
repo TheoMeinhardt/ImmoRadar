@@ -1,13 +1,13 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-await-in-loop */
 import { Request, Response } from 'express';
-import { dbCheckLikeExistsOnPost, dbCheckLikeExistsOnComment, dbGetPostsByRealEstate, dbGetPostByPostID, dbGetCommentsByPost, dbGetCommentByCommentID, dbGetLikesFromPost, dbGetLikesFromComments, dbPostPost, dbLikePost, dbPostComment, dbLikeComment, dbPatchPost, dbPatchComment, dbDeletePost, dbUnlikePost, dbDeleteComment, dbUnlikeComment } from '../models/commentSystem.js';
+import { dbCheckLikeExistsOnPost, dbCheckLikeExistsOnComment, dbGetPostsByRealEstate, dbGetPostByPostID, dbGetCommentsByPost, dbGetCommentByCommentID, dbGetLikesFromPost, dbGetLikesFromComments, dbPostPost, dbLikePost, dbPostComment, dbLikeComment, dbPatchPost, dbPatchComment, dbDeletePost, dbUnlikePost, dbDeleteComment, dbUnlikeComment } from '../models/commentSystem';
 
 //  -------------- GETS --------------
 
 async function getPostsAndComments(req: Request, res: Response): Promise<void> {
-  const { reID } = req.params;
-  const posts = await dbGetPostsByRealEstate(reID);
+  const { id: re_id } = req.params;
+  const posts = await dbGetPostsByRealEstate(re_id);
 
   // const postCommentResult = {};
 

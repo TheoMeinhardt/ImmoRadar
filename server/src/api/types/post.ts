@@ -7,6 +7,7 @@ type postDTO = {
   created_at: Date;
   re_id: string;
   user_id: string;
+  name: string;
 };
 
 type post = {
@@ -18,6 +19,7 @@ type post = {
   likes: number;
   reID: string;
   userID: string;
+  userName: string;
 };
 
 export { postDTO, post };

@@ -12,6 +12,7 @@ async function postMapper(dto: postDTO | postDTO[]): Promise<post | post[]> {
       likes: await dbGetLikesFromPost(d.post_id),
       reID: d.re_id,
       userID: d.user_id,
+      userName: d.name,
     };
 
     return newPost;

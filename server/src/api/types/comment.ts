@@ -4,6 +4,7 @@ type commentDTO = {
   created_at: Date;
   post_id: string;
   user_id: string;
+  name: string;
 };
 
 type comment = {
@@ -13,6 +14,7 @@ type comment = {
   likes: number;
   postID: string;
   userID: string;
+  userName: string;
 };
 
 export { comment, commentDTO };
