@@ -7,17 +7,14 @@ import { dbGetSessionID, dbPatchSessionID, dbGetUserBySession } from '../models/
 
 dotenv.config();
 
-const stripe: Stripe = new Stripe(
-  'sk_test_51LkOYYKr94hGO7PCiTzlKx8duhxgMbUypUcWf47njwy5dVir6eRltBlKxa7hrVjB8Dd1Eqb65PmKAwTYEE0wfFpw00PE0OM81E' as string,
-  {
-    apiVersion: '2022-08-01',
-    appInfo: {
-      name: 'immoradar',
-      version: '0.0.1',
-      url: 'immoradar.co.at',
-    },
+const stripe: Stripe = new Stripe('sk_test_51LkOYYKr94hGO7PCiTzlKx8duhxgMbUypUcWf47njwy5dVir6eRltBlKxa7hrVjB8Dd1Eqb65PmKAwTYEE0wfFpw00PE0OM81E' as string, {
+  apiVersion: '2022-08-01',
+  appInfo: {
+    name: 'immoradar',
+    version: '0.0.1',
+    url: 'immoradar.co.at',
   },
-);
+});
 
 async function postToWebhook(req: Request, res: Response): Promise<void> {
   let event: any;
@@ -112,9 +109,7 @@ async function getUserBySession(req: Request, res: Response): Promise<void> {
 
 async function patchSessionID(req: Request, res: Response): Promise<void> {
   const { id } = req.params;
-  console.log(id);
   const { session_id } = req.body;
-  console.log(session_id);
   const userID = id;
 
   if (!session_id) {
@@ -165,11 +160,4 @@ async function patchSessionID(req: Request, res: Response): Promise<void> {
 }
 
 // StripeInvalidRequestError
-export {
-  postToWebhook,
-  createCheckout,
-  createPortal,
-  getSessionID,
-  patchSessionID,
-  getUserBySession,
-};
+export { postToWebhook, createCheckout, createPortal, getSessionID, patchSessionID, getUserBySession };
