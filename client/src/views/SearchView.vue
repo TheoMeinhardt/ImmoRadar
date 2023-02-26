@@ -86,6 +86,7 @@ const realEstateStore = useRealEstateStore();
 const searchString = ref('');
 const filtersOpened = ref(false);
 const realEstates = ref(realEstateStore.realEstatesShort);
+const searchedOrFilteredRealEstates = ref(realEstateStore.realEstatesShort);
 
 // Filters
 const priceRange = ref({ min: 0, max: realEstateStore.maxPrice });
@@ -99,7 +100,7 @@ const leftUsableAreaMarkerDisplay = computed(() => `${usableAreaRange.value.min}
 const rightUsableAreaMarkerDisplay = computed(() => `${usableAreaRange.value.max}m²`);
 
 async function applyFilters() {
-  realEstates.value = realEstates.value.filter((re) => re.price >= priceRange.value.min && re.price <= priceRange.value.max && re.usableArea >= usableAreaRange.value.min && re.usableArea <= usableAreaRange.value.max);
+  realEstates.value = searchedOrFilteredRealEstates.value.filter((re) => re.price >= priceRange.value.min && re.price <= priceRange.value.max && re.usableArea >= usableAreaRange.value.min && re.usableArea <= usableAreaRange.value.max);
 }
 
 async function search() {
@@ -110,18 +111,21 @@ async function search() {
 
     if (bbox) {
       const poly = bboxPolygon(bbox);
-      realEstates.value = realEstateStore.realEstatesShort.filter((re) => booleanPointInPolygon(point([re.long, re.lat]), poly));
+      realEstates.value = searchedOrFilteredRealEstates.value.filter((re) => booleanPointInPolygon(point([re.long, re.lat]), poly));
+      searchedOrFilteredRealEstates.value = realEstates.value;
     }
   }
 }
 
 function resetSearch() {
   realEstates.value = realEstateStore.realEstatesShort;
+  searchedOrFilteredRealEstates.value = realEstateStore.realEstatesShort;
   searchString.value = '';
 }
 
 function resetFilters() {
   realEstates.value = realEstateStore.realEstatesShort;
+  searchedOrFilteredRealEstates.value = realEstateStore.realEstatesShort;
   searchString.value = '';
   priceRange.value = { min: 0, max: realEstateStore.maxPrice };
   usableAreaRange.value = { min: 0.0, max: Number(realEstateStore.maxUsableArea) };
