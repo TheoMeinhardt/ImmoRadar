@@ -5,7 +5,7 @@ import * as db from '../models';
 async function getAssets(req: Request, res: Response): Promise<void> {
   const assets: asset[] = await db.getAssets();
 
-  res.status(200).json(assets.map((asst) => ({ name: asst.name, icon: asst.icon })));
+  res.status(200).json(assets);
 }
 
 export { getAssets };

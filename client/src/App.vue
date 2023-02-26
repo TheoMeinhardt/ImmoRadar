@@ -45,4 +45,8 @@ onMounted(async () => {
 body {
   background-color: #4b506e;
 }
+
+.cursor-pointer {
+  cursor: pointer;
+}
 </style>
