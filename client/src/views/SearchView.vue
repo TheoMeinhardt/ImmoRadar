@@ -3,11 +3,10 @@
     <q-page-container>
       <div class="flex justify-center" style="width: 100vw">
         <div class="column justify-center items-center">
-          <q-input v-model="searchString" filled input-class="text-dark" type="search" bg-color="white" color="grey" placeholder="Vienna" class="searchBar block row">
+          <q-input v-model="searchString" filled input-class="text-dark" type="search" bg-color="white" color="grey" placeholder="1160, Wien" class="searchBar block row">
             <template v-slot:append>
               <q-select v-model="forSaleRent" filled color="dark" options-dense bg-color="primary" class="forSaleRentDropdow" option-value="id" option-label="desc" emit-value map-options :options="forSaleRentOptions" dense flat />
               <q-icon @click="search" name="fa-solid fa-search" class="q-ml-sm cursor-pointer" color="dark" />
-              <!-- <q-icon @click="resetSearch" name="fa-regular fa-circle-xmark" color="dark" class="q-ml-sm cursor-pointer" size="1rem" /> -->
             </template>
           </q-input>
 
@@ -77,7 +76,8 @@ const realEstateStore = useRealEstateStore();
 const searchString = ref('');
 const filtersOpened = ref(false);
 const realEstates = ref(realEstateStore.realEstatesShort);
-const searchedOrFilteredRealEstates = ref(realEstateStore.realEstatesShort);
+const searchedRealEstates = ref(realEstateStore.realEstatesShort);
+const filteredRealEstates = ref(realEstateStore.realEstatesShort);
 
 // Filters
 const priceRange = ref({ min: 0, max: realEstateStore.maxPrice });
@@ -95,7 +95,8 @@ const leftUsableAreaMarkerDisplay = computed(() => `${usableAreaRange.value.min}
 const rightUsableAreaMarkerDisplay = computed(() => `${usableAreaRange.value.max}m²`);
 
 async function applyFilters() {
-  realEstates.value = searchedOrFilteredRealEstates.value.filter((re) => re.price >= priceRange.value.min && re.price <= priceRange.value.max && re.usableArea >= usableAreaRange.value.min && re.usableArea <= usableAreaRange.value.max && re.buyable === forSaleRent.value);
+  realEstates.value = searchedRealEstates.value.filter((re) => re.price >= priceRange.value.min && re.price <= priceRange.value.max && re.usableArea >= usableAreaRange.value.min && re.usableArea <= usableAreaRange.value.max && re.buyable === forSaleRent.value);
+  filteredRealEstates.value = realEstates.value;
 }
 
 async function search() {
@@ -106,16 +107,10 @@ async function search() {
 
     if (bbox) {
       const poly = bboxPolygon(bbox);
-      realEstates.value = searchedOrFilteredRealEstates.value.filter((re) => booleanPointInPolygon(point([re.long, re.lat]), poly) && re.buyable === forSaleRent.value);
-      searchedOrFilteredRealEstates.value = realEstates.value;
+      realEstates.value = filteredRealEstates.value.filter((re) => booleanPointInPolygon(point([re.long, re.lat]), poly) && re.buyable === forSaleRent.value);
+      searchedRealEstates.value = realEstates.value;
     }
   }
-}
-
-function resetSearch() {
-  realEstates.value = realEstateStore.realEstatesShort;
-  searchedOrFilteredRealEstates.value = realEstateStore.realEstatesShort;
-  searchString.value = '';
 }
 
 function resetFilters() {
@@ -123,7 +118,8 @@ function resetFilters() {
   realEstateStore.calcMaxUsableArea(true);
 
   realEstates.value = realEstateStore.realEstatesShort;
-  searchedOrFilteredRealEstates.value = realEstateStore.realEstatesShort;
+  filteredRealEstates.value = realEstateStore.realEstatesShort;
+  searchedRealEstates.value = realEstateStore.realEstatesShort;
   searchString.value = '';
   priceRange.value = { min: 0, max: realEstateStore.maxPrice };
   usableAreaRange.value = { min: 0.0, max: Number(realEstateStore.maxUsableArea) };
