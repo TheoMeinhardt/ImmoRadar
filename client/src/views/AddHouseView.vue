@@ -165,6 +165,9 @@ function onContinueStep() {
         stepperRef.value.next();
       }
       break;
+    case 4:
+      stepperRef.value.next();
+      break;
     case 5:
       finishedEstate = {
         name: estate.value,
@@ -229,7 +232,7 @@ function onContinueStep() {
           active-color="primary"
           active-icon="none"
         >
-          <div class="q-mx-md">
+          <div class="q-mx-sm">
             <p class="text-white" style="font-family: Keep Calm">Basic information</p>
             <q-input
               v-model="estate"
@@ -308,17 +311,22 @@ function onContinueStep() {
               borderless
               type="textarea"
             ></q-editor>
-            <div class="text-center">
+            <div class="">
+              <p class="text-white q-mt-md" style="font-family: Keep Calm">Status</p>
               <q-chip
                 v-if="status == 'rentable'"
-                text-color="grey-6"
-                style="font-family: Keep Calm"
+                class="col-1 cursor-pointer q-pa-lg"
+                style="width: fit-content; font-family: Keep Calm"
+                outline
+                color="primary"
+                text-color="white"
                 clickable
                 @click="status = 'buyable'"
                 >Buyable</q-chip
               >
               <q-chip
                 v-if="status == 'buyable'"
+                class="q-pa-lg"
                 color="primary"
                 text-color="black"
                 style="font-family: Keep Calm"
@@ -326,14 +334,18 @@ function onContinueStep() {
               >
               <q-chip
                 v-if="status == 'buyable'"
-                text-color="grey-6"
-                style="font-family: Keep Calm"
+                class="col-1 cursor-pointer q-pa-lg"
+                style="width: fit-content; font-family: Keep Calm"
+                outline
+                color="primary"
+                text-color="white"
                 clickable
                 @click="status = 'rentable'"
                 >Rentable</q-chip
               >
               <q-chip
                 v-if="status == 'rentable'"
+                class="q-pa-lg"
                 color="primary"
                 text-color="black"
                 style="font-family: Keep Calm"
@@ -341,7 +353,7 @@ function onContinueStep() {
               >
             </div>
             <p class="text-white q-mt-md" style="font-family: Keep Calm">Assets*</p>
-            <div class="text-center">
+            <div class="">
               <q-chip
                 v-for="asset of assets"
                 v-model:selected="
@@ -365,7 +377,7 @@ function onContinueStep() {
           active-color="primary"
           active-icon="none"
         >
-          <div class="q-mx-md">
+          <div class="q-mx-sm">
             <p class="text-white" style="font-family: Keep Calm">Expenses</p>
             <q-input
               v-model="estatePrice"
@@ -440,7 +452,7 @@ function onContinueStep() {
           active-color="primary"
           active-icon="none"
         >
-          <div class="q-mx-md">
+          <div class="q-mx-sm">
             <p class="text-white" style="font-family: Keep Calm">Rooms</p>
             <div class="q-gutter-md row items-start">
               <div class="q-gutter-none row items-start" style="width: 150px">
@@ -464,7 +476,9 @@ function onContinueStep() {
                   style="width: 30%"
                   :rules="[(val) => !!val || 'Please enter a number']"
                 >
-                  <template v-slot:label> <q-icon name="fa-solid fa-door-open"></q-icon></template>
+                  <template v-slot:label>
+                    <q-icon class="text-center" name="fa-solid fa-door-open"></q-icon
+                  ></template>
                 </q-input>
                 <q-btn
                   @click="removeRoom"
@@ -584,7 +598,9 @@ function onContinueStep() {
             <q-file
               v-model="energyCertificate"
               bg-color="primary"
-              class="myFileInput"
+              class="myFileInput text-center"
+              label-color="white"
+              use-chips
               borderless
               label="+ Add Energy Certificate"
               :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }"
@@ -597,7 +613,7 @@ function onContinueStep() {
           icon="img:/images/4.svg"
           active-color="primary"
           active-icon="none"
-          ><div class="q-mx-md">
+          ><div class="q-mx-sm">
             <!-- FIXME Image selector -->
             <p class="text-white" style="font-family: Keep Calm">Images</p>
             <q-file
@@ -607,6 +623,8 @@ function onContinueStep() {
               unelevated
               borderless
               multiple
+              use-chips
+              label-color="white"
             ></q-file>
             <p class="text-white" style="font-family: Keep Calm">Other Documents/Files</p>
             <q-file
@@ -615,6 +633,8 @@ function onContinueStep() {
               class="myFileInput"
               borderless
               multiple
+              use-chips
+              label-color="white"
               label="+ Add"
               :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }"
             ></q-file></div
