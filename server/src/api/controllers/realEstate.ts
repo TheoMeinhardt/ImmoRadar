@@ -1,5 +1,4 @@
-import { Request, Response, raw } from 'express';
-import Stripe from 'stripe';
+import { Request, Response } from 'express';
 import { address, geocodeRes, heating, realEstate, shortRealEstate } from '../types';
 import { makeReadableAddress, addressGeocode } from '../helpers';
 import { realEstateValidator } from '../validators';
@@ -96,9 +95,7 @@ async function patchRealEstate(req: Request, res: Response): Promise<void> {
 
     // create a new real estate object with the data from the original real estate and overwrite every property with the data from the real estate data object
     const patchedRealEstate: realEstate = { ...originalRealEstate, ...realEstateData };
-    patchedRealEstate.address = realEstateData.address
-      ? { ...originalAddress, ...realEstateData.address }
-      : originalAddress;
+    patchedRealEstate.address = realEstateData.address ? { ...originalAddress, ...realEstateData.address } : originalAddress;
 
     // Json verification
     realEstateValidator(patchedRealEstate);
@@ -136,11 +133,4 @@ async function deleteRealEstate(req: Request, res: Response): Promise<void> {
   }
 }
 
-export {
-  getAllRealEstates,
-  getOneRealEstate,
-  getShortendRealEstates,
-  addRealEstate,
-  deleteRealEstate,
-  patchRealEstate,
-};
+export { getAllRealEstates, getOneRealEstate, getShortendRealEstates, addRealEstate, deleteRealEstate, patchRealEstate };
