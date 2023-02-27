@@ -95,7 +95,18 @@ const leftUsableAreaMarkerDisplay = computed(() => `${usableAreaRange.value.min}
 const rightUsableAreaMarkerDisplay = computed(() => `${usableAreaRange.value.max}m²`);
 
 async function applyFilters() {
-  realEstates.value = searchedRealEstates.value.filter((re) => re.price >= priceRange.value.min && re.price <= priceRange.value.max && re.usableArea >= usableAreaRange.value.min && re.usableArea <= usableAreaRange.value.max && re.buyable === forSaleRent.value);
+  realEstates.value = searchedRealEstates.value.filter(
+    (re) =>
+      re.price >= priceRange.value.min &&
+      re.price <= priceRange.value.max &&
+      re.usableArea >= usableAreaRange.value.min &&
+      re.usableArea <= usableAreaRange.value.max &&
+      re.buyable === forSaleRent.value &&
+      realEstateHasAssets(
+        re,
+        assets.value.filter((a) => a.selected),
+      ),
+  );
   filteredRealEstates.value = realEstates.value;
 }
 
@@ -111,6 +122,20 @@ async function search() {
       searchedRealEstates.value = realEstates.value;
     }
   }
+}
+
+function realEstateHasAssets(re, assets) {
+  let matches = 0;
+  for (const a of assets) {
+    if (realEstateHasAsset(re, a)) matches++;
+  }
+
+  return matches === assets.length;
+}
+
+function realEstateHasAsset(re, asset) {
+  if (re.assets.find((a) => a.assetID === asset.assetID)) return true;
+  return false;
 }
 
 function resetFilters() {
