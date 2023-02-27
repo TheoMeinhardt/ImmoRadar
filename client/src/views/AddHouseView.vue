@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
+import axios from 'axios';
 import NavBar from '@/components/NavBar.vue';
 import { useRealEstateStore } from '@/stores/realEstates.js';
 
@@ -119,6 +120,10 @@ const sum = (num1, num2) => {
   return res;
 };
 
+const postEstate = async (estate) => {
+  await axios.post('http://localhost:3000/api/realEstates', estate);
+};
+
 function onContinueStep() {
   switch (step.value) {
     case 1:
@@ -189,6 +194,7 @@ function onContinueStep() {
         constructionYear: constructionYear.value,
         assets: assets.value.filter((asset) => asset.selected === true),
       };
+      postEstate(finishedEstate);
       break;
     default:
       break;
