@@ -53,8 +53,10 @@ type shortRealEstate = {
   lat: number;
   long: number;
   price: number | null;
+  buyable: boolean;
   usableArea: number;
   thumbnail: string;
+  assets: asset[];
   rooms: number;
 };
 

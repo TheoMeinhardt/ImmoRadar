@@ -29,7 +29,7 @@ async function getShortendRealEstates(req: Request, res: Response): Promise<void
   const longRealEstates: realEstate[] = await db.getAllRealEstates();
   const shortRealEstates: shortRealEstate[] = [];
 
-  for await (const { reID, name, address: adrs, price, usableArea, rooms, images } of longRealEstates) {
+  for await (const { reID, name, address: adrs, price, usableArea, buyable, assets, rooms, images } of longRealEstates) {
     const geoinfo: geocodeRes = await addressGeocode(adrs as address);
 
     shortRealEstates.push({
@@ -39,6 +39,8 @@ async function getShortendRealEstates(req: Request, res: Response): Promise<void
       lat: geoinfo.features[0].center[1],
       long: geoinfo.features[0].center[0],
       price,
+      buyable,
+      assets,
       thumbnail: images[0],
       usableArea,
       rooms,
