@@ -22,16 +22,25 @@ export const useRealEstateStore = defineStore('realEstateStore', {
 
       this.realEstatesShort = data;
 
+      this.calcMaxPrice(undefined);
+      this.calcMaxUsableArea(undefined);
+    },
+
+    calcMaxPrice(forSale) {
       let maxPrice = 0;
-      for (const { price } of data) {
-        maxPrice = Number(price) >= Number(maxPrice) ? price : Number(maxPrice);
+      for (const { price, buyable } of this.realEstatesShort) {
+        if (forSale === buyable) maxPrice = Number(price) >= Number(maxPrice) ? price : Number(maxPrice);
+        else if (forSale === undefined) maxPrice = Number(price) >= Number(maxPrice) ? price : Number(maxPrice);
       }
 
       this.maxPrice = maxPrice;
+    },
 
+    calcMaxUsableArea(forSale) {
       let maxUsableArea = 0.0;
-      for (const { usableArea } of data) {
-        maxUsableArea = Number(usableArea) >= Number(maxUsableArea) ? Number(usableArea) : maxUsableArea;
+      for (const { usableArea, buyable } of this.realEstatesShort) {
+        if (forSale === buyable) maxUsableArea = Number(usableArea) >= Number(maxUsableArea) ? Number(usableArea) : maxUsableArea;
+        else if (forSale === undefined) maxUsableArea = Number(usableArea) >= Number(maxUsableArea) ? Number(usableArea) : maxUsableArea;
       }
 
       this.maxUsableArea = Number(maxUsableArea);

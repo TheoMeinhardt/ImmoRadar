@@ -5,8 +5,9 @@
         <div class="column justify-center items-center">
           <q-input v-model="searchString" filled input-class="text-dark" type="search" bg-color="white" color="grey" placeholder="Vienna" class="searchBar block row">
             <template v-slot:append>
-              <q-icon @click="search" name="fa-solid fa-search" class="cursor-pointer" color="dark" />
-              <q-icon @click="resetSearch" name="fa-regular fa-circle-xmark" color="dark" class="q-ml-sm cursor-pointer" size="1rem" />
+              <q-select v-model="forSaleRent" filled color="dark" options-dense bg-color="primary" class="forSaleRentDropdow" option-value="id" option-label="desc" emit-value map-options :options="forSaleRentOptions" dense flat />
+              <q-icon @click="search" name="fa-solid fa-search" class="q-ml-sm cursor-pointer" color="dark" />
+              <!-- <q-icon @click="resetSearch" name="fa-regular fa-circle-xmark" color="dark" class="q-ml-sm cursor-pointer" size="1rem" /> -->
             </template>
           </q-input>
 
@@ -40,16 +41,6 @@
                 <q-chip v-for="asset of assets" v-model:selected="assets[assets.findIndex((a) => a.assetID === asset.assetID)].selected" class="col-1 cursor-pointer" style="width: fit-content" outline color="primary" text-color="white" :key="asset.assetID">{{ asset.name }}</q-chip>
               </div>
 
-              <!-- For sale/rent Filter -->
-              <div class="row justify-between q-mt-md">
-                <div class="col-5 text-left text-subtitle1 text-weight-bolder" style="font-family: 'Keep Calm'">For</div>
-                <div class="col-7 text-right text-caption">{{ forSaleRent.charAt(0).toUpperCase() }}{{ forSaleRent.slice(1) }}</div>
-              </div>
-              <div>
-                <q-radio v-model="forSaleRent" dark checked-icon="task_alt" unchecked-icon="panorama_fish_eye" val="rent" label="Rent" />
-                <q-radio v-model="forSaleRent" dark checked-icon="task_alt" unchecked-icon="panorama_fish_eye" val="sale" label="Sale" />
-              </div>
-
               <div class="q-mt-md text-center">
                 <q-btn @click="applyFilters" unelevated rounded color="primary" label="apply filters" />
                 <q-btn @click="resetFilters" unelevated outline rounded color="primary" class="q-ml-sm" label="reset" />
@@ -75,7 +66,7 @@
 
 <script setup>
 import { point, bboxPolygon, booleanPointInPolygon } from '@turf/turf';
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 
 import NavBar from '@/components/NavBar.vue';
 import RealEstateCard from '../components/RealEstateCard.vue';
@@ -92,7 +83,11 @@ const searchedOrFilteredRealEstates = ref(realEstateStore.realEstatesShort);
 const priceRange = ref({ min: 0, max: realEstateStore.maxPrice });
 const usableAreaRange = ref({ min: 0.0, max: Number(realEstateStore.maxUsableArea) });
 const assets = ref();
-const forSaleRent = ref('rent');
+const forSaleRent = ref(false);
+const forSaleRentOptions = [
+  { id: false, desc: 'for rent' },
+  { id: true, desc: 'for sale' },
+];
 
 const leftPriceMarkerDisplay = computed(() => formatCurrency(priceRange.value.min));
 const rightPriceMarkerDisplay = computed(() => formatCurrency(priceRange.value.max));
@@ -100,7 +95,7 @@ const leftUsableAreaMarkerDisplay = computed(() => `${usableAreaRange.value.min}
 const rightUsableAreaMarkerDisplay = computed(() => `${usableAreaRange.value.max}m²`);
 
 async function applyFilters() {
-  realEstates.value = searchedOrFilteredRealEstates.value.filter((re) => re.price >= priceRange.value.min && re.price <= priceRange.value.max && re.usableArea >= usableAreaRange.value.min && re.usableArea <= usableAreaRange.value.max);
+  realEstates.value = searchedOrFilteredRealEstates.value.filter((re) => re.price >= priceRange.value.min && re.price <= priceRange.value.max && re.usableArea >= usableAreaRange.value.min && re.usableArea <= usableAreaRange.value.max && re.buyable === forSaleRent.value);
 }
 
 async function search() {
@@ -111,7 +106,7 @@ async function search() {
 
     if (bbox) {
       const poly = bboxPolygon(bbox);
-      realEstates.value = searchedOrFilteredRealEstates.value.filter((re) => booleanPointInPolygon(point([re.long, re.lat]), poly));
+      realEstates.value = searchedOrFilteredRealEstates.value.filter((re) => booleanPointInPolygon(point([re.long, re.lat]), poly) && re.buyable === forSaleRent.value);
       searchedOrFilteredRealEstates.value = realEstates.value;
     }
   }
@@ -124,12 +119,15 @@ function resetSearch() {
 }
 
 function resetFilters() {
+  realEstateStore.calcMaxPrice(true);
+  realEstateStore.calcMaxUsableArea(true);
+
   realEstates.value = realEstateStore.realEstatesShort;
   searchedOrFilteredRealEstates.value = realEstateStore.realEstatesShort;
   searchString.value = '';
   priceRange.value = { min: 0, max: realEstateStore.maxPrice };
   usableAreaRange.value = { min: 0.0, max: Number(realEstateStore.maxUsableArea) };
-  forSaleRent.value = 'rent';
+  forSaleRent.value = true;
 
   assets.value.forEach((a) => (a.selected = false));
 }
@@ -137,6 +135,14 @@ function resetFilters() {
 function formatCurrency(num) {
   return `${num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')} €`;
 }
+
+watch(forSaleRent, (newVal) => {
+  realEstateStore.calcMaxPrice(newVal);
+  realEstateStore.calcMaxUsableArea(newVal);
+
+  priceRange.value.max = realEstateStore.maxPrice;
+  usableAreaRange.value.max = realEstateStore.maxUsableArea;
+});
 
 onMounted(async () => {
   await realEstateStore.fetchAssetLabels();
@@ -149,6 +155,14 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
+:deep(.q-field--highlighted) {
+  border: 0px;
+}
+
+:deep(.q-field--filled.q-field--highlighted .q-field__control::after) {
+  transform: scale3d(0, 0, 0);
+}
+
 .searchBar {
   font-family: 'Keep Calm';
   width: 88vw;
@@ -156,6 +170,12 @@ onMounted(async () => {
 
   :deep(.q-field__control) {
     border-radius: 20px;
+  }
+}
+
+.forSaleRentDropdow {
+  :deep(.q-field__control) {
+    border-radius: 15px;
   }
 }
 
