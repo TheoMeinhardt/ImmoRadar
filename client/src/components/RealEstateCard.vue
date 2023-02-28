@@ -1,5 +1,5 @@
 <template>
-  <div class="badge bg-dark q-pa-sm q-ma-md text-white">
+  <div class="badge bg-dark q-pa-sm q-mb-md q-mx-md text-white">
     <q-img v-if="!thumbnailLoading" :src="thumbnail" loading="lazy" />
     <div v-else class="text-center q-my-lg">
       <q-spinner-tail size="2.5em" thickness="5" />
@@ -8,7 +8,7 @@
     <span class="text-heading block q-mt-sm">{{ realEstate.name }}</span>
     <span class="text-address block">{{ realEstate.address.split(',')[0] }},</span>
     <span class="text-address block">{{ realEstate.address.split(',')[1] }}</span>
-    <span class="text-content block q-mt-sm">{{ realEstate.price }}€</span>
+    <span class="text-content block q-mt-sm">{{ new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumSignificantDigits: 12 }).format(realEstate.price) }}</span>
     <span class="text-content block">{{ realEstate.usableArea }}m²</span>
     <span class="text-content block">{{ realEstate.rooms }} Rooms</span>
   </div>

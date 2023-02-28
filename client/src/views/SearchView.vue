@@ -53,7 +53,21 @@
           </div>
         </div>
 
-        <RealEstateCard v-for="re of realEstates" :realEstate="re" :key="re.reID"></RealEstateCard>
+        <div class="row wrap justify-center">
+          <div class="col-12 q-ml-xl q-mb-sm">
+            <div class="gridListSwitchContainer q-px-md q-py-xs bg-dark">
+              <q-icon @click="gridView = true" name="fa-solid fa-border-all" :color="gridView ? 'white' : 'grey'" :size="gridView ? '1.25rem' : '1rem'" class="cursor-pointer q-mr-sm"></q-icon>
+              <q-icon @click="gridView = false" name="fa-solid fa-list-ul" :color="!gridView ? 'white' : 'grey'" :size="!gridView ? '1.25rem' : '1rem'" class="cursor-pointer"></q-icon>
+            </div>
+          </div>
+
+          <div v-if="gridView" class="row wrap justify-center">
+            <RealEstateCard v-for="re of realEstates" :realEstate="re" :key="re.reID" class="col-6" style="width: 40vw"></RealEstateCard>
+          </div>
+          <div v-else class="col">
+            <RealEstateListItem v-for="re of realEstates" :realEstate="re" :key="re.reID"></RealEstateListItem>
+          </div>
+        </div>
       </div>
     </q-page-container>
 
@@ -69,6 +83,7 @@ import { ref, computed, onMounted, watch } from 'vue';
 
 import NavBar from '@/components/NavBar.vue';
 import RealEstateCard from '../components/RealEstateCard.vue';
+import RealEstateListItem from '../components/RealEstateListItem.vue';
 import { useRealEstateStore } from '@/stores/realEstates.js';
 
 const realEstateStore = useRealEstateStore();
@@ -78,6 +93,7 @@ const filtersOpened = ref(false);
 const realEstates = ref(realEstateStore.realEstatesShort);
 const searchedRealEstates = ref(realEstateStore.realEstatesShort);
 const filteredRealEstates = ref(realEstateStore.realEstatesShort);
+const gridView = ref(true);
 
 // Filters
 const priceRange = ref({ min: 0, max: realEstateStore.maxPrice });
@@ -213,5 +229,10 @@ onMounted(async () => {
   height: 2px;
 
   border-bottom: 2px solid white;
+}
+
+.gridListSwitchContainer {
+  width: fit-content;
+  border-radius: 15px;
 }
 </style>
