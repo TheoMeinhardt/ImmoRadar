@@ -42,7 +42,7 @@ onMounted(async () => {
 
 .item {
   font-family: 'Keep Calm';
-  width: 100%;
+  width: 100vw;
   border-top: 1px solid white;
 }
 
