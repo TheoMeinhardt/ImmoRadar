@@ -20,7 +20,7 @@
                 <div class="col-9 text-right text-caption">{{ formatCurrency(priceRange.min) }} - {{ formatCurrency(priceRange.max) }}</div>
               </div>
               <div class="text-center">
-                <q-range v-model="priceRange" :min="0" :max="realEstateStore.maxPrice" :step="5" style="width: 95%" color="primary" label switch-label-side :left-label-value="leftPriceMarkerDisplay" :right-label-value="rightPriceMarkerDisplay" />
+                <q-range v-model="priceRange" :min="0" :max="calcMaxPrice + 100" :step="5" style="width: 95%" color="primary" label switch-label-side :left-label-value="leftPriceMarkerDisplay" :right-label-value="rightPriceMarkerDisplay" />
               </div>
 
               <!-- Area Filter -->
@@ -96,7 +96,7 @@ const filteredRealEstates = ref(realEstateStore.realEstatesShort);
 const gridView = ref(true);
 
 // Filters
-const priceRange = ref({ min: 0, max: realEstateStore.maxPrice });
+const priceRange = ref({ min: 0, max: 0 });
 const usableAreaRange = ref({ min: 0.0, max: Number(realEstateStore.maxUsableArea) });
 const assets = ref();
 const forSaleRent = ref(false);
@@ -155,14 +155,14 @@ function realEstateHasAsset(re, asset) {
 }
 
 function resetFilters() {
-  realEstateStore.calcMaxPrice(true);
   realEstateStore.calcMaxUsableArea(true);
+  priceRange.value.max = calcMaxPrice;
+  // priceRange.value.min = calcMinPrice;
 
   realEstates.value = realEstateStore.realEstatesShort;
   filteredRealEstates.value = realEstateStore.realEstatesShort;
   searchedRealEstates.value = realEstateStore.realEstatesShort;
   searchString.value = '';
-  priceRange.value = { min: 0, max: realEstateStore.maxPrice };
   usableAreaRange.value = { min: 0.0, max: Number(realEstateStore.maxUsableArea) };
   forSaleRent.value = true;
 
@@ -173,11 +173,41 @@ function formatCurrency(num) {
   return `${num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')} €`;
 }
 
+const calcMaxPrice = computed(
+  () => {
+    let maxPrice = 0;
+
+    for (const { price, buyable } of realEstates.value) {
+      if (forSaleRent.value === buyable) maxPrice = Number(price) >= Number(maxPrice) ? price : Number(maxPrice);
+      else if (forSaleRent.value === undefined) maxPrice = Number(price) >= Number(maxPrice) ? price : Number(maxPrice);
+    }
+
+    return maxPrice;
+  },
+  {
+    dependencies: [forSaleRent],
+  },
+);
+
+const calcMinPrice = computed(
+  () => {
+    let minPrice = realEstates.value[0].price;
+
+    for (const { price, buyable } of realEstates.value) {
+      if (forSaleRent.value === buyable) minPrice = Number(price) <= Number(minPrice) ? price : Number(minPrice);
+      else if (forSaleRent.value === undefined) minPrice = Number(price) <= Number(minPrice) ? price : Number(minPrice);
+    }
+
+    return minPrice;
+  },
+  {
+    dependencies: [forSaleRent],
+  },
+);
+
 watch(forSaleRent, (newVal) => {
-  realEstateStore.calcMaxPrice(newVal);
   realEstateStore.calcMaxUsableArea(newVal);
 
-  priceRange.value.max = realEstateStore.maxPrice;
   usableAreaRange.value.max = realEstateStore.maxUsableArea;
 });
 
@@ -188,6 +218,9 @@ onMounted(async () => {
   for (const asset of assets.value) {
     asset.selected = false;
   }
+
+  priceRange.value.max = calcMaxPrice;
+  // priceRange.value.min = calcMinPrice;
 });
 </script>
 

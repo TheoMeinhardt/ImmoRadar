@@ -6,7 +6,6 @@ export const useRealEstateStore = defineStore('realEstateStore', {
     return {
       realEstatesShort: Array,
       allAssets: Array,
-      maxPrice: Number,
       maxUsableArea: Number,
     };
   },
@@ -22,18 +21,7 @@ export const useRealEstateStore = defineStore('realEstateStore', {
 
       this.realEstatesShort = data;
 
-      this.calcMaxPrice(undefined);
       this.calcMaxUsableArea(undefined);
-    },
-
-    calcMaxPrice(forSale) {
-      let maxPrice = 0;
-      for (const { price, buyable } of this.realEstatesShort) {
-        if (forSale === buyable) maxPrice = Number(price) >= Number(maxPrice) ? price : Number(maxPrice);
-        else if (forSale === undefined) maxPrice = Number(price) >= Number(maxPrice) ? price : Number(maxPrice);
-      }
-
-      this.maxPrice = maxPrice;
     },
 
     calcMaxUsableArea(forSale) {
