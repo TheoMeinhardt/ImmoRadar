@@ -2,6 +2,7 @@ import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import { Quasar } from 'quasar';
 import { Buffer } from 'buffer';
+import { Notify } from 'quasar';
 
 import App from './App.vue';
 import router from './router';
@@ -19,7 +20,9 @@ globalThis.Buffer = Buffer;
 const app = createApp(App);
 
 app.use(Quasar, {
-  plugins: {},
+  plugins: {
+    Notify,
+  },
 });
 
 app.use(createPinia());

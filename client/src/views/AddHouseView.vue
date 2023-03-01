@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import NavBar from '@/components/NavBar.vue';
+import { notifyWarning, notifySuccess } from '../composables/notify.js';
 import { useRealEstateStore } from '@/stores/realEstates.js';
 import { useUserStore } from '@/stores/user.js';
 
@@ -23,6 +24,7 @@ let finishedEstate = {};
 
 const step = ref(1);
 const stepperRef = ref(null);
+const estateRef = ref(null);
 const addressRef = ref(null);
 const cityRef = ref(null);
 const zipRef = ref(null);
@@ -112,11 +114,6 @@ const removeBedroom = () => {
   }
 };
 
-const sum = (num1, num2) => {
-  const res = num1 + num2;
-  return res;
-};
-
 const filterAssetsArray = (assets) => {
   const filteredAssets = assets.filter((asset) => asset.selected === true);
   const newAssetArray = [];
@@ -127,18 +124,25 @@ const filterAssetsArray = (assets) => {
 };
 
 const postEstate = async (estate) => {
-  await axios.post('http://localhost:3000/realEstate', estate);
+  try {
+    await axios.post('http://localhost:3000/realEstate', estate);
+    window.location.href = '/#/';
+  } catch (err) {
+    notifyWarning(err);
+  }
 };
 
 function onContinueStep() {
   switch (step.value) {
     case 1:
+      estateRef.value.validate();
       addressRef.value.validate();
       cityRef.value.validate();
       zipRef.value.validate();
       stateRef.value.validate();
       countryRef.value.validate();
       if (
+        !estateRef.value.hasError &&
         !addressRef.value.hasError &&
         !cityRef.value.hasError &&
         !zipRef.value.hasError &&
@@ -206,7 +210,6 @@ function onContinueStep() {
         constructionYear: constructionYear.value,
         assets: filterAssetsArray(assets.value),
       };
-      console.log(finishedEstate);
       postEstate(finishedEstate);
       break;
     default:
@@ -246,11 +249,13 @@ function onContinueStep() {
             <p class="text-white" style="font-family: Keep Calm">Basic information</p>
             <q-input
               v-model="estate"
+              ref="estateRef"
               bg-color="white"
-              label="Name of the estate"
+              label="Name of the estate*"
               :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }"
               class="q-my-md myInput"
               borderless
+              :rules="[(val) => val.length > 0 || 'Please enter a name']"
             ></q-input>
             <q-input
               v-model="address"
@@ -430,7 +435,7 @@ function onContinueStep() {
               :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }"
               class="q-my-md myInput"
               borderless
-              :rules="[(val) => !!val || 'Please enter a price']"
+              :rules="[(val) => !!val || 'Please enter a provision']"
             ></q-input>
             <p class="text-white q-mt-xl" style="font-family: Keep Calm">Area</p>
             <q-input
@@ -441,12 +446,7 @@ function onContinueStep() {
               :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }"
               class="q-my-md myInput"
               borderless
-              :rules="[
-                (val) =>
-                  val <= sum(Number(this.useArea), Number(this.outArea)) ||
-                  'Please enter a valid area',
-                (val) => val > 0 || 'Please enter a valid area',
-              ]"
+              :rules="[(val) => val > 0 || 'Please enter a valid area']"
             ></q-input>
             <q-input
               v-model="useArea"
@@ -585,6 +585,7 @@ function onContinueStep() {
               class="myInput"
               label="Type"
               borderless
+              :rules="[(val) => !!val || 'Please select a type']"
             >
             </q-select>
             <q-select
@@ -594,6 +595,7 @@ function onContinueStep() {
               class="q-my-md myInput"
               label="Combustible"
               borderless
+              :rules="[(val) => !!val || 'Please select a type']"
             >
             </q-select>
             <div class="q-gutter-md row items-start">
