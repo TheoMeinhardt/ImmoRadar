@@ -20,8 +20,6 @@ onMounted(async () => {
 });
 
 let finishedEstate = {};
-let cityname = '';
-let plz = '';
 
 const step = ref(1);
 const stepperRef = ref(null);
@@ -119,6 +117,15 @@ const sum = (num1, num2) => {
   return res;
 };
 
+const filterAssetsArray = (assets) => {
+  const filteredAssets = assets.filter((asset) => asset.selected === true);
+  const newAssetArray = [];
+  for (const asset of filteredAssets) {
+    newAssetArray.push({ assetID: asset.assetID, name: asset.name, icon: asset.icon });
+  }
+  return newAssetArray;
+};
+
 const postEstate = async (estate) => {
   await axios.post('http://localhost:3000/realEstate', estate);
 };
@@ -197,7 +204,7 @@ function onContinueStep() {
           heatingCert: 'true',
         },
         constructionYear: constructionYear.value,
-        assets: assets.value.filter((asset) => asset.selected === true),
+        assets: filterAssetsArray(assets.value),
       };
       console.log(finishedEstate);
       postEstate(finishedEstate);
@@ -632,7 +639,6 @@ function onContinueStep() {
           active-color="primary"
           active-icon="none"
           ><div class="q-mx-sm">
-            <!-- FIXME Image selector -->
             <p class="text-white" style="font-family: Keep Calm">Images</p>
             <q-file
               v-model="images"
@@ -664,35 +670,9 @@ function onContinueStep() {
           active-color="primary"
           active-icon="none"
         >
-          <!-- TODO hier kopier ich dann die DetailsView hin -->
-          <div>
-            <q-img
-              :src="images[0]"
-              style="width: 100%; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px"
-            >
-              <div
-                v-if="status.value == 'buyable'"
-                class="absolute-bottom-left text-subtitle2"
-                style="border-top-right-radius: 20px"
-              >
-                <div class="row no-wrap items-center">
-                  <div class="col">
-                    <div class="text-caption">Buy for</div>
-                    <div class="text-h6">
-                      <b>{{ estatePrice }}€</b>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div
-                v-else
-                class="absolute-bottom-left text-subtitle2"
-                style="border-top-right-radius: 20px"
-              >
-                <b>{{ estatePrice }}€ </b>/ Month | Rentable
-              </div>
-            </q-img>
-          </div>
+          <div
+            style="width: 100%; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px"
+          ></div>
           <div class="q-pa-sm q-ma-sm text-white">
             <span class="text-h5 block"
               ><b>{{ estate }}</b></span
@@ -743,7 +723,11 @@ function onContinueStep() {
 
             <span class="text-h5 block q-mb-md"><b>Assets</b></span>
             <div class="q-ma-md">
-              <div v-for="asset in assets.filter((a) => a.selected == true)" :key="asset.assetID" class="row inline">
+              <div
+                v-for="asset in assets.filter((a) => a.selected == true)"
+                :key="asset.assetID"
+                class="row inline"
+              >
                 <q-chip size="15px" color="white" text-color="grey" class="text-capitalize">
                   {{ asset.name }}
                 </q-chip>
@@ -764,7 +748,7 @@ function onContinueStep() {
                   <p class="text-body2">Usable</p>
                 </div>
               </div>
-              <div class="text-h6 q-ma-md col" v-if="outArea.value > 0">
+              <div class="text-h6 q-ma-md col" v-if="outArea > 0">
                 <span>{{ outArea }}m²</span>
                 <div>
                   <p class="text-body2">Outside</p>
@@ -792,6 +776,21 @@ function onContinueStep() {
                 <span>{{ heatingCombustible }}</span>
                 <div>
                   <p class="text-body2">Combustible</p>
+                </div>
+              </div>
+            </div>
+            <span class="text-h5 block q-mb-md"><b>Price</b></span>
+            <div class="row text-center">
+              <div v-if="status == 'buyable'" class="text-h6 q-ma-md q-mr-md col">
+                <span>{{ estatePrice }}€</span>
+                <div>
+                  <p class="text-body2">For sale</p>
+                </div>
+              </div>
+              <div v-else class="text-h6 q-ma-md q-mr-md col">
+                <span>{{ estatePrice }}€</span>
+                <div>
+                  <p class="text-body2">/ Month | Rentable</p>
                 </div>
               </div>
             </div>
