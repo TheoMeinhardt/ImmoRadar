@@ -61,7 +61,7 @@ async function createCheckout(req: Request, res: Response): Promise<void> {
         },
       ],
       success_url: 'http://localhost:8080/#/success?session_id={CHECKOUT_SESSION_ID}',
-      cancel_url: 'http://localhost:8080/cancel',
+      cancel_url: 'http://localhost:8080/#/cancel',
     });
     res.status(200).send(session);
   } catch (error) {
@@ -111,9 +111,7 @@ async function getUserBySession(req: Request, res: Response): Promise<void> {
 
 async function patchSessionID(req: Request, res: Response): Promise<void> {
   const { id } = req.params;
-  console.log(id);
   const { session_id } = req.body;
-  console.log(session_id);
   const userID = id;
 
   if (!session_id) {
@@ -165,11 +163,4 @@ async function patchSessionID(req: Request, res: Response): Promise<void> {
 
 
 // StripeInvalidRequestError
-export {
-  postToWebhook,
-  createCheckout,
-  createPortal,
-  getSessionID,
-  patchSessionID,
-  getUserBySession,
-};
+export { postToWebhook, createCheckout, createPortal, getSessionID, patchSessionID, getUserBySession };
