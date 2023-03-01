@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import NavBar from '@/components/NavBar.vue';
-import { notifyWarning, notifySuccess } from '../composables/notify.js';
+import { notifyWarning } from '../composables/notify.js';
 import { useRealEstateStore } from '@/stores/realEstates.js';
 import { useUserStore } from '@/stores/user.js';
 
