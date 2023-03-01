@@ -3,8 +3,12 @@ import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import NavBar from '@/components/NavBar.vue';
 import { useRealEstateStore } from '@/stores/realEstates.js';
+import { useUserStore } from '@/stores/user.js';
 
 const realEstateStore = useRealEstateStore();
+
+const userStore = useUserStore();
+const user = userStore.user;
 
 onMounted(async () => {
   await realEstateStore.fetchAssetLabels();
@@ -23,6 +27,7 @@ const step = ref(1);
 const stepperRef = ref(null);
 const addressRef = ref(null);
 const cityRef = ref(null);
+const zipRef = ref(null);
 const constructionYearRef = ref(null);
 const estatePriceRef = ref(null);
 const heatingPriceRef = ref(null);
@@ -42,9 +47,10 @@ const provisionRef = ref(null);
 const estate = ref('');
 const address = ref('');
 const city = ref('');
+const zip = ref(null);
 const state = ref('');
 const country = ref('');
-const constructionYear = ref('');
+const constructionYear = ref(null);
 const description = ref('');
 const status = ref('buyable');
 const assets = ref([]);
@@ -77,13 +83,6 @@ const heatingTypes = [
 ];
 
 const heatingCombustibles = ['Gas', 'Oil', 'Wood', 'Electricity', 'Solar', 'Heat Pump', 'Other'];
-
-const splitCityPLZ = (city) => {
-  const cityPLZ = city.split(' ');
-  const plz = cityPLZ[0];
-  const cityname = cityPLZ[1];
-  return { plz, cityname };
-};
 
 const addRoom = () => {
   rooms.value++;
@@ -121,7 +120,7 @@ const sum = (num1, num2) => {
 };
 
 const postEstate = async (estate) => {
-  await axios.post('http://localhost:3000/api/realEstates', estate);
+  await axios.post('http://localhost:3000/realEstate', estate);
 };
 
 function onContinueStep() {
@@ -129,15 +128,16 @@ function onContinueStep() {
     case 1:
       addressRef.value.validate();
       cityRef.value.validate();
+      zipRef.value.validate();
       stateRef.value.validate();
       countryRef.value.validate();
       if (
         !addressRef.value.hasError &&
         !cityRef.value.hasError &&
+        !zipRef.value.hasError &&
         !stateRef.value.hasError &&
         !countryRef.value.hasError
       ) {
-        splitCityPLZ(city.value);
         stepperRef.value.next();
       }
       break;
@@ -174,8 +174,8 @@ function onContinueStep() {
         description: description.value,
         address: {
           address: address.value,
-          city: cityname,
-          zip: plz,
+          city: city.value,
+          zip: zip.value,
           state: state.value,
           country: country.value,
         },
@@ -187,16 +187,19 @@ function onContinueStep() {
         bedrooms: bedrooms.value,
         buyable: status.value === 'buyable' ? true : false,
         price: estatePrice.value,
+        provision: provision.value,
+        userID: user.userID,
         heating: {
           type: heatingType.value,
           combustible: heatingCombustible.value,
-          heatingType: heatingType.value,
           heatingRequirement: hwb.value,
           fgee: fgee.value,
+          heatingCert: 'true',
         },
         constructionYear: constructionYear.value,
         assets: assets.value.filter((asset) => asset.selected === true),
       };
+      console.log(finishedEstate);
       postEstate(finishedEstate);
       break;
     default:
@@ -253,31 +256,45 @@ function onContinueStep() {
               borderless
               :rules="[(val) => val.length > 0 || 'Please enter a valid address']"
             ></q-input>
-            <q-input
-              v-model="city"
-              ref="cityRef"
-              bg-color="white"
-              label="City and PLZ*"
-              style="font-family: Quicksand Book"
-              :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }"
-              class="q-my-md myInput"
-              borderless
-              :rules="[(val) => val.length > 0 || 'Please enter a valid city']"
-            ></q-input>
+            <div class="q-gutter-md row items-start q-mb-none">
+              <q-input
+                v-model="city"
+                ref="cityRef"
+                bg-color="white"
+                label="City*"
+                style="font-family: Quicksand Book; width: 45%"
+                :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }"
+                class="q-my-md myInput"
+                borderless
+                :rules="[(val) => val.length > 0 || 'Please enter a valid city']"
+              ></q-input>
+              <q-input
+                v-model.number="zip"
+                ref="zipRef"
+                bg-color="white"
+                type="number"
+                label="Zip code*"
+                style="font-family: Quicksand Book; width: 45%"
+                :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }"
+                class="q-my-md myInput"
+                borderless
+                :rules="[(val) => val > 0 || 'Please enter a valid city']"
+              ></q-input>
+            </div>
             <q-input
               v-model="state"
-              ref="addressRef"
+              ref="stateRef"
               bg-color="white"
               label="State*"
               style="font-family: Quicksand Book"
               :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }"
-              class="q-my-md myInput"
+              class="q-mb-md myInput"
               borderless
               :rules="[(val) => val.length > 0 || 'Please enter a state']"
             ></q-input>
             <q-input
               v-model="country"
-              ref="addressRef"
+              ref="countryRef"
               bg-color="white"
               label="Country*"
               style="font-family: Quicksand Book"
@@ -287,18 +304,16 @@ function onContinueStep() {
               :rules="[(val) => val.length > 0 || 'Please enter a country']"
             ></q-input>
             <q-input
-              v-model="constructionYear"
+              v-model.number="constructionYear"
               ref="constructionYearRef"
               bg-color="white"
+              type="number"
               label="Construction Year"
               style="font-family: Quicksand Book"
               :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }"
               class="q-my-md myInput"
               borderless
-              :rules="[
-                (val) => val.length === 4 || 'Please enter a valid year',
-                (val) => 1800 <= val <= 2023 || 'Please enter a valid year',
-              ]"
+              :rules="[(val) => 1800 <= val <= 2023 || 'Please enter a valid year']"
             ></q-input>
             <q-editor
               v-model="description"
@@ -400,10 +415,11 @@ function onContinueStep() {
               :rules="[(val) => !!val || 'Please enter a price']"
             ></q-input>
             <q-input
-              v-model="provision"
-              ref="heatingPriceRef"
+              v-model.number="provision"
+              ref="provisionRef"
               bg-color="white"
               label="Provision"
+              type="number"
               :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }"
               class="q-my-md myInput"
               borderless
@@ -575,8 +591,9 @@ function onContinueStep() {
             </q-select>
             <div class="q-gutter-md row items-start">
               <q-input
-                v-model="fgee"
+                v-model.number="fgee"
                 ref="fgeeRef"
+                type="number"
                 bg-color="white"
                 label="fGEE"
                 :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }"
@@ -585,8 +602,9 @@ function onContinueStep() {
                 style="width: 45%"
               ></q-input>
               <q-input
-                v-model="hwb"
+                v-model.number="hwb"
                 ref="hwbRef"
+                type="number"
                 bg-color="white"
                 label="HWB"
                 :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }"
@@ -647,6 +665,137 @@ function onContinueStep() {
           active-icon="none"
         >
           <!-- TODO hier kopier ich dann die DetailsView hin -->
+          <div>
+            <q-img
+              :src="images[0]"
+              style="width: 100%; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px"
+            >
+              <div
+                v-if="status.value == 'buyable'"
+                class="absolute-bottom-left text-subtitle2"
+                style="border-top-right-radius: 20px"
+              >
+                <div class="row no-wrap items-center">
+                  <div class="col">
+                    <div class="text-caption">Buy for</div>
+                    <div class="text-h6">
+                      <b>{{ estatePrice }}€</b>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                v-else
+                class="absolute-bottom-left text-subtitle2"
+                style="border-top-right-radius: 20px"
+              >
+                <b>{{ estatePrice }}€ </b>/ Month | Rentable
+              </div>
+            </q-img>
+          </div>
+          <div class="q-pa-sm q-ma-sm text-white">
+            <span class="text-h5 block"
+              ><b>{{ estate }}</b></span
+            >
+            <span class="block"
+              >{{ address }} |
+              {{ zip }}
+              {{ city }}</span
+            >
+
+            <!-- <div v-for="i in images.slice(1)" :key="i" class="row inline">
+              <q-img
+                :src="i"
+                class="q-ma-sm"
+                style="width: 100px; height: 100px; border-radius: 20px"
+                @click="carousel = true"
+              >
+              </q-img>
+            </div> -->
+
+            <span class="text-h5 block q-my-md"><b>Description</b></span>
+            <p class="q-ml-md">{{ description }}</p>
+
+            <span class="text-h5 block q-my-md"><b>Rooms</b></span>
+            <div class="row inline text-center">
+              <div class="text-h5 q-ma-md col">
+                <i class="fa-solid fa-door-open q-mr-sm"></i>
+                <span>{{ rooms }}</span>
+                <div>
+                  <p class="text-body2">Rooms</p>
+                </div>
+              </div>
+              <div class="text-h5 q-ma-md q-mr-md col">
+                <i class="fa-solid fa-bed q-mr-sm"></i>
+                <span>{{ bedrooms }}</span>
+                <div>
+                  <p class="text-body2">Bedrooms</p>
+                </div>
+              </div>
+              <div class="text-h5 q-ma-md col">
+                <i class="fa-solid fa-bath q-mr-sm"></i>
+                <span>{{ bathrooms }}</span>
+                <div>
+                  <p class="text-body2">Bathrooms</p>
+                </div>
+              </div>
+            </div>
+
+            <span class="text-h5 block q-mb-md"><b>Assets</b></span>
+            <div class="q-ma-md">
+              <div v-for="asset in assets.filter((a) => a.selected == true)" :key="asset.assetID" class="row inline">
+                <q-chip size="15px" color="white" text-color="grey" class="text-capitalize">
+                  {{ asset.name }}
+                </q-chip>
+              </div>
+            </div>
+
+            <span class="text-h5 block q-my-md"><b>Area</b></span>
+            <div class="row inline text-center">
+              <div class="text-h6 q-ma-md q-mr-md col">
+                <span>{{ propArea }}m²</span>
+                <div>
+                  <p class="text-body2">Property</p>
+                </div>
+              </div>
+              <div class="text-h6 q-ma-md col">
+                <span>{{ useArea }}m²</span>
+                <div>
+                  <p class="text-body2">Usable</p>
+                </div>
+              </div>
+              <div class="text-h6 q-ma-md col" v-if="outArea.value > 0">
+                <span>{{ outArea }}m²</span>
+                <div>
+                  <p class="text-body2">Outside</p>
+                </div>
+              </div>
+            </div>
+
+            <span class="text-h5 block q-mb-md"><b>Heating</b></span>
+            <div class="row text-center">
+              <div class="text-h6 q-ma-md q-mr-md col">
+                <span>{{ hwb }}€</span>
+                <div>
+                  <p class="text-body2">Heating Cost</p>
+                </div>
+              </div>
+
+              <div class="text-h6 q-ma-md col text-capitalize">
+                <span>{{ heatingType }}</span>
+                <div>
+                  <p class="text-body2">Heating Type</p>
+                </div>
+              </div>
+
+              <div class="text-h6 q-ma-md col text-capitalize">
+                <span>{{ heatingCombustible }}</span>
+                <div>
+                  <p class="text-body2">Combustible</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </q-step>
         <template v-slot:navigation>
           <q-stepper-navigation>
