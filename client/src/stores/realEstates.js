@@ -77,5 +77,9 @@ export const useRealEstateStore = defineStore('realEstateStore', {
       const { data } = await axios.get(`/realestate/${reID}`);
       this.wholeRealEstate = data;
     },
+    async fetchRealEstateShort(reID) {
+      const { data } = await axios.get(`/realestate/short/${reID}`);
+      this.realEstateShort = data;
+    },
   },
 });
