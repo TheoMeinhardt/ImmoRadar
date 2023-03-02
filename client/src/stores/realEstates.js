@@ -6,6 +6,7 @@ export const useRealEstateStore = defineStore('realEstateStore', {
     return {
       realEstatesShort: Array,
       wholeRealEstate: Object,
+      realEstateShort: Object,
     };
   },
   actions: {
@@ -16,6 +17,10 @@ export const useRealEstateStore = defineStore('realEstateStore', {
     async fetchWholeRealEstate(reID) {
       const { data } = await axios.get(`/realestate/${reID}`);
       this.wholeRealEstate = data;
+    },
+    async fetchRealEstateShort(reID) {
+      const { data } = await axios.get(`/realestate/short/${reID}`);
+      this.realEstateShort = data;
     },
   },
 });
