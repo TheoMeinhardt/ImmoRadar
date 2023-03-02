@@ -11,6 +11,7 @@ import UserView from '@/views/UserView.vue';
 import SearchView from '@/views/SearchView.vue';
 import AddHouseView from '@/views/AddHouseView.vue';
 import UserOverview from '@/views/subviews/UserOverview.vue';
+import EstateView from '@/views/EstateView.vue';
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -80,6 +81,12 @@ const router = createRouter({
       path: '/checkout',
       name: 'checkout',
       component: CheckoutView,
+    },
+    {
+      path: '/estateview/:reID',
+      name: 'estateview',
+      component: EstateView,
+      props: true,
     },
     { path: '/:catchAll(.*)', component: NotFound },
   ],

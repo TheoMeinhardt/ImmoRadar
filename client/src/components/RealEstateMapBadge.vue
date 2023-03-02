@@ -18,6 +18,9 @@
           <span class="text-body1 block q-mt-sm">{{ realEstate.price }}€</span>
           <span class="text-caption block">{{ realEstate.usableArea }}m²</span>
           <span class="text-caption block">{{ realEstate.rooms }} Rooms</span>
+          <q-card-actions vertical align="center">
+            <router-link :to="`/estateview/${realEstate.reID}`" style="text-decoration: underline; color: white" :reID="realEstate.reID">View More...</router-link>
+          </q-card-actions>
         </div>
       </div>
     </Transition>
@@ -25,7 +28,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import axios from 'axios';
+import { ref, onMounted } from 'vue';
 import { useRealEstateStore } from '../stores/realEstates';
 
 const realEstateStore = useRealEstateStore();
@@ -51,6 +55,23 @@ async function showBadge() {
   thumbnail.value = await realEstateStore.getImageForRealEstate(props.realEstate.reID);
   thumbnailLoading.value = false;
 }
+
+onMounted(async () => {
+  try {
+    const res = await axios.post(
+      '/image',
+      {
+        path: props.realEstate.thumbnail,
+      },
+      // { responseType: 'arraybuffer' }
+    );
+    thumbnail.value = res.data;
+    // let base64String = Buffer.from(res.data).toString('base64');
+    // thumbnail.value = 'data:image/jpg;base64,' + base64String;
+  } catch (err) {
+    console.log(err);
+  }
+});
 </script>
 
 <style scoped>

@@ -40,6 +40,8 @@ type realEstate = {
   provision: number;
   constructionYear: Date | null;
   images: string[];
+  lat?: number;
+  long?: number;
   assets: asset[];
   heatingID: string | null;
   heating: heating;

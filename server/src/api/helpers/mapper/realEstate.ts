@@ -1,15 +1,19 @@
-import { realEstate, realEstateDTO } from '../../types';
+import { realEstate, realEstateDTO, address } from '../../types';
 import { getAddress, getImagesByRealEstate, getAssetsByRealEstate, getHeatingByID } from '../../models';
+import { addressGeocode } from '..';
 
 async function realEstateMapper(dto: realEstateDTO | realEstateDTO[]): Promise<realEstate | realEstate[]> {
   const convertrealEstateDTOtoRealEstate = async (d: realEstateDTO): Promise<realEstate> => {
+    const adrs = await getAddress(d.address_id);
+    const geoinfo = await addressGeocode(adrs as address);
+
     const newRealEstate: realEstate = {
       reID: d.re_id,
       name: d.name,
       subname: d.subname ?? null,
       description: d.description,
       addressID: d.address_id,
-      address: await getAddress(d.address_id),
+      address: adrs,
       propertyArea: d.property_area ?? null,
       usableArea: d.usable_area,
       outsideArea: d.outside_area ?? null,
@@ -18,6 +22,8 @@ async function realEstateMapper(dto: realEstateDTO | realEstateDTO[]): Promise<r
       bedrooms: d.bedrooms,
       buyable: d.buyable,
       price: d.price ?? null,
+      lat: geoinfo.features[0].center[1],
+      long: geoinfo.features[0].center[0],
       userID: d.user_id,
       provision: d.provision,
       constructionYear: d.construction_year ?? null,
