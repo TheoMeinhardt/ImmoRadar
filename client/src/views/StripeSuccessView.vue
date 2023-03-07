@@ -41,11 +41,13 @@ onMounted(async () => {
   //Premium
   // const id = '575e72af-e14c-45e7-afa5-932a50d8400d';
   // document.documentElement.style.overflow = 'hidden';
+
   // Kein Premium
-  const id = '8153a1fc-e958-4658-9451-e55df5a4db45';
+  // const id = '8153a1fc-e958-4658-9451-e55df5a4db45';
 
   // Eigentlicher User
-  // const id = usterStore.user.id;
+  console.log(userStore.user);
+  // const id = userStore.user.id;
 
   try {
     let hash = location.hash;

@@ -95,18 +95,26 @@ async function createPortal(req: Request, res: Response): Promise<void> {
 // }
 
 async function getSessionID(req: Request, res: Response): Promise<void> {
-  const { id } = req.params;
-  const userID = id;
-  const sessionID = await dbGetSessionID(userID);
-  if (!sessionID) res.status(404).send('Ressource not found');
-  res.status(200).json(sessionID);
+  try {
+    const { id } = req.params;
+    const userID = id;
+    const sessionID = await dbGetSessionID(userID);
+    if (!sessionID) res.status(404).send('Ressource not found');
+    res.status(200).json(sessionID);
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 async function getUserBySession(req: Request, res: Response): Promise<void> {
-  const { session_id } = req.params;
-  const userID = await dbGetUserBySession(session_id);
-  if (!userID) res.status(200).json('data');
-  res.status(200).json(userID);
+  try {
+    const { session_id } = req.params;
+    const userID = await dbGetUserBySession(session_id);
+    if (!userID) res.status(200).json('data');
+    res.status(200).json(userID);
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 async function patchSessionID(req: Request, res: Response): Promise<void> {
@@ -160,7 +168,6 @@ async function patchSessionID(req: Request, res: Response): Promise<void> {
   console.log('OK');
   res.status(200).json(updatedSessionID);
 }
-
 
 // StripeInvalidRequestError
 export { postToWebhook, createCheckout, createPortal, getSessionID, patchSessionID, getUserBySession };
