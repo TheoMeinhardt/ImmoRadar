@@ -1,26 +1,42 @@
 <template>
-  <section class="flex items-center h-full p-16 dark:bg-gray-900 dark:text-gray-100">
-    <div class="container flex flex-col items-center justify-center px-5 mx-auto my-8">
-      <div class="max-w-md text-center">
-        <h2 class="mb-8 font-extrabold text-9xl dark:text-gray-600">
-          <span class="sr-only">Error</span>404
-        </h2>
-        <p class="text-2xl font-semibold md:text-3xl">Sorry, we couldn't find this page.</p>
-        <p class="mt-4 mb-8 dark:text-gray-400">
-          But dont worry, you can find plenty of other things on our homepage.
-        </p>
-        <a
-          rel="noopener noreferrer"
-          href="http://localhost:8080"
-          class="px-8 py-3 font-semibold rounded dark:bg-violet-400 dark:text-gray-900"
-          >Back to homepage</a
-        >
+  <div>
+    <div class="flex items-center justify-center min-h-screen bg-white py-48">
+      <div class="flex flex-col">
+        <div class="flex flex-col items-center">
+          <div class="text-indigo-500 font-bold text-7xl">404</div>
+
+          <div
+            class="font-bold text-3xl xl:text-7xl lg:text-6xl md:text-5xl mt-10"
+          >
+            Diese Seite existiert nicht
+          </div>
+
+          <div
+            class="text-gray-400 font-medium text-sm md:text-xl lg:text-2xl mt-8"
+          >
+            Die von Ihnen gesuchte Seite konnte nicht gefunden werden.
+          </div>
+
+          <button
+            class="text-white bg-indigo-500 rounded-full px-8 py-3 mt-10 font-medium"
+            @click="$router.push('/')"
+          >
+            Gehe zur Startseite
+          </button>
+        </div>
       </div>
     </div>
-  </section>
+  </div>
 </template>
+
 <style scoped>
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+
+@media (max-width: 640px) {
+  .text-4xl {
+    font-size: 3rem;
+  }
+}
 </style>
