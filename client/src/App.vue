@@ -14,12 +14,14 @@ const realEstateStore = useRealEstateStore();
 const userStore = useUserStore();
 const router = useRouter();
 
-axios.defaults.baseURL = import.meta.env.DEV ? 'http://localhost:3000' : 'https://immoradar-server.onrender.com';
+axios.defaults.baseURL = import.meta.env.DEV
+  ? 'http://localhost:3000'
+  : 'https://immoradar-server.onrender.com';
 console.log(`${import.meta.env.MODE} mode`);
 
 onMounted(async () => {
-  // if (!userStore.isLoggedIn) router.push('/form');
-  // else realEstateStore.fetchAllRealEstateShort();
+  if (!userStore.isLoggedIn) router.push('/form');
+  else realEstateStore.fetchAllRealEstateShort();
 });
 </script>
 
