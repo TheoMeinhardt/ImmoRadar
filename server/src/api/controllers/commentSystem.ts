@@ -9,30 +9,6 @@ async function getPostsAndComments(req: Request, res: Response): Promise<void> {
   const { id: re_id } = req.params;
   const posts = await dbGetPostsByRealEstate(re_id);
 
-  // const postCommentResult = {};
-
-  // for (let i = 0; i < posts.length; i += 1) {
-  //   const post = posts[i];
-  //   const comments = await dbGetCommentsByPost(post.post_id);
-  //   const likesForPost = await dbGetLikesFromPost(post.post_id);
-  //   if (!postCommentResult[post.post_id]) {
-  //     postCommentResult[post.post_id] = { ...post, comments: [] };
-  //   }
-  //   postCommentResult[post.post_id].likes = likesForPost[0].count;
-  //   for (let j = 0; j < comments.length; j += 1) {
-  //     const comment = comments[j];
-  //     const likesForComment = await dbGetLikesFromComments(comment.comment_id);
-  //     if (!postCommentResult[post.post_id].comments.find((c) => c.comment_id === comment.comment_id)) {
-  //       postCommentResult[post.post_id].comments.push({
-  //         ...comment,
-  //         likes: likesForComment[0].count,
-  //       });
-  //     } else {
-  //       const commentIndex = postCommentResult[post.post_id].comments.findIndex((c) => c.comment_id === comment.comment_id);
-  //       postCommentResult[post.post_id].comments[commentIndex].likes = likesForComment[0].count;
-  //     }
-  //   }
-  // }
 
   res.status(200).json(posts);
 }
