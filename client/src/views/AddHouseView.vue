@@ -71,16 +71,7 @@ const heatingCombustible = ref(null);
 const images = ref(null);
 const files = ref(null); //ein Array aus File Objects
 
-const heatingTypes = [
-  'Central Heating',
-  'Floor Heating',
-  'Electric Heating',
-  'Gas Heating',
-  'Wood Heating',
-  'Solar Heating',
-  'Heat Pump',
-  'Other',
-];
+const heatingTypes = ['Central Heating', 'Floor Heating', 'Electric Heating', 'Gas Heating', 'Wood Heating', 'Solar Heating', 'Heat Pump', 'Other'];
 
 const heatingCombustibles = ['Gas', 'Oil', 'Wood', 'Electricity', 'Solar', 'Heat Pump', 'Other'];
 
@@ -141,14 +132,7 @@ function onContinueStep() {
       zipRef.value.validate();
       stateRef.value.validate();
       countryRef.value.validate();
-      if (
-        !estateRef.value.hasError &&
-        !addressRef.value.hasError &&
-        !cityRef.value.hasError &&
-        !zipRef.value.hasError &&
-        !stateRef.value.hasError &&
-        !countryRef.value.hasError
-      ) {
+      if (!estateRef.value.hasError && !addressRef.value.hasError && !cityRef.value.hasError && !zipRef.value.hasError && !stateRef.value.hasError && !countryRef.value.hasError) {
         stepperRef.value.next();
       }
       break;
@@ -158,13 +142,7 @@ function onContinueStep() {
       provisionRef.value.validate();
       propAreaRef.value.validate();
       useAreaRef.value.validate();
-      if (
-        !estatePriceRef.value.hasError &&
-        !heatingPriceRef.value.hasError &&
-        !propAreaRef.value.hasError &&
-        !useAreaRef.value.hasError &&
-        !provisionRef.value.hasError
-      ) {
+      if (!estatePriceRef.value.hasError && !heatingPriceRef.value.hasError && !propAreaRef.value.hasError && !useAreaRef.value.hasError && !provisionRef.value.hasError) {
         stepperRef.value.next();
       }
       break;
@@ -221,460 +199,96 @@ function onContinueStep() {
 <template>
   <q-layout>
     <q-page-container>
-      <q-stepper
-        v-model="step"
-        ref="stepperRef"
-        style="background-color: #4b506e"
-        animated
-        flat
-        header-nav="true"
-      >
+      <q-stepper v-model="step" ref="stepperRef" style="background-color: #4b506e" animated flat header-nav="true">
         <div class="text-center">
-          <div
-            class="fontSize q-mt-md text-white"
-            style="font-family: Quicksand; text-align: center"
-          >
+          <div class="fontSize q-mt-md text-white" style="font-family: Quicksand; text-align: center">
             Create new real estate
             <q-icon class="q-ml-sm" name="fa-solid fa-house-chimney-medical"></q-icon>
           </div>
         </div>
-        <q-step
-          :name="1"
-          title=""
-          icon="img:/images/1.svg"
-          active-color="primary"
-          active-icon="none"
-        >
+        <q-step :name="1" title="" icon="img:/images/1.svg" active-color="primary" active-icon="none">
           <div class="q-mx-sm">
             <p class="text-white" style="font-family: Keep Calm">Basic information</p>
-            <q-input
-              v-model="estate"
-              ref="estateRef"
-              bg-color="white"
-              label="Name of the estate*"
-              :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }"
-              class="q-my-md myInput"
-              borderless
-              :rules="[(val) => val.length > 0 || 'Please enter a name']"
-            ></q-input>
-            <q-input
-              v-model="address"
-              ref="addressRef"
-              bg-color="white"
-              label="Whats the address*"
-              style="font-family: Quicksand Book"
-              :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }"
-              class="q-my-md myInput"
-              borderless
-              :rules="[(val) => val.length > 0 || 'Please enter a valid address']"
-            ></q-input>
+            <q-input v-model="estate" ref="estateRef" bg-color="white" label="Name of the estate*" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="q-my-md myInput" borderless :rules="[(val) => val.length > 0 || 'Please enter a name']"></q-input>
+            <q-input v-model="address" ref="addressRef" bg-color="white" label="Whats the address*" style="font-family: Quicksand Book" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="q-my-md myInput" borderless :rules="[(val) => val.length > 0 || 'Please enter a valid address']"></q-input>
             <div class="q-gutter-md row items-start q-mb-none">
-              <q-input
-                v-model="city"
-                ref="cityRef"
-                bg-color="white"
-                label="City*"
-                style="font-family: Quicksand Book; width: 45%"
-                :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }"
-                class="q-my-md myInput"
-                borderless
-                :rules="[(val) => val.length > 0 || 'Please enter a valid city']"
-              ></q-input>
-              <q-input
-                v-model.number="zip"
-                ref="zipRef"
-                bg-color="white"
-                type="number"
-                label="Zip code*"
-                style="font-family: Quicksand Book; width: 45%"
-                :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }"
-                class="q-my-md myInput"
-                borderless
-                :rules="[(val) => val > 0 || 'Please enter a valid city']"
-              ></q-input>
+              <q-input v-model="city" ref="cityRef" bg-color="white" label="City*" style="font-family: Quicksand Book; width: 45%" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="q-my-md myInput" borderless :rules="[(val) => val.length > 0 || 'Please enter a valid city']"></q-input>
+              <q-input v-model.number="zip" ref="zipRef" bg-color="white" type="number" label="Zip code*" style="font-family: Quicksand Book; width: 45%" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="q-my-md myInput" borderless :rules="[(val) => val > 0 || 'Please enter a valid city']"></q-input>
             </div>
-            <q-input
-              v-model="state"
-              ref="stateRef"
-              bg-color="white"
-              label="State*"
-              style="font-family: Quicksand Book"
-              :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }"
-              class="q-mb-md myInput"
-              borderless
-              :rules="[(val) => val.length > 0 || 'Please enter a state']"
-            ></q-input>
-            <q-input
-              v-model="country"
-              ref="countryRef"
-              bg-color="white"
-              label="Country*"
-              style="font-family: Quicksand Book"
-              :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }"
-              class="q-my-md myInput"
-              borderless
-              :rules="[(val) => val.length > 0 || 'Please enter a country']"
-            ></q-input>
-            <q-input
-              v-model.number="constructionYear"
-              ref="constructionYearRef"
-              bg-color="white"
-              type="number"
-              label="Construction Year"
-              style="font-family: Quicksand Book"
-              :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }"
-              class="q-my-md myInput"
-              borderless
-              :rules="[(val) => 1800 <= val <= 2023 || 'Please enter a valid year']"
-            ></q-input>
-            <q-editor
-              v-model="description"
-              placeholder="Description"
-              bg-color="white"
-              label="Description of the address"
-              style="font-family: Quicksand Book"
-              :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }"
-              class="q-my-md myInput"
-              borderless
-              type="textarea"
-            ></q-editor>
+            <q-input v-model="state" ref="stateRef" bg-color="white" label="State*" style="font-family: Quicksand Book" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="q-mb-md myInput" borderless :rules="[(val) => val.length > 0 || 'Please enter a state']"></q-input>
+            <q-input v-model="country" ref="countryRef" bg-color="white" label="Country*" style="font-family: Quicksand Book" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="q-my-md myInput" borderless :rules="[(val) => val.length > 0 || 'Please enter a country']"></q-input>
+            <q-input v-model.number="constructionYear" ref="constructionYearRef" bg-color="white" type="number" label="Construction Year" style="font-family: Quicksand Book" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="q-my-md myInput" borderless :rules="[(val) => 1800 <= val <= 2023 || 'Please enter a valid year']"></q-input>
+            <q-editor v-model="description" placeholder="Description" bg-color="white" label="Description of the address" style="font-family: Quicksand Book" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="q-my-md myInput" borderless type="textarea"></q-editor>
             <div class="">
               <p class="text-white q-mt-md" style="font-family: Keep Calm">Status</p>
-              <q-chip
-                v-if="status == 'rentable'"
-                class="col-1 cursor-pointer q-pa-lg"
-                style="width: fit-content; font-family: Keep Calm"
-                outline
-                color="primary"
-                text-color="white"
-                clickable
-                @click="status = 'buyable'"
-                >Buyable</q-chip
-              >
-              <q-chip
-                v-if="status == 'buyable'"
-                class="q-pa-lg"
-                color="primary"
-                text-color="black"
-                style="font-family: Keep Calm"
-                >Buyable</q-chip
-              >
-              <q-chip
-                v-if="status == 'buyable'"
-                class="col-1 cursor-pointer q-pa-lg"
-                style="width: fit-content; font-family: Keep Calm"
-                outline
-                color="primary"
-                text-color="white"
-                clickable
-                @click="status = 'rentable'"
-                >Rentable</q-chip
-              >
-              <q-chip
-                v-if="status == 'rentable'"
-                class="q-pa-lg"
-                color="primary"
-                text-color="black"
-                style="font-family: Keep Calm"
-                >Rentable</q-chip
-              >
+              <q-chip v-if="status == 'rentable'" class="col-1 cursor-pointer q-pa-lg" style="width: fit-content; font-family: Keep Calm" outline color="primary" text-color="white" clickable @click="status = 'buyable'">Buyable</q-chip>
+              <q-chip v-if="status == 'buyable'" class="q-pa-lg" color="primary" text-color="black" style="font-family: Keep Calm">Buyable</q-chip>
+              <q-chip v-if="status == 'buyable'" class="col-1 cursor-pointer q-pa-lg" style="width: fit-content; font-family: Keep Calm" outline color="primary" text-color="white" clickable @click="status = 'rentable'">Rentable</q-chip>
+              <q-chip v-if="status == 'rentable'" class="q-pa-lg" color="primary" text-color="black" style="font-family: Keep Calm">Rentable</q-chip>
             </div>
             <p class="text-white q-mt-md" style="font-family: Keep Calm">Assets*</p>
             <div class="">
-              <q-chip
-                v-for="asset of assets"
-                v-model:selected="
-                  assets[assets.findIndex((a) => a.assetID === asset.assetID)].selected
-                "
-                class="col-1 cursor-pointer"
-                style="width: fit-content; font-family: Keep Calm"
-                outline
-                color="primary"
-                text-color="white"
-                :key="asset.assetID"
-                >{{ asset.name }}</q-chip
-              >
+              <q-chip v-for="asset of assets" v-model:selected="assets[assets.findIndex((a) => a.assetID === asset.assetID)].selected" class="col-1 cursor-pointer" style="width: fit-content; font-family: Keep Calm" outline color="primary" text-color="white" :key="asset.assetID">{{ asset.name }}</q-chip>
             </div>
           </div></q-step
         >
-        <q-step
-          :name="2"
-          title=""
-          icon="img:/images/2.svg"
-          active-color="primary"
-          active-icon="none"
-        >
+        <q-step :name="2" title="" icon="img:/images/2.svg" active-color="primary" active-icon="none">
           <div class="q-mx-sm">
             <p class="text-white" style="font-family: Keep Calm">Expenses</p>
-            <q-input
-              v-model="estatePrice"
-              ref="estatePriceRef"
-              bg-color="white"
-              label="Price*"
-              :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }"
-              class="q-my-md myInput"
-              borderless
-              :rules="[(val) => !!val || 'Please enter a price']"
-            ></q-input>
-            <q-input
-              v-model="heatingPrice"
-              ref="heatingPriceRef"
-              bg-color="white"
-              label="Heating*"
-              :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }"
-              class="q-my-md myInput"
-              borderless
-              :rules="[(val) => !!val || 'Please enter a price']"
-            ></q-input>
-            <q-input
-              v-model.number="provision"
-              ref="provisionRef"
-              bg-color="white"
-              label="Provision"
-              type="number"
-              :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }"
-              class="q-my-md myInput"
-              borderless
-              :rules="[(val) => !!val || 'Please enter a provision']"
-            ></q-input>
+            <q-input v-model="estatePrice" ref="estatePriceRef" bg-color="white" label="Price*" :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }" class="q-my-md myInput" borderless :rules="[(val) => !!val || 'Please enter a price']"></q-input>
+            <q-input v-model="heatingPrice" ref="heatingPriceRef" bg-color="white" label="Heating*" :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }" class="q-my-md myInput" borderless :rules="[(val) => !!val || 'Please enter a price']"></q-input>
+            <q-input v-model.number="provision" ref="provisionRef" bg-color="white" label="Provision" type="number" :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }" class="q-my-md myInput" borderless :rules="[(val) => !!val || 'Please enter a provision']"></q-input>
             <p class="text-white q-mt-xl" style="font-family: Keep Calm">Area</p>
-            <q-input
-              v-model="propArea"
-              ref="propAreaRef"
-              bg-color="white"
-              label="Property area*"
-              :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }"
-              class="q-my-md myInput"
-              borderless
-              :rules="[(val) => val > 0 || 'Please enter a valid area']"
-            ></q-input>
-            <q-input
-              v-model="useArea"
-              ref="useAreaRef"
-              bg-color="white"
-              label="Useable area*"
-              :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }"
-              class="q-my-md myInput"
-              borderless
-              :rules="[(val) => (val) => val > 0 || 'Please enter a valid area']"
-            ></q-input>
-            <q-input
-              v-model="outArea"
-              bg-color="white"
-              label="Outside area*"
-              :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }"
-              class="q-my-md myInput"
-              borderless
-            ></q-input>
+            <q-input v-model="propArea" ref="propAreaRef" bg-color="white" label="Property area*" :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }" class="q-my-md myInput" borderless :rules="[(val) => val > 0 || 'Please enter a valid area']"></q-input>
+            <q-input v-model="useArea" ref="useAreaRef" bg-color="white" label="Useable area*" :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }" class="q-my-md myInput" borderless :rules="[(val) => (val) => val > 0 || 'Please enter a valid area']"></q-input>
+            <q-input v-model="outArea" bg-color="white" label="Outside area*" :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }" class="q-my-md myInput" borderless></q-input>
           </div>
         </q-step>
-        <q-step
-          :name="3"
-          title=""
-          icon="img:/images/3.svg"
-          active-color="primary"
-          active-icon="none"
-        >
+        <q-step :name="3" title="" icon="img:/images/3.svg" active-color="primary" active-icon="none">
           <div class="q-mx-sm">
             <p class="text-white" style="font-family: Keep Calm">Rooms</p>
             <div class="q-gutter-md row items-start">
               <div class="q-gutter-none row items-start" style="width: 150px">
-                <q-btn
-                  @click="addRoom"
-                  class="mySpecialInput leftBtn"
-                  unelevated
-                  size="189%"
-                  style="width: 20%"
-                  >+</q-btn
-                >
-                <q-input
-                  v-model="rooms"
-                  ref="roomsRef"
-                  bg-color="white"
-                  label-slot
-                  label="Rooms*"
-                  :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }"
-                  class="mySpecialInput"
-                  borderless
-                  style="width: 30%"
-                  :rules="[(val) => !!val || 'Please enter a number']"
-                >
-                  <template v-slot:label>
-                    <q-icon class="text-center" name="fa-solid fa-door-open"></q-icon
-                  ></template>
+                <q-btn @click="addRoom" class="mySpecialInput leftBtn" unelevated size="189%" style="width: 20%">+</q-btn>
+                <q-input v-model="rooms" ref="roomsRef" bg-color="white" label-slot label="Rooms*" :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }" class="mySpecialInput" borderless style="width: 30%" :rules="[(val) => !!val || 'Please enter a number']">
+                  <template v-slot:label> <q-icon class="text-center" name="fa-solid fa-door-open"></q-icon></template>
                 </q-input>
-                <q-btn
-                  @click="removeRoom"
-                  class="mySpecialInput rightBtn"
-                  unelevated
-                  size="189%"
-                  style="width: 20%"
-                  >-</q-btn
-                >
+                <q-btn @click="removeRoom" class="mySpecialInput rightBtn" unelevated size="189%" style="width: 20%">-</q-btn>
               </div>
               <div class="q-gutter-none row items-start" style="width: 150px">
-                <q-btn
-                  @click="addBathroom"
-                  class="mySpecialInput leftBtn"
-                  unelevated
-                  size="189%"
-                  style="width: 20%"
-                  >+</q-btn
-                >
-                <q-input
-                  v-model="bathrooms"
-                  ref="bathroomsRef"
-                  bg-color="white"
-                  label="Bathroom*"
-                  label-slot
-                  :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }"
-                  class="mySpecialInput"
-                  borderless
-                  style="width: 30%"
-                  :rules="[(val) => !!val || 'Please enter a number']"
-                >
+                <q-btn @click="addBathroom" class="mySpecialInput leftBtn" unelevated size="189%" style="width: 20%">+</q-btn>
+                <q-input v-model="bathrooms" ref="bathroomsRef" bg-color="white" label="Bathroom*" label-slot :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }" class="mySpecialInput" borderless style="width: 30%" :rules="[(val) => !!val || 'Please enter a number']">
                   <template v-slot:label><q-icon name="fa-solid fa-bath"></q-icon></template>
                 </q-input>
-                <q-btn
-                  @click="removeBathroom"
-                  class="mySpecialInput rightBtn"
-                  unelevated
-                  size="189%"
-                  style="width: 20%"
-                  >-</q-btn
-                >
+                <q-btn @click="removeBathroom" class="mySpecialInput rightBtn" unelevated size="189%" style="width: 20%">-</q-btn>
               </div>
               <div class="q-gutter-none row items-start" style="width: 150px">
-                <q-btn
-                  @click="addBedroom"
-                  class="mySpecialInput leftBtn"
-                  unelevated
-                  size="189%"
-                  style="width: 20%"
-                  >+</q-btn
-                >
-                <q-input
-                  v-model="bedrooms"
-                  ref="bedroomsRef"
-                  bg-color="white"
-                  label="Bedrooms*"
-                  label-slot
-                  :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }"
-                  class="mySpecialInput"
-                  borderless
-                  style="width: 30%"
-                  :rules="[(val) => !!val || 'Please enter a number']"
-                >
+                <q-btn @click="addBedroom" class="mySpecialInput leftBtn" unelevated size="189%" style="width: 20%">+</q-btn>
+                <q-input v-model="bedrooms" ref="bedroomsRef" bg-color="white" label="Bedrooms*" label-slot :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }" class="mySpecialInput" borderless style="width: 30%" :rules="[(val) => !!val || 'Please enter a number']">
                   <template v-slot:label><q-icon name="fa-solid fa-bed"></q-icon></template>
                 </q-input>
-                <q-btn
-                  @click="removeBedroom"
-                  class="mySpecialInput rightBtn"
-                  unelevated
-                  size="189%"
-                  style="width: 20%"
-                  >-</q-btn
-                >
+                <q-btn @click="removeBedroom" class="mySpecialInput rightBtn" unelevated size="189%" style="width: 20%">-</q-btn>
               </div>
             </div>
             <p class="text-white q-mt-xl" style="font-family: Keep Calm">Heating</p>
-            <q-select
-              v-model="heatingType"
-              ref="heatingTypeRef"
-              :options="heatingTypes"
-              class="myInput"
-              label="Type"
-              borderless
-              :rules="[(val) => !!val || 'Please select a type']"
-            >
-            </q-select>
-            <q-select
-              v-model="heatingCombustible"
-              ref="heatingCombustibleRef"
-              :options="heatingCombustibles"
-              class="q-my-md myInput"
-              label="Combustible"
-              borderless
-              :rules="[(val) => !!val || 'Please select a type']"
-            >
-            </q-select>
+            <q-select v-model="heatingType" ref="heatingTypeRef" :options="heatingTypes" class="myInput" label="Type" borderless :rules="[(val) => !!val || 'Please select a type']"> </q-select>
+            <q-select v-model="heatingCombustible" ref="heatingCombustibleRef" :options="heatingCombustibles" class="q-my-md myInput" label="Combustible" borderless :rules="[(val) => !!val || 'Please select a type']"> </q-select>
             <div class="q-gutter-md row items-start">
-              <q-input
-                v-model.number="fgee"
-                ref="fgeeRef"
-                type="number"
-                bg-color="white"
-                label="fGEE"
-                :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }"
-                class="q-my-md myInput"
-                borderless
-                style="width: 45%"
-              ></q-input>
-              <q-input
-                v-model.number="hwb"
-                ref="hwbRef"
-                type="number"
-                bg-color="white"
-                label="HWB"
-                :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }"
-                class="q-my-md myInput"
-                borderless
-                style="width: 45%"
-              ></q-input>
+              <q-input v-model.number="fgee" ref="fgeeRef" type="number" bg-color="white" label="fGEE" :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }" class="q-my-md myInput" borderless style="width: 45%"></q-input>
+              <q-input v-model.number="hwb" ref="hwbRef" type="number" bg-color="white" label="HWB" :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }" class="q-my-md myInput" borderless style="width: 45%"></q-input>
             </div>
-            <q-file
-              v-model="energyCertificate"
-              bg-color="primary"
-              class="myFileInput text-center"
-              label-color="white"
-              use-chips
-              borderless
-              label="+ Add Energy Certificate"
-              :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }"
-            ></q-file>
+            <q-file v-model="energyCertificate" bg-color="primary" class="myFileInput text-center" label-color="white" use-chips borderless label="+ Add Energy Certificate" :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }"></q-file>
           </div>
         </q-step>
-        <q-step
-          :name="4"
-          title=""
-          icon="img:/images/4.svg"
-          active-color="primary"
-          active-icon="none"
+        <q-step :name="4" title="" icon="img:/images/4.svg" active-color="primary" active-icon="none"
           ><div class="q-mx-sm">
             <p class="text-white" style="font-family: Keep Calm">Images</p>
-            <q-file
-              v-model="images"
-              label="+ Add"
-              class="myFileInput q-mb-md"
-              unelevated
-              borderless
-              multiple
-              use-chips
-              label-color="white"
-            ></q-file>
+            <q-file v-model="images" label="+ Add" class="myFileInput q-mb-md" unelevated borderless multiple use-chips label-color="white"></q-file>
             <p class="text-white" style="font-family: Keep Calm">Other Documents/Files</p>
-            <q-file
-              v-model="files"
-              bg-color="primary"
-              class="myFileInput"
-              borderless
-              multiple
-              use-chips
-              label-color="white"
-              label="+ Add"
-              :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }"
-            ></q-file></div
+            <q-file v-model="files" bg-color="primary" class="myFileInput" borderless multiple use-chips label-color="white" label="+ Add" :input-style="{ fontFamily: 'Keep Calm', color: '#717171', margin: '5px' }"></q-file></div
         ></q-step>
-        <q-step
-          :name="5"
-          title=""
-          icon="img:/images/4.svg"
-          active-color="primary"
-          active-icon="none"
-        >
-          <div
-            style="width: 100%; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px"
-          ></div>
+        <q-step :name="5" title="" icon="img:/images/4.svg" active-color="primary" active-icon="none">
+          <div style="width: 100%; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px"></div>
           <div class="q-pa-sm q-ma-sm text-white">
             <span class="text-h5 block"
               ><b>{{ estate }}</b></span
@@ -725,11 +339,7 @@ function onContinueStep() {
 
             <span class="text-h5 block q-mb-md"><b>Assets</b></span>
             <div class="q-ma-md">
-              <div
-                v-for="asset in assets.filter((a) => a.selected == true)"
-                :key="asset.assetID"
-                class="row inline"
-              >
+              <div v-for="asset in assets.filter((a) => a.selected == true)" :key="asset.assetID" class="row inline">
                 <q-chip size="15px" color="white" text-color="grey" class="text-capitalize">
                   {{ asset.name }}
                 </q-chip>
@@ -801,14 +411,7 @@ function onContinueStep() {
         <template v-slot:navigation>
           <q-stepper-navigation>
             <div class="q-mb-xl" style="font-family: Keep Calm; text-align: center">
-              <q-btn
-                rounded
-                style="width: 300px"
-                type="submit"
-                @click="onContinueStep"
-                color="primary"
-                :label="step === 4 ? 'Check' : step === 5 ? 'Publish' : 'Next'"
-              />
+              <q-btn rounded style="width: 300px" type="submit" @click="onContinueStep" color="primary" :label="step === 4 ? 'Check' : step === 5 ? 'Publish' : 'Next'" />
             </div>
           </q-stepper-navigation>
         </template>
