@@ -8,7 +8,13 @@
     <span class="text-heading block q-mt-sm">{{ realEstate.name }}</span>
     <span class="text-address block">{{ realEstate.address.split(',')[0] }},</span>
     <span class="text-address block">{{ realEstate.address.split(',')[1] }}</span>
-    <span class="text-content block q-mt-sm">{{ new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumSignificantDigits: 12 }).format(realEstate.price) }}</span>
+    <span class="text-content block q-mt-sm">{{
+      new Intl.NumberFormat('de-DE', {
+        style: 'currency',
+        currency: 'EUR',
+        maximumSignificantDigits: 12,
+      }).format(realEstate.price)
+    }}</span>
     <span class="text-content block">{{ realEstate.usableArea }}m²</span>
     <span class="text-content block">{{ realEstate.rooms }} Rooms</span>
   </div>

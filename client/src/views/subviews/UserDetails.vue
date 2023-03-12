@@ -1,7 +1,9 @@
 <template>
   <div v-show="true" class="header text-center text-white">
     <div class="headerProfilePic">
-      <div v-if="userStore.user.profilePic" class="userIconBigger"><q-img :src="userStore.user.profilePic" class="profilePic"></q-img></div>
+      <div v-if="userStore.user.profilePic" class="userIconBigger">
+        <q-img :src="userStore.user.profilePic" class="profilePic"></q-img>
+      </div>
       <div v-else class="userIconBigger">
         <q-icon name="fa-regular fa-user" size="xl" />
       </div>
@@ -14,49 +16,160 @@
 
   <q-form @submit="updateProfile" class="userDetailsForm">
     <q-list class="text-white bg-secondary q-mt-lg">
-      <q-expansion-item :default-opened="true" :expand-icon-toggle="true" expand-icon-class="text-white" dense label="Personal Information">
+      <q-expansion-item
+        :default-opened="true"
+        :expand-icon-toggle="true"
+        expand-icon-class="text-white"
+        dense
+        label="Personal Information"
+      >
         <q-card class="bg-secondary">
           <q-card-section class="q-pt-sm">
-            <q-input label="Email *" :rules="emailRules" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="profileInput" outlined v-model="email" />
-            <q-input label="Phone Number" :rules="phoneRules" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="profileInput q-mt-sm" outlined v-model="phone" />
-            <q-input label="Company" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="profileInput q-mt-sm" outlined v-model="company" />
+            <q-input
+              label="Email *"
+              :rules="emailRules"
+              bg-color="white"
+              :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }"
+              class="profileInput"
+              outlined
+              v-model="email"
+            />
+            <q-input
+              label="Phone Number"
+              :rules="phoneRules"
+              bg-color="white"
+              :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }"
+              class="profileInput q-mt-sm"
+              outlined
+              v-model="phone"
+            />
+            <q-input
+              label="Company"
+              bg-color="white"
+              :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }"
+              class="profileInput q-mt-sm"
+              outlined
+              v-model="company"
+            />
           </q-card-section>
         </q-card>
       </q-expansion-item>
 
-      <q-expansion-item :default-opened="true" :expand-icon-toggle="true" expand-icon-class="text-white" dense label="Name">
+      <q-expansion-item
+        :default-opened="true"
+        :expand-icon-toggle="true"
+        expand-icon-class="text-white"
+        dense
+        label="Name"
+      >
         <q-card class="bg-secondary">
           <q-card-section>
             <div class="twoInputsPerLine">
-              <q-input label="Firstname *" :rules="fnameRules" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="smallerProfileInput" outlined v-model="fname" />
-              <q-input label="Middlename" :rules="mnameRules" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="smallerProfileInput" outlined v-model="mname" />
+              <q-input
+                label="Firstname *"
+                :rules="fnameRules"
+                bg-color="white"
+                :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }"
+                class="smallerProfileInput"
+                outlined
+                v-model="fname"
+              />
+              <q-input
+                label="Middlename"
+                :rules="mnameRules"
+                bg-color="white"
+                :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }"
+                class="smallerProfileInput"
+                outlined
+                v-model="mname"
+              />
             </div>
 
-            <q-input label="Lastname *" :rules="lnameRules" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="profileInput q-mt-sm" outlined v-model="lname" />
+            <q-input
+              label="Lastname *"
+              :rules="lnameRules"
+              bg-color="white"
+              :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }"
+              class="profileInput q-mt-sm"
+              outlined
+              v-model="lname"
+            />
           </q-card-section>
         </q-card>
       </q-expansion-item>
 
-      <q-expansion-item :default-opened="true" :expand-icon-toggle="true" expand-icon-class="text-white" dense label="Address">
+      <q-expansion-item
+        :default-opened="true"
+        :expand-icon-toggle="true"
+        expand-icon-class="text-white"
+        dense
+        label="Address"
+      >
         <q-card class="bg-secondary">
           <q-card-section>
-            <q-input label="Whats your Address?" :rules="addressRules" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="profileInput" outlined v-model="address" />
+            <q-input
+              label="Whats your Address?"
+              :rules="addressRules"
+              bg-color="white"
+              :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }"
+              class="profileInput"
+              outlined
+              v-model="address"
+            />
 
             <div class="twoInputsPerLine">
-              <q-input label="ZIP-Code" :rules="zipRules" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="smallerProfileInput q-mt-sm" outlined v-model="zip" />
-              <q-input label="City" :rules="cityRules" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="smallerProfileInput q-mt-sm" outlined v-model="city" />
+              <q-input
+                label="ZIP-Code"
+                :rules="zipRules"
+                bg-color="white"
+                :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }"
+                class="smallerProfileInput q-mt-sm"
+                outlined
+                v-model="zip"
+              />
+              <q-input
+                label="City"
+                :rules="cityRules"
+                bg-color="white"
+                :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }"
+                class="smallerProfileInput q-mt-sm"
+                outlined
+                v-model="city"
+              />
             </div>
 
             <div class="twoInputsPerLine">
-              <q-input label="State" :rules="stateRules" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="smallerProfileInput q-mt-sm" outlined v-model="state" />
-              <q-input label="Country" :rules="countryRules" bg-color="white" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="smallerProfileInput q-mt-sm" outlined v-model="country" />
+              <q-input
+                label="State"
+                :rules="stateRules"
+                bg-color="white"
+                :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }"
+                class="smallerProfileInput q-mt-sm"
+                outlined
+                v-model="state"
+              />
+              <q-input
+                label="Country"
+                :rules="countryRules"
+                bg-color="white"
+                :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }"
+                class="smallerProfileInput q-mt-sm"
+                outlined
+                v-model="country"
+              />
             </div>
           </q-card-section>
         </q-card>
       </q-expansion-item>
     </q-list>
 
-    <q-btn :disabled="submitInProgress" type="submit" color="primary" class="btn block q-mt-lg updateButton" rounded>
+    <q-btn
+      :disabled="submitInProgress"
+      type="submit"
+      color="primary"
+      class="btn block q-mt-lg updateButton"
+      rounded
+    >
       <div v-if="!submitInProgress" class="text-subtitle1">Update Profile</div>
       <div v-else>
         <q-spinner-tail size="1em" thickness="5" />
@@ -103,7 +216,11 @@ async function updateProfile() {
       lastname: lname.value,
       company: company.value,
       address: {
-        addressID: userStore.user.address ? (userStore.user.address.addressID ? userStore.user.address.addressID : null) : null,
+        addressID: userStore.user.address
+          ? userStore.user.address.addressID
+            ? userStore.user.address.addressID
+            : null
+          : null,
         address: address.value,
         zip: Number(zip.value),
         city: city.value,
@@ -126,75 +243,48 @@ async function updateProfile() {
 // Form validation
 //
 
-const emailRules = [(val) => val.length > 0 || 'You need to provide an Email!', (val) => validateEmail(val) || 'Provided email is not valid'];
+const emailRules = [
+  (val) => val.length > 0 || 'You need to provide an Email!',
+  (val) => validateEmail(val) || 'Provided email is not valid',
+];
 const phoneRules = [
   (val) => {
     if (val.length >= 1) validatePhoneNumber(val) || 'Provided phone number is not valid';
   },
 ];
 
-const fnameRules = [(val) => val.length > 0 || 'Provide a Firstname', (val) => validateJustLetters(val) || 'Invalid name'];
+const fnameRules = [
+  (val) => val.length > 0 || 'Provide a Firstname',
+  (val) => validateJustLetters(val) || 'Invalid name',
+];
 const mnameRules = [
   (val) => {
     if (val.length > 0) {
       if (validateJustLetters(val)) return true;
-      else return 'Invalid name';
-    } else return true;
+      return 'Invalid name';
+    }
+    return true;
   },
 ];
-const lnameRules = [(val) => val.length > 0 || 'Provide a Surname', (val) => validateJustLetters(val) || 'Invalid name'];
+const lnameRules = [
+  (val) => val.length > 0 || 'Provide a Surname',
+  (val) => validateJustLetters(val) || 'Invalid name',
+];
 
 let partialAddress = false;
 
-// Checks if one of the address input's is filled with data. If one is, you have to fill out every other input.
+// Checks if one of the address input's is filled with data. If one is,
+// you have to fill out every other input.
 // Should prevent just submitting a zip for exapmple.
 watch([address, zip, city, state, country], ([newAdrs, newZip, newCity, newState, newCountry]) => {
-  partialAddress = newAdrs.length > 0 || newZip.length > 0 || newCity.length > 0 || newState.length > 0 || newCountry.length > 0 ? true : false;
+  partialAddress = !!(
+    newAdrs.length > 0
+    || newZip.length > 0
+    || newCity.length > 0
+    || newState.length > 0
+    || newCountry.length > 0
+  );
 });
-
-const addressRules = [
-  (val) => {
-    if (partialAddress) {
-      if (!val.length > 0) return 'You need to provide an address!';
-      else if (!validateAddress(val)) return 'Provided address is not valid!';
-      else return true;
-    } else return true;
-  },
-];
-const zipRules = [
-  (val) => {
-    if (partialAddress) {
-      if (!val.length > 0) return 'Provide a ZIP-Code';
-      else if (isNaN(val) || Number(val) > 99950 || Number(val) < 501) return 'Invalid ZIP-Code';
-      else return true;
-    } else return true;
-  },
-];
-
-const cityRules = [
-  (val) => {
-    if (partialAddress) {
-      if (!val.length > 0) return 'Provide a City';
-      else return true;
-    } else return true;
-  },
-];
-const stateRules = [
-  (val) => {
-    if (partialAddress) {
-      if (!val.length > 0) return 'Provide a State';
-      else return true;
-    } else return true;
-  },
-];
-const countryRules = [
-  (val) => {
-    if (partialAddress) {
-      if (!val.length > 0) return 'Provide a Country';
-      else return true;
-    } else return true;
-  },
-];
 
 function validateJustLetters(value) {
   const re = /^[A-Za-z]+$/;
@@ -215,6 +305,55 @@ function validateAddress(value) {
   const re = /^[A-Za-z0-9ßäöü/'.\-\s,]*$/;
   return re.test(String(value));
 }
+
+const addressRules = [
+  (val) => {
+    if (partialAddress) {
+      if (!val.length > 0) return 'You need to provide an address!';
+      if (!validateAddress(val)) return 'Provided address is not valid!';
+      return true;
+    }
+    return true;
+  },
+];
+const zipRules = [
+  (val) => {
+    if (partialAddress) {
+      if (!val.length > 0) return 'Provide a ZIP-Code';
+      if (isNaN(val) || Number(val) > 99950 || Number(val) < 501) return 'Invalid ZIP-Code';
+      return true;
+    }
+    return true;
+  },
+];
+
+const cityRules = [
+  (val) => {
+    if (partialAddress) {
+      if (!val.length > 0) return 'Provide a City';
+      return true;
+    }
+    return true;
+  },
+];
+const stateRules = [
+  (val) => {
+    if (partialAddress) {
+      if (!val.length > 0) return 'Provide a State';
+      return true;
+    }
+    return true;
+  },
+];
+const countryRules = [
+  (val) => {
+    if (partialAddress) {
+      if (!val.length > 0) return 'Provide a Country';
+      return true;
+    }
+    return true;
+  },
+];
 </script>
 
 <style scoped>

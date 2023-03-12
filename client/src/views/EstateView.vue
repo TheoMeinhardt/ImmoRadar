@@ -2,13 +2,35 @@
   <q-layout v-if="finishedLoading">
     <div>
       <div class="returnbutton">
-        <q-btn to="/" class="q-ma-md fa-arrow-left" round flat style="background-color: #00000080" icon="fa-solid fa-arrow-left"></q-btn>
+        <q-btn
+          to="/"
+          class="q-ma-md fa-arrow-left"
+          round
+          flat
+          style="background-color: #00000080"
+          icon="fa-solid fa-arrow-left"
+        ></q-btn>
       </div>
       <div class="mapbutton">
-        <q-btn @click="setlonglat()" to="/" class="q-ma-md" round flat style="background-color: #00000080; color: white" icon="fa-solid fa-location-dot"></q-btn>
+        <q-btn
+          @click="setlonglat()"
+          to="/"
+          class="q-ma-md"
+          round
+          flat
+          style="background-color: #00000080; color: white"
+          icon="fa-solid fa-location-dot"
+        ></q-btn>
       </div>
-      <q-img :src="images[0]" style="width: 100%; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px">
-        <div v-if="realEstateStore.wholeRealEstate.buyable == true" class="absolute-bottom-left text-subtitle2" style="border-top-right-radius: 20px">
+      <q-img
+        :src="images[0]"
+        style="width: 100%; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px"
+      >
+        <div
+          v-if="realEstateStore.wholeRealEstate.buyable == true"
+          class="absolute-bottom-left text-subtitle2"
+          style="border-top-right-radius: 20px"
+        >
           <div class="row no-wrap items-center">
             <div class="col">
               <div class="text-caption">Buy for</div>
@@ -18,7 +40,11 @@
             </div>
           </div>
         </div>
-        <div v-else class="absolute-bottom-left text-subtitle2" style="border-top-right-radius: 20px">
+        <div
+          v-else
+          class="absolute-bottom-left text-subtitle2"
+          style="border-top-right-radius: 20px"
+        >
           <b>{{ realEstateStore.wholeRealEstate.price }}€ </b>/ Month | Rentable
         </div>
       </q-img>
@@ -34,7 +60,13 @@
       >
 
       <div v-for="i in images.slice(1)" :key="i" class="row inline">
-        <q-img :src="i" class="q-ma-sm" style="width: 100px; height: 100px; border-radius: 20px" @click="carousel = true"> </q-img>
+        <q-img
+          :src="i"
+          class="q-ma-sm"
+          style="width: 100px; height: 100px; border-radius: 20px"
+          @click="carousel = true"
+        >
+        </q-img>
       </div>
 
       <span class="text-h5 block q-my-md"><b>Description</b></span>
@@ -67,7 +99,11 @@
 
       <span class="text-h5 block q-mb-md"><b>Assets</b></span>
       <div class="q-ma-md">
-        <div v-for="asset in realEstateStore.wholeRealEstate.assets" :key="asset.assetID" class="row inline">
+        <div
+          v-for="asset in realEstateStore.wholeRealEstate.assets"
+          :key="asset.assetID"
+          class="row inline"
+        >
           <q-chip size="15px" color="white" text-color="grey" class="text-capitalize">
             {{ asset.name }}
           </q-chip>
@@ -130,9 +166,15 @@
           </q-item-section>
 
           <q-item-section>
-            <q-item-label class="text-black" style="font-size: large">{{ estateUserStore.estateUser.username }}</q-item-label>
-            <q-item-label caption style="font-size: medium"> <i class="fa-solid fa-phone"></i> {{ estateUserStore.estateUser.phone }} </q-item-label>
-            <q-item-label caption style="font-size: medium"> <i class="fa-solid fa-envelope"></i> {{ estateUserStore.estateUser.email }} </q-item-label>
+            <q-item-label class="text-black" style="font-size: large">{{
+              estateUserStore.estateUser.username
+            }}</q-item-label>
+            <q-item-label caption style="font-size: medium">
+              <i class="fa-solid fa-phone"></i> {{ estateUserStore.estateUser.phone }}
+            </q-item-label>
+            <q-item-label caption style="font-size: medium">
+              <i class="fa-solid fa-envelope"></i> {{ estateUserStore.estateUser.email }}
+            </q-item-label>
           </q-item-section>
         </q-item>
       </q-card>
@@ -154,9 +196,9 @@
 </template>
 
 <script setup>
-import NavBar from '@/components/NavBar.vue';
 import axios from 'axios';
 import { ref, onMounted } from 'vue';
+import NavBar from '@/components/NavBar.vue';
 import { useRealEstateStore } from '@/stores/realEstates.js';
 import { useEstateMapStore } from '../stores/estate-map.js';
 import { useEstateUserStore } from '../stores/estateUser.js';
@@ -187,7 +229,7 @@ onMounted(async () => {
 
   // console.log(estateUserStore.estateUser.username);
 
-  for await (let re of realEstateStore.wholeRealEstate.images) {
+  for await (const re of realEstateStore.wholeRealEstate.images) {
     try {
       const res = await axios.post('/image', {
         path: re,

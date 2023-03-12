@@ -2,8 +2,16 @@
   <q-layout>
     <q-page-container>
       <div v-if="!userStore.isLoggedIn">
-        <h4 class="text-center text-white text-h3" style="font-family: Keep Calm">You have to login first!</h4>
-        <p @click="$router.push('/form')" class="text-subtitle1 text-center text-white cursor-pointer" style="font-family: Quicksand Book">Proceed to Login</p>
+        <h4 class="text-center text-white text-h3" style="font-family: Keep Calm">
+          You have to login first!
+        </h4>
+        <p
+          @click="$router.push('/form')"
+          class="text-subtitle1 text-center text-white cursor-pointer"
+          style="font-family: Quicksand Book"
+        >
+          Proceed to Login
+        </p>
       </div>
 
       <div v-else style="font-family: Keep Calm">
