@@ -12,6 +12,7 @@ import SearchView from '@/views/SearchView.vue';
 import AddHouseView from '@/views/AddHouseView.vue';
 import UserOverview from '@/views/subviews/UserOverview.vue';
 import EstateView from '@/views/EstateView.vue';
+import CommentView from '../views/CommentView.vue';
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -81,6 +82,11 @@ const router = createRouter({
       path: '/checkout',
       name: 'checkout',
       component: CheckoutView,
+    },
+    {
+      path: '/comments',
+      name: 'comments',
+      component: CommentView,
     },
     {
       path: '/estateview/:reID',
