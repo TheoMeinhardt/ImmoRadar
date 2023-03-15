@@ -54,12 +54,13 @@
           strategy.
         </p>
         <div class="flex items-center mt-4 space-x-4">
-          <button
-            type="button"
-            class="flex items-center text-sm hover:underline"
-          >
-            <i class="fa-solid fa-reply q-mr-sm"></i>
-            Reply
+          <button type="button" class="flex items-center text-sm">
+            <i class="fa-solid fa-heart q-mr-sm"></i>
+            <p>24 Likes</p>
+          </button>
+          <button type="button" class="flex items-center text-sm">
+            <i class="fa-solid fa-reply q-mx-sm"></i>
+            <p>Reply</p>
           </button>
         </div>
       </article>
@@ -87,6 +88,12 @@
           </div>
         </footer>
         <p class="">Much appreciated! Glad you liked it!</p>
+        <div class="flex items-center mt-4 space-x-4">
+          <button type="button" class="flex items-center text-sm">
+            <i class="fa-solid fa-heart q-mr-sm"></i>
+            <p>7 Likes</p>
+          </button>
+        </div>
       </article>
     </div>
   </section>
