@@ -14,3 +14,5 @@ Content-Type: application/json
 {
     "session_id":"cs_test_a1TfAt7CigWorQ4TDemz0ZkN79x2cCSqpdDQWh5Z9JDSbERBK1yIcjnXRe"
 }
+###############################
+GET http://localhost:3000/realestate/2f7bfacf-d7f4-4ea2-a95e-5caaedbb88ef/posts
