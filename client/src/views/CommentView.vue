@@ -104,26 +104,24 @@ onMounted(async () => {
             {{ p.content }}
           </p>
           <div
-            class="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700"
+            class="q-my-md py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700"
             v-if="showEditPost && currentPost === p"
           >
-            <label for="comment" class="sr-only text-">Your comment</label>
-            <textarea
-              v-model="p.title"
-              id="postTitle"
-              rows="1"
-              class="px-0 w-full text-lg border-0 focus:ring-0 focus:outline-none"
-              placeholder="Title..."
+            <q-input required v-model="p.title" type="text" label="Title" />
+            <q-input
               required
-            ></textarea>
-            <textarea
               v-model="p.content"
-              id="postContent"
-              rows="3"
-              class="px-0 w-full text-sm border-0 focus:ring-0 focus:outline-none"
-              placeholder="Content..."
-              required
-            ></textarea>
+              type="text"
+              label="Content"
+              class="q-mb-md"
+            />
+            <button
+              type="submit"
+              class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-primary rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800"
+            >
+              Save
+              <i class="fa-solid fa-floppy-disk q-pa-sm"></i>
+            </button>
           </div>
           <div class="flex items-center mt-4 space-x-4">
             <button type="button" class="flex items-center text-sm">
@@ -186,14 +184,20 @@ onMounted(async () => {
             class="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700"
             v-if="showEditComment && currentComment === c"
           >
-            <textarea
-              v-model="c.content"
-              id="postContent"
-              rows="3"
-              class="px-0 w-full text-sm border-0 focus:ring-0 focus:outline-none"
-              placeholder="Content..."
+            <q-input
               required
-            ></textarea>
+              v-model="p.content"
+              type="text"
+              label="Content"
+              class="q-mb-md"
+            />
+            <button
+              type="submit"
+              class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-primary rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800"
+            >
+              Save
+              <i class="fa-solid fa-floppy-disk q-pa-sm"></i>
+            </button>
           </div>
           <div class="flex items-center mt-4 space-x-4">
             <button type="button" class="flex items-center text-sm">
