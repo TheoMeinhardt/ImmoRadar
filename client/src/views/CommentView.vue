@@ -12,6 +12,7 @@ const showEditPost = ref(false);
 const showEditComment = ref(false);
 const showDeletePost = ref(false);
 const showDeleteComment = ref(false);
+const likedPost = ref(false);
 
 const currentPost = ref(null);
 const currentComment = ref(null);
@@ -125,7 +126,8 @@ onMounted(async () => {
           </div>
           <div class="flex items-center mt-4 space-x-4">
             <button type="button" class="flex items-center text-sm">
-              <i class="fa-solid fa-heart q-mr-sm"></i>
+              <i v-if="likedPost" class="fa-solid fa-heart q-mr-sm"></i>
+              <i v-if="!likedPost" class="fa-regular fa-heart q-mr-sm"></i>
               <p>{{ p.likes.count }}</p>
             </button>
             <button type="button" class="flex items-center text-sm">
