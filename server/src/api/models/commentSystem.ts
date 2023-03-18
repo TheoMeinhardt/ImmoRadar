@@ -16,23 +16,35 @@ async function dbCheckLikeExistsOnComment(userID: string, commentID: string) {
 }
 
 async function dbGetPostsByRealEstate(re_id: string): Promise<post[]> {
-  const { rows } = await pool.query('SELECT posts.post_id, posts.title, posts.content, posts.created_at, posts.re_id, posts.user_id, users.user_id ,users.name FROM posts join users on posts.user_id = users.user_id where re_id = $1', [re_id]);
-  console.log(rows);
+  const { rows } = await pool.query(
+    'SELECT posts.post_id, posts.title, posts.content, posts.created_at, posts.re_id, posts.user_id, users.user_id ,users.name FROM posts join users on posts.user_id = users.user_id where re_id = $1',
+    [re_id],
+  );
+  // console.log(rows);
   return (await postMapper(rows)) as post[];
 }
 
 async function dbGetPostByPostID(postID: string): Promise<post> {
-  const { rows } = await pool.query('SELECT posts.post_id,posts.title,posts.content,posts.created_at,posts.re_id,posts.user_id, users.user_id, users.name FROM posts JOIN users ON posts.user_id = users.user_id WHERE post_id = $1', [postID]);
+  const { rows } = await pool.query(
+    'SELECT posts.post_id,posts.title,posts.content,posts.created_at,posts.re_id,posts.user_id, users.user_id, users.name FROM posts JOIN users ON posts.user_id = users.user_id WHERE post_id = $1',
+    [postID],
+  );
   return (await postMapper(rows[0])) as post;
 }
 
 async function dbGetCommentsByPost(postID: string): Promise<comment[]> {
-  const { rows } = await pool.query('SELECT comments.comment_id,comments.content,comments.created_at,comments.user_id,comments.post_id, users.user_id, users.name FROM comments join users on comments.user_id = users.user_id where post_id = $1', [postID]);
+  const { rows } = await pool.query(
+    'SELECT comments.comment_id,comments.content,comments.created_at,comments.user_id,comments.post_id, users.user_id, users.name FROM comments join users on comments.user_id = users.user_id where post_id = $1',
+    [postID],
+  );
   return (await commentMapper(rows)) as comment[];
 }
 
 async function dbGetCommentByCommentID(commentID: string): Promise<comment> {
-  const { rows } = await pool.query('SELECT comments.comment_id,comments.content,comments.created_at,comments.user_id,comments.post_id, users.user_id, users.name FROM comments join users on comments.user_id = users.user_id where comment_id = $1', [commentID]);
+  const { rows } = await pool.query(
+    'SELECT comments.comment_id,comments.content,comments.created_at,comments.user_id,comments.post_id, users.user_id, users.name FROM comments join users on comments.user_id = users.user_id where comment_id = $1',
+    [commentID],
+  );
   return (await commentMapper(rows[0])) as comment;
 }
 
@@ -98,4 +110,23 @@ async function dbUnlikeComment(commentID: string, userID: string) {
   await pool.query('DELETE FROM likes WHERE comment_id = $1 AND user_id = $2', [commentID, userID]);
 }
 
-export { dbCheckLikeExistsOnPost, dbCheckLikeExistsOnComment, dbGetPostsByRealEstate, dbGetPostByPostID, dbGetCommentsByPost, dbGetCommentByCommentID, dbGetLikesFromPost, dbGetLikesFromComments, dbPostPost, dbLikePost, dbPostComment, dbLikeComment, dbPatchPost, dbPatchComment, dbDeletePost, dbUnlikePost, dbDeleteComment, dbUnlikeComment };
+export {
+  dbCheckLikeExistsOnPost,
+  dbCheckLikeExistsOnComment,
+  dbGetPostsByRealEstate,
+  dbGetPostByPostID,
+  dbGetCommentsByPost,
+  dbGetCommentByCommentID,
+  dbGetLikesFromPost,
+  dbGetLikesFromComments,
+  dbPostPost,
+  dbLikePost,
+  dbPostComment,
+  dbLikeComment,
+  dbPatchPost,
+  dbPatchComment,
+  dbDeletePost,
+  dbUnlikePost,
+  dbDeleteComment,
+  dbUnlikeComment,
+};

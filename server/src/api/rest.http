@@ -1,2 +1,4 @@
 GET http://localhost:3000/realestate/2f7bfacf-d7f4-4ea2-a95e-5caaedbb88ef/posts
 ################################################################################################
+GET http://localhost:3000/realestate/2f7bfacf-d7f4-4ea2-a95e-5caaedbb88ef/posts/32ab02c0-91a7-4865-8d7c-122c410614dc/d1a4647a-1200-4dde-b911-262ef1f13c92
+#######################################
