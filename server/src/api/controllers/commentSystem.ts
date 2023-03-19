@@ -75,6 +75,13 @@ async function postComment(req: Request, res: Response): Promise<void> {
     const { post_id } = req.params;
     const { content, user_id } = req.body;
 
+    // Check if post exists
+    const postExists = await dbGetPostByPostID(post_id);
+    if (!postExists) {
+      res.status(404).json({ error: 'Post not found' });
+      return;
+    }
+
     const result = await dbPostComment(content, user_id, post_id);
     res.status(200).json(result);
   } catch (err) {
@@ -98,7 +105,7 @@ async function likePost(req: Request, res: Response): Promise<void> {
     // Check if like already exists
     const likeExists = await dbCheckLikeExistsOnPost(user_id, post_id);
     if (likeExists) {
-      res.status(400).json({ error: 'Like already exists' });
+      res.status(200).json({ error: 'Like already exists' });
       return;
     }
 
@@ -118,12 +125,14 @@ async function likeComment(req: Request, res: Response): Promise<void> {
     const commentExists = await dbGetCommentByCommentID(comment_id);
     if (!commentExists) {
       res.status(404).json({ error: 'Comment not found' });
+      return;
     }
 
     // Check if like already exists
     const likeExists = await dbCheckLikeExistsOnComment(user_id, comment_id);
     if (likeExists) {
       res.status(400).json({ error: 'Like already exists' });
+      return;
     }
 
     const result = await dbLikeComment(user_id, comment_id);
@@ -144,10 +153,12 @@ async function patchPost(req: Request, res: Response): Promise<void> {
 
   if (!postById) {
     res.status(404).json({ message: 'Post not found' });
+    return;
   }
 
   if (postById.userID !== user_id) {
     res.status(401).json({ message: 'Not authorized to edit this post' });
+    return;
   }
 
   const updatedPost = await dbPatchPost(title, content, post_id);
@@ -163,10 +174,12 @@ async function patchComment(req: Request, res: Response): Promise<void> {
 
   if (!comment) {
     res.status(404).json({ message: 'Comment not found' });
+    return;
   }
 
   if (comment.userID !== user_id) {
     res.status(401).json({ message: 'Not authorized to edit this comment' });
+    return;
   }
 
   const updatedComment = await dbPatchComment(content, comment_id);
@@ -178,22 +191,25 @@ async function patchComment(req: Request, res: Response): Promise<void> {
 
 async function unlikePost(req: Request, res: Response): Promise<void> {
   try {
-    const { user_id, post_id } = req.body;
+    const { post_id } = req.params;
+    const { user_id } = req.body;
 
     // Check if post exists
     const postExists = await dbGetPostByPostID(post_id);
     if (!postExists) {
       res.status(404).json({ error: 'Post not found' });
+      return;
     }
 
     // Check if like exists
     const likeExists = await dbCheckLikeExistsOnPost(user_id, post_id);
     if (!likeExists) {
-      res.status(400).json({ error: 'Like does not exist' });
+      res.status(200).json({ error: 'Like does not exist' });
+      return;
     }
 
-    const result = await dbUnlikePost(user_id, post_id);
-    res.status(200).json(result);
+    const deletedLike = await dbUnlikePost(user_id, post_id);
+    res.status(200).json(deletedLike);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Server error' });
@@ -208,12 +224,14 @@ async function unlikeComment(req: Request, res: Response): Promise<void> {
     const commentExists = await dbGetCommentByCommentID(comment_id);
     if (!commentExists) {
       res.status(404).json({ error: 'Comment not found' });
+      return;
     }
 
     // Check if like exists
     const likeExists = await dbCheckLikeExistsOnComment(user_id, comment_id);
     if (!likeExists) {
       res.status(400).json({ error: 'Like does not exist' });
+      return;
     }
 
     const result = await dbUnlikeComment(user_id, comment_id);
@@ -227,11 +245,7 @@ async function unlikeComment(req: Request, res: Response): Promise<void> {
 async function deletePost(req: Request, res: Response): Promise<void> {
   const { post_id } = req.params;
   const { user_id } = req.body;
-  console.log(req.body);
-  console.log(post_id);
-  console.log(user_id);
   const postByID = await dbGetPostByPostID(post_id);
-  console.log(postByID.userID);
   if (!postByID) {
     res.status(404).json({ message: 'Post not found' });
     return;

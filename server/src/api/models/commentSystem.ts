@@ -71,7 +71,7 @@ async function dbLikePost(userID: string, postID: string): Promise<like> {
 }
 
 async function dbPostComment(content: string, userID: string, postID: string): Promise<comment> {
-  const { rows } = await pool.query('INSERT INTO comments (title, content, user_id, post_id) VALUES ($1, $2, $3, $4) RETURNING *', [content, userID, postID]);
+  const { rows } = await pool.query('INSERT INTO comments (content, user_id, post_id) VALUES ($1, $2, $3) RETURNING *', [content, userID, postID]);
   return (await commentMapper(rows[0])) as comment;
 }
 
@@ -98,8 +98,9 @@ async function dbDeletePost(postID: string) {
   await pool.query('delete from posts where post_id = $1', [postID]);
 }
 
-async function dbUnlikePost(postID: string, userID: string) {
-  await pool.query('DELETE FROM likes WHERE post_id = $1 AND user_id = $2', [postID, userID]);
+async function dbUnlikePost(post_id: string, user_id: string) {
+  const { rows } = await pool.query('delete from likes where user_id = $1 and post_id = $2 returning *', [post_id, user_id]);
+  return rows[0];
 }
 
 async function dbDeleteComment(commentID: string) {
