@@ -24,6 +24,7 @@ const comment = ref('');
 onMounted(async () => {
   const { data } = await axios.get('http://localhost:3000/realestate/2f7bfacf-d7f4-4ea2-a95e-5caaedbb88ef/posts');
   posts.value = data;
+  console.log(sortPostsByDate(data));
 });
 
 // const checkLikedPost = async (postID, userID) => {
@@ -43,6 +44,16 @@ const formatDate = (date) => {
     minute: '2-digit',
   };
   return new Date(date).toLocaleString('de-DE', options);
+};
+
+const sortPostsByDate = (posts) => {
+  posts.sort(function (a, b) {
+    var c = new Date(a.createdAt);
+    var d = new Date(b.createdAt);
+    var erg = c - d;
+    console.log(erg);
+    return erg;
+  });
 };
 
 // -------------- POSTS --------------
@@ -264,7 +275,6 @@ const unlikeComment = async (commentID) => {
     });
   }
 };
-
 </script>
 <template>
   <section class="py-8 lg:py-16">
