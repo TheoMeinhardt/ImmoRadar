@@ -119,7 +119,8 @@ async function likePost(req: Request, res: Response): Promise<void> {
 
 async function likeComment(req: Request, res: Response): Promise<void> {
   try {
-    const { user_id, comment_id } = req.body;
+    const { comment_id } = req.params;
+    const { user_id } = req.body;
 
     // Check if comment exists
     const commentExists = await dbGetCommentByCommentID(comment_id);
@@ -131,7 +132,7 @@ async function likeComment(req: Request, res: Response): Promise<void> {
     // Check if like already exists
     const likeExists = await dbCheckLikeExistsOnComment(user_id, comment_id);
     if (likeExists) {
-      res.status(400).json({ error: 'Like already exists' });
+      res.status(200).json({ error: 'Like already exists' });
       return;
     }
 
@@ -218,7 +219,8 @@ async function unlikePost(req: Request, res: Response): Promise<void> {
 
 async function unlikeComment(req: Request, res: Response): Promise<void> {
   try {
-    const { user_id, comment_id } = req.body;
+    const { user_id } = req.body;
+    const { comment_id } = req.params;
 
     // Check if comment exists
     const commentExists = await dbGetCommentByCommentID(comment_id);

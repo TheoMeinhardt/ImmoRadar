@@ -108,7 +108,8 @@ async function dbDeleteComment(commentID: string) {
 }
 
 async function dbUnlikeComment(commentID: string, userID: string) {
-  await pool.query('DELETE FROM likes WHERE comment_id = $1 AND user_id = $2', [commentID, userID]);
+  const { rows } = await pool.query('DELETE FROM likes WHERE user_id = $1 and comment_id = $2 returning *', [commentID, userID]);
+  return rows[0];
 }
 
 export {

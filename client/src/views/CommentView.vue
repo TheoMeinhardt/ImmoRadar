@@ -23,7 +23,6 @@ const comment = ref('');
 
 onMounted(async () => {
   const { data } = await axios.get('http://localhost:3000/realestate/2f7bfacf-d7f4-4ea2-a95e-5caaedbb88ef/posts');
-  console.log(data);
   posts.value = data;
 });
 
@@ -56,7 +55,7 @@ const postPost = async () => {
         color: 'red',
       });
     } else {
-      const { data } = await axios.post('http://localhost:3000/realestate/2f7bfacf-d7f4-4ea2-a95e-5caaedbb88ef/posts', {
+      await axios.post('http://localhost:3000/realestate/2f7bfacf-d7f4-4ea2-a95e-5caaedbb88ef/posts', {
         title: postTitle.value,
         content: postContent.value,
         user_id: currentUser.value,
@@ -65,7 +64,6 @@ const postPost = async () => {
         message: 'Sie haben den Post gesendet!',
         color: 'green',
       });
-      console.log(data);
     }
   } catch (error) {
     $q.notify({
@@ -78,12 +76,11 @@ const postPost = async () => {
 
 const deletePost = async (postID) => {
   try {
-    const { data } = await axios.delete(`http://localhost:3000/realestate/2f7bfacf-d7f4-4ea2-a95e-5caaedbb88ef/posts/${postID}`, { data: { user_id: currentUser.value } });
+    await axios.delete(`http://localhost:3000/realestate/posts/${postID}`, { data: { user_id: currentUser.value } });
     $q.notify({
       message: 'Sie haben den Post gelöscht!',
       color: 'green',
     });
-    console.log(data);
   } catch (error) {
     console.error(error);
     $q.notify({
@@ -95,11 +92,10 @@ const deletePost = async (postID) => {
 
 const sendComment = async (postID) => {
   try {
-    const { data } = await axios.post(`http://localhost:3000/realestate/2f7bfacf-d7f4-4ea2-a95e-5caaedbb88ef/posts/${postID}/comments`, {
+    await axios.post(`http://localhost:3000/realestate/posts/${postID}/comments`, {
       user_id: currentUser.value,
       content: comment.value,
     });
-    console.log(data);
     $q.notify({
       message: 'Sie haben den Kommentar gesendet!',
       color: 'green',
@@ -115,7 +111,7 @@ const sendComment = async (postID) => {
 
 const likePost = async (postID) => {
   try {
-    const { data } = await axios.post(`http://localhost:3000/realestate/2f7bfacf-d7f4-4ea2-a95e-5caaedbb88ef/posts/${postID}/like`, {
+    const { data } = await axios.post(`http://localhost:3000/realestate/posts/${postID}/like`, {
       user_id: currentUser.value,
     });
     if (data.error === 'Like already exists') {
@@ -140,7 +136,7 @@ const likePost = async (postID) => {
 
 const unlikePost = async (postID) => {
   try {
-    const { data } = await axios.delete(`http://localhost:3000/realestate/2f7bfacf-d7f4-4ea2-a95e-5caaedbb88ef/posts/${postID}/unlike`, { data: { user_id: currentUser.value } });
+    const { data } = await axios.delete(`http://localhost:3000/realestate/posts/${postID}/unlike`, { data: { user_id: currentUser.value } });
     if (data.error === 'Like does not exist') {
       $q.notify({
         message: 'Sie haben den Post nicht geliked!',
@@ -161,29 +157,114 @@ const unlikePost = async (postID) => {
   }
 };
 
-const editPost = async (postID) => {
+const editPost = async (post) => {
   try {
-    const post = posts.value.find((p) => p.postID === postID);
-    console.log(post.title);
-    console.log(post.content);
-    const { data } = await axios.patch(`http://localhost:3000/realestate/2f7bfacf-d7f4-4ea2-a95e-5caaedbb88ef/posts/${postID}`, {
+    const postID = post.postID;
+    await axios.patch(`http://localhost:3000/realestate/posts/${postID}`, {
       title: post.title,
       content: post.content,
       user_id: currentUser.value,
     });
     $q.notify({
-      message: 'Sie haben den Post editiert!',
+      message: 'Sie haben den Post geändert!',
       color: 'green',
     });
-    console.log(data);
   } catch (error) {
     console.error(error);
     $q.notify({
-      message: 'Fehler beim Editieren!',
+      message: 'Fehler beim Ändern!',
       color: 'red',
     });
   }
 };
+
+// -------------- COMMENTS --------------
+
+const deleteComment = async (commentID) => {
+  try {
+    await axios.delete(`http://localhost:3000/realestate/posts/comments/${commentID}`, { data: { user_id: currentUser.value } });
+    $q.notify({
+      message: 'Sie haben den Kommentar gelöscht!',
+      color: 'green',
+    });
+  } catch (error) {
+    console.error(error);
+    $q.notify({
+      message: 'Fehler beim Löschen!',
+      color: 'red',
+    });
+  }
+};
+
+const editComment = async (comment) => {
+  try {
+    const commentID = comment.commentID;
+    await axios.patch(`http://localhost:3000/realestate/posts/comments/${commentID}`, {
+      content: comment.content,
+      user_id: currentUser.value,
+    });
+    $q.notify({
+      message: 'Sie haben den Kommentar geändert!',
+      color: 'green',
+    });
+  } catch (error) {
+    console.error(error);
+    $q.notify({
+      message: 'Fehler beim Ändern!',
+      color: 'red',
+    });
+  }
+};
+
+const likeComment = async (commentID) => {
+  try {
+    const { data } = await axios.post(`http://localhost:3000/realestate/posts/comments/${commentID}/like`, {
+      user_id: currentUser.value,
+    });
+
+    if (data.error === 'Like already exists') {
+      $q.notify({
+        message: 'Sie haben den Kommentar schon geliked!',
+        color: 'green',
+      });
+    } else {
+      $q.notify({
+        message: 'Sie haben den Kommentar geliked!',
+        color: 'green',
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    $q.notify({
+      message: 'Fehler beim Liken des Kommentars!',
+      color: 'red',
+    });
+  }
+};
+
+const unlikeComment = async (commentID) => {
+  try {
+    const { data } = await axios.delete(`http://localhost:3000/realestate/posts/comments/${commentID}/unlike`, { data: { user_id: currentUser.value } });
+    if (data.error === 'Like does not exist') {
+      $q.notify({
+        message: 'Sie haben den Post nicht geliked!',
+        color: 'red',
+      });
+    } else {
+      $q.notify({
+        message: 'Sie haben den Post entliked!',
+        color: 'green',
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    $q.notify({
+      message: 'Fehler beim Liken des Posts!',
+      color: 'red',
+    });
+  }
+};
+
 </script>
 <template>
   <section class="py-8 lg:py-16">
@@ -240,7 +321,7 @@ const editPost = async (postID) => {
                 Cancel
               </button>
               <button
-                @click="(showEditPost = false), editPost(p.postID)"
+                @click="(showEditPost = false), editPost(p)"
                 type="submit"
                 class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-primary rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800 ml-4"
               >
@@ -312,8 +393,7 @@ const editPost = async (postID) => {
           </footer>
           <p class="">{{ c.content }}</p>
           <div class="q-my-md py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700" v-if="showEditComment && currentComment === c">
-            <q-input required v-model="p.title" type="text" label="Title" />
-            <q-input required v-model="p.content" type="text" label="Content" class="q-mb-md" />
+            <q-input required v-model="c.content" type="text" label="Content" class="q-mb-md" />
             <div class="flex justify-end">
               <button
                 @click="showEditComment = false"
@@ -323,7 +403,7 @@ const editPost = async (postID) => {
                 Cancel
               </button>
               <button
-                @click="showEditComment = false"
+                @click="(showEditComment = false), editComment(c)"
                 type="submit"
                 class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-primary rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800 ml-4"
               >
@@ -332,11 +412,11 @@ const editPost = async (postID) => {
             </div>
           </div>
           <div class="flex items-center mt-4">
-            <button type="button" class="flex items-center text-sm">
+            <button @click="likeComment(c.commentID)" type="button" class="flex items-center text-sm">
               <i class="fa-solid fa-heart q-mr-sm text-primary"></i>
             </button>
             <p class="q-pr-sm">{{ c.likes.count }}</p>
-            <button v-if="c.likes.count > 0">
+            <button @click="unlikeComment(c.commentID)" type="button" v-if="c.likes.count > 0">
               <i class="fa-regular fa-heart q-mr-sm text-primary"></i>
             </button>
             <div class="lt-sm">
@@ -399,6 +479,7 @@ const editPost = async (postID) => {
             </div>
             <button
               v-close-popup
+              @click="deleteComment(currentComment.commentID)"
               type="button"
               class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
             >

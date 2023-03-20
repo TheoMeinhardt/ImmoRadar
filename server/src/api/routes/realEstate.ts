@@ -33,22 +33,24 @@ router.post('/create-portal-session', asyncHandler(createPortal));
 
 // COMMENTSYSTEM
 router.get('/:id/posts', asyncHandler(commentSystemControllers.getPostsAndComments));
+
 router.get('/:id/posts/:user_id/:post_id', asyncHandler(commentSystemControllers.checkLikeOnPost));
 router.get('/:id/posts/:user_id/:comment_id', asyncHandler(commentSystemControllers.checkLikeOnComment));
 
 // POSTS
 router.post('/:id/posts', asyncHandler(commentSystemControllers.postPost));
-router.patch('/:id/posts/:post_id', asyncHandler(commentSystemControllers.patchPost));
-router.delete('/:id/posts/:post_id', asyncHandler(commentSystemControllers.deletePost));
+router.patch('/posts/:post_id', asyncHandler(commentSystemControllers.patchPost));
+router.delete('/posts/:post_id', asyncHandler(commentSystemControllers.deletePost));
 
-router.post('/:id/posts/:post_id/like', asyncHandler(commentSystemControllers.likePost));
-router.delete('/:id/posts/:post_id/unlike', asyncHandler(commentSystemControllers.unlikePost));
+router.post('/posts/:post_id/like', asyncHandler(commentSystemControllers.likePost));
+router.delete('/posts/:post_id/unlike', asyncHandler(commentSystemControllers.unlikePost));
 
 // COMMENTS
-router.post('/:id/posts/:post_id/comments', asyncHandler(commentSystemControllers.postComment));
-router.patch('/:id/posts/:post_id/comments/:comment_id', asyncHandler(commentSystemControllers.patchComment));
-router.post('/:id/posts/:post_id/comments/:comment_id', asyncHandler(commentSystemControllers.likeComment));
-router.delete('/:id/posts/:post_id/comments/:comment_id', asyncHandler(commentSystemControllers.deleteComment));
-router.delete('/:id/posts/:post_id/comments/:comment_id', asyncHandler(commentSystemControllers.unlikeComment));
+router.post('/posts/:post_id/comments', asyncHandler(commentSystemControllers.postComment));
+router.patch('/posts/comments/:comment_id', asyncHandler(commentSystemControllers.patchComment));
+router.delete('/posts/comments/:comment_id', asyncHandler(commentSystemControllers.deleteComment));
+
+router.post('/posts/comments/:comment_id/like', asyncHandler(commentSystemControllers.likeComment));
+router.delete('/posts/comments/:comment_id/unlike', asyncHandler(commentSystemControllers.unlikeComment));
 
 export default router;
