@@ -1,7 +1,7 @@
 <script setup>
 import axios from 'axios';
 import { useQuasar } from 'quasar';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 const $q = useQuasar();
 const posts = ref([]);
 const currentUser = ref('32ab02c0-91a7-4865-8d7c-122c410614dc'); //John Smith
@@ -21,10 +21,11 @@ const currentPost = ref(null);
 const currentComment = ref(null);
 const comment = ref('');
 
+const sortOrder = ref('newest');
+
 onMounted(async () => {
   const { data } = await axios.get('http://localhost:3000/realestate/2f7bfacf-d7f4-4ea2-a95e-5caaedbb88ef/posts');
   posts.value = data;
-  console.log(sortPostsByDate(data));
 });
 
 // const checkLikedPost = async (postID, userID) => {
@@ -46,15 +47,22 @@ const formatDate = (date) => {
   return new Date(date).toLocaleString('de-DE', options);
 };
 
-const sortPostsByDate = (posts) => {
-  posts.sort(function (a, b) {
-    var c = new Date(a.createdAt);
-    var d = new Date(b.createdAt);
-    var erg = c - d;
-    console.log(erg);
-    return erg;
-  });
+const toggleSortOrder = () => {
+  console.log('test');
+  sortOrder.value = sortOrder.value === 'newest' ? 'oldest' : 'newest';
 };
+
+const sortPosts = computed(() => {
+  const sortedPosts = posts.value;
+  console.log(sortPosts);
+  sortedPosts.sort((a, b) => {
+    const dateA = new Date(a.createdAt);
+    const dateB = new Date(b.createdAt);
+    return sortOrder.value === 'newest' ? dateB - dateA : dateA - dateB;
+  });
+  console.log(sortedPosts);
+  return sortedPosts;
+});
 
 // -------------- POSTS --------------
 
@@ -278,6 +286,7 @@ const unlikeComment = async (commentID) => {
 </script>
 <template>
   <section class="py-8 lg:py-16">
+    <q-btn color="primary" icon="check" label="OK" @click="toggleSortOrder" />
     <div class="max-w-2xl mx-auto px-4">
       <div class="flex justify-between items-center mb-6">
         <h2 class="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">Meinungen ({{ posts.length }})</h2>
