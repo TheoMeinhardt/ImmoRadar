@@ -21,11 +21,13 @@ const currentPost = ref(null);
 const currentComment = ref(null);
 const comment = ref('');
 
+const bool = ref(true);
 const sortOrder = ref('newest');
 
 onMounted(async () => {
   const { data } = await axios.get('http://localhost:3000/realestate/2f7bfacf-d7f4-4ea2-a95e-5caaedbb88ef/posts');
   posts.value = data;
+  console.log(data);
 });
 
 // const checkLikedPost = async (postID, userID) => {
@@ -47,22 +49,40 @@ const formatDate = (date) => {
   return new Date(date).toLocaleString('de-DE', options);
 };
 
-const toggleSortOrder = () => {
-  console.log('test');
-  sortOrder.value = sortOrder.value === 'newest' ? 'oldest' : 'newest';
-};
-
-const sortPosts = computed(() => {
+const sortPosts = () => {
   const sortedPosts = posts.value;
-  console.log(sortPosts);
-  sortedPosts.sort((a, b) => {
-    const dateA = new Date(a.createdAt);
-    const dateB = new Date(b.createdAt);
-    return sortOrder.value === 'newest' ? dateB - dateA : dateA - dateB;
-  });
-  console.log(sortedPosts);
-  return sortedPosts;
-});
+  if (bool.value === true) {
+    sortedPosts.sort((a, b) => {
+      const dateA = new Date(a.createdAt);
+      const dateB = new Date(b.createdAt);
+      return sortOrder.value === 'newest' ? dateB - dateA : dateA - dateB;
+    });
+    sortedPosts.forEach((post) => {
+      post.comments.sort((a, b) => {
+        const dateA = new Date(a.createdAt);
+        const dateB = new Date(b.createdAt);
+        return sortOrder.value === 'newest' ? dateB - dateA : dateA - dateB;
+      });
+    });
+    bool.value = !bool.value;
+    return sortedPosts;
+  } else {
+    sortedPosts.sort((a, b) => {
+      const dateA = new Date(a.createdAt);
+      const dateB = new Date(b.createdAt);
+      return sortOrder.value === 'oldest' ? dateB - dateA : dateA - dateB;
+    });
+    sortedPosts.forEach((post) => {
+      post.comments.sort((a, b) => {
+        const dateA = new Date(a.createdAt);
+        const dateB = new Date(b.createdAt);
+        return sortOrder.value === 'oldest' ? dateB - dateA : dateA - dateB;
+      });
+    });
+    bool.value = !bool.value;
+    return sortedPosts;
+  }
+};
 
 // -------------- POSTS --------------
 
@@ -286,23 +306,30 @@ const unlikeComment = async (commentID) => {
 </script>
 <template>
   <section class="py-8 lg:py-16">
-    <q-btn color="primary" icon="check" label="OK" @click="toggleSortOrder" />
     <div class="max-w-2xl mx-auto px-4">
       <div class="flex justify-between items-center mb-6">
         <h2 class="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">Meinungen ({{ posts.length }})</h2>
       </div>
-      <form class="mb-6">
+      <div class="mb-6">
         <div class="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
           <textarea v-model="postTitle" id="postTitle" rows="1" class="px-0 w-full text-lg border-0 focus:ring-0 focus:outline-none" placeholder="Title..." required></textarea>
           <textarea v-model="postContent" id="postContent" rows="5" class="px-0 w-full text-sm border-0 focus:ring-0 focus:outline-none" placeholder="Content..." required></textarea>
         </div>
-        <button
-          @click="postPost"
-          class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-primary rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800"
-        >
-          Post comment
-        </button>
-      </form>
+        <div class="row justify-between">
+          <button
+            @click="postPost"
+            class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-primary rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800"
+          >
+            Post comment
+          </button>
+          <button
+            @click="sortPosts"
+            class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-primary rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800"
+          >
+            Sort
+          </button>
+        </div>
+      </div>
       <div v-for="p in posts" :key="p.id">
         <article class="p-6 mb-6 text-base bg-white rounded-lg dark:bg-gray-900">
           <footer class="flex justify-between items-center mb-2">
