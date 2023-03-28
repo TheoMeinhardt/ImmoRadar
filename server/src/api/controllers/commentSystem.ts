@@ -95,14 +95,12 @@ async function likePost(req: Request, res: Response): Promise<void> {
     const { post_id } = req.params;
     const { user_id } = req.body;
 
-    // Check if post exists
     const postExists = await dbGetPostByPostID(post_id);
     if (!postExists) {
       res.status(404).json({ error: 'Post not found' });
       return;
     }
 
-    // Check if like already exists
     const likeExists = await dbCheckLikeExistsOnPost(user_id, post_id);
     if (likeExists) {
       res.status(200).json({ error: 'Like already exists' });
@@ -168,24 +166,27 @@ async function patchPost(req: Request, res: Response): Promise<void> {
 }
 
 async function patchComment(req: Request, res: Response): Promise<void> {
-  const { content, user_id } = req.body;
-  const { comment_id } = req.params;
+  try {
+    const { content, user_id } = req.body;
+    const { comment_id } = req.params;
 
-  const comment = await dbGetCommentByCommentID(comment_id);
+    const comment = await dbGetCommentByCommentID(comment_id);
 
-  if (!comment) {
-    res.status(404).json({ message: 'Comment not found' });
-    return;
+    if (!comment) {
+      res.status(404).json({ message: 'Comment not found' });
+      return;
+    }
+
+    if (comment.userID !== user_id) {
+      res.status(401).json({ message: 'Not authorized to edit this comment' });
+      return;
+    }
+
+    const updatedComment = await dbPatchComment(content, comment_id);
+    res.status(200).json(updatedComment);
+  } catch (error) {
+    console.error(error);
   }
-
-  if (comment.userID !== user_id) {
-    res.status(401).json({ message: 'Not authorized to edit this comment' });
-    return;
-  }
-
-  const updatedComment = await dbPatchComment(content, comment_id);
-
-  res.status(200).json(updatedComment);
 }
 
 //  -------------- DELETES --------------
