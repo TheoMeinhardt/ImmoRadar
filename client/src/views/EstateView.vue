@@ -260,7 +260,6 @@ import NavBar from '@/components/NavBar.vue';
 import CommentView from './CommentView.vue';
 import axios from 'axios';
 import { ref, onMounted } from 'vue';
-import NavBar from '@/components/NavBar.vue';
 import { useRealEstateStore } from '@/stores/realEstates.js';
 import { useEstateMapStore } from '../stores/estate-map.js';
 import { useEstateUserStore } from '../stores/estateUser.js';
