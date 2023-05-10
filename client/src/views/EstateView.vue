@@ -66,12 +66,13 @@
           class="absolute-bottom-left text-subtitle2"
           style="border-top-right-radius: 20px"
         >
-        <div
-          v-else
-          class="absolute-bottom-left text-subtitle2"
-          style="border-top-right-radius: 20px"
-        >
-          <b>{{ realEstateStore.wholeRealEstate.price }}€ </b>/ Month | Rentable
+          <div
+            class="absolute-bottom-left text-subtitle2"
+            style="border-top-right-radius: 20px"
+          >
+            <b>{{ realEstateStore.wholeRealEstate.price }}€ </b>/ Month |
+            Rentable
+          </div>
         </div>
       </q-img>
     </div>
