@@ -17,7 +17,27 @@ export default defineConfig({
     vue({
       template: { transformAssetUrls },
     }),
-    VitePWA({ registerType: 'autoUpdate', manifest }),
+    VitePWA({
+      registerType: 'autoUpdate',
+      manifest,
+      includeAssets: ['**/*.{js,css,html,jpg,ico,xml,svg,png,ttf,woff2}'],
+      workbox: {
+        mode: 'development',
+        runtimeCaching: [
+          {
+            urlPattern: /^https?:\/\/localhost:3000\/user/,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'immoradar-cache',
+              expiration: {
+                maxEntries: 50,
+                maxAgeSeconds: 60 * 60 * 24, // Cache for 1 day
+              },
+            },
+          },
+        ],
+      },
+    }),
     quasar({
       sassVariables: 'src/quasar-variables.sass',
     }),
