@@ -22,13 +22,19 @@ const currentComment = ref(null);
 const comment = ref('');
 
 const bool = ref(true);
-const sortOrder = ref('newest');
+const sortOrder = ref('oldest');
 
 onMounted(async () => {
-  const { data } = await axios.get('http://localhost:3000/realestate/2f7bfacf-d7f4-4ea2-a95e-5caaedbb88ef/posts');
-  posts.value = data;
-  console.log(data);
+  await getPosts();
+  console.log(posts.value);
 });
+
+const getPosts = async () => {
+  const { data } = await axios.get(
+    'http://localhost:3000/realestate/2f7bfacf-d7f4-4ea2-a95e-5caaedbb88ef/posts',
+  );
+  posts.value = data;
+};
 
 // const checkLikedPost = async (postID, userID) => {
 //   const { data } = await axios.get(
@@ -51,37 +57,21 @@ const formatDate = (date) => {
 
 const sortPosts = () => {
   const sortedPosts = posts.value;
-  if (bool.value === true) {
-    sortedPosts.sort((a, b) => {
-      const dateA = new Date(a.createdAt);
-      const dateB = new Date(b.createdAt);
-      return sortOrder.value === 'newest' ? dateB - dateA : dateA - dateB;
-    });
-    sortedPosts.forEach((post) => {
-      post.comments.sort((a, b) => {
-        const dateA = new Date(a.createdAt);
-        const dateB = new Date(b.createdAt);
-        return sortOrder.value === 'newest' ? dateB - dateA : dateA - dateB;
-      });
-    });
-    bool.value = !bool.value;
-    return sortedPosts;
-  } else {
-    sortedPosts.sort((a, b) => {
-      const dateA = new Date(a.createdAt);
-      const dateB = new Date(b.createdAt);
-      return sortOrder.value === 'oldest' ? dateB - dateA : dateA - dateB;
-    });
-    sortedPosts.forEach((post) => {
-      post.comments.sort((a, b) => {
-        const dateA = new Date(a.createdAt);
-        const dateB = new Date(b.createdAt);
-        return sortOrder.value === 'oldest' ? dateB - dateA : dateA - dateB;
-      });
-    });
-    bool.value = !bool.value;
-    return sortedPosts;
-  }
+
+  const sortFunc = (a, b) => {
+    const dateA = new Date(a.createdAt);
+    const dateB = new Date(b.createdAt);
+    return sortOrder.value === 'newest' ? dateB - dateA : dateA - dateB;
+  };
+
+  const sortPostComments = (post) => {
+    post.comments.sort(sortFunc);
+  };
+
+  sortedPosts.sort(sortFunc);
+  sortedPosts.forEach(sortPostComments);
+  sortOrder.value = sortOrder.value === 'newest' ? 'oldest' : 'newest';
+  return sortedPosts;
 };
 
 // -------------- POSTS --------------
@@ -94,16 +84,21 @@ const postPost = async () => {
         color: 'red',
       });
     } else {
-      await axios.post('http://localhost:3000/realestate/2f7bfacf-d7f4-4ea2-a95e-5caaedbb88ef/posts', {
-        title: postTitle.value,
-        content: postContent.value,
-        user_id: currentUser.value,
-      });
+      await axios.post(
+        'http://localhost:3000/realestate/2f7bfacf-d7f4-4ea2-a95e-5caaedbb88ef/posts',
+        {
+          title: postTitle.value,
+          content: postContent.value,
+          user_id: currentUser.value,
+        },
+      );
       $q.notify({
         message: 'Sie haben den Post gesendet!',
         color: 'green',
       });
     }
+
+    await getPosts();
   } catch (error) {
     $q.notify({
       message: 'Fehler beim Sende des Posts!',
@@ -115,11 +110,14 @@ const postPost = async () => {
 
 const deletePost = async (postID) => {
   try {
-    await axios.delete(`http://localhost:3000/realestate/posts/${postID}`, { data: { user_id: currentUser.value } });
+    await axios.delete(`http://localhost:3000/realestate/posts/${postID}`, {
+      data: { user_id: currentUser.value },
+    });
     $q.notify({
       message: 'Sie haben den Post gelöscht!',
       color: 'green',
     });
+    await getPosts();
   } catch (error) {
     console.error(error);
     $q.notify({
@@ -131,14 +129,18 @@ const deletePost = async (postID) => {
 
 const sendComment = async (postID) => {
   try {
-    await axios.post(`http://localhost:3000/realestate/posts/${postID}/comments`, {
-      user_id: currentUser.value,
-      content: comment.value,
-    });
+    await axios.post(
+      `http://localhost:3000/realestate/posts/${postID}/comments`,
+      {
+        user_id: currentUser.value,
+        content: comment.value,
+      },
+    );
     $q.notify({
       message: 'Sie haben den Kommentar gesendet!',
       color: 'green',
     });
+    await getPosts();
   } catch (error) {
     console.error(error);
     $q.notify({
@@ -150,9 +152,12 @@ const sendComment = async (postID) => {
 
 const likePost = async (postID) => {
   try {
-    const { data } = await axios.post(`http://localhost:3000/realestate/posts/${postID}/like`, {
-      user_id: currentUser.value,
-    });
+    const { data } = await axios.post(
+      `http://localhost:3000/realestate/posts/${postID}/like`,
+      {
+        user_id: currentUser.value,
+      },
+    );
     if (data.error === 'Like already exists') {
       $q.notify({
         message: 'Sie haben den Post schon geliked!',
@@ -164,6 +169,7 @@ const likePost = async (postID) => {
         color: 'green',
       });
     }
+    await getPosts();
   } catch (error) {
     console.error(error);
     $q.notify({
@@ -175,7 +181,10 @@ const likePost = async (postID) => {
 
 const unlikePost = async (postID) => {
   try {
-    const { data } = await axios.delete(`http://localhost:3000/realestate/posts/${postID}/unlike`, { data: { user_id: currentUser.value } });
+    const { data } = await axios.delete(
+      `http://localhost:3000/realestate/posts/${postID}/unlike`,
+      { data: { user_id: currentUser.value } },
+    );
     if (data.error === 'Like does not exist') {
       $q.notify({
         message: 'Sie haben den Post nicht geliked!',
@@ -187,6 +196,7 @@ const unlikePost = async (postID) => {
         color: 'green',
       });
     }
+    await getPosts();
   } catch (error) {
     console.error(error);
     $q.notify({
@@ -208,6 +218,7 @@ const editPost = async (post) => {
       message: 'Sie haben den Post geändert!',
       color: 'green',
     });
+    await getPosts();
   } catch (error) {
     console.error(error);
     $q.notify({
@@ -221,11 +232,15 @@ const editPost = async (post) => {
 
 const deleteComment = async (commentID) => {
   try {
-    await axios.delete(`http://localhost:3000/realestate/posts/comments/${commentID}`, { data: { user_id: currentUser.value } });
+    await axios.delete(
+      `http://localhost:3000/realestate/posts/comments/${commentID}`,
+      { data: { user_id: currentUser.value } },
+    );
     $q.notify({
       message: 'Sie haben den Kommentar gelöscht!',
       color: 'green',
     });
+    await getPosts();
   } catch (error) {
     console.error(error);
     $q.notify({
@@ -238,14 +253,18 @@ const deleteComment = async (commentID) => {
 const editComment = async (comment) => {
   try {
     const commentID = comment.commentID;
-    await axios.patch(`http://localhost:3000/realestate/posts/comments/${commentID}`, {
-      content: comment.content,
-      user_id: currentUser.value,
-    });
+    await axios.patch(
+      `http://localhost:3000/realestate/posts/comments/${commentID}`,
+      {
+        content: comment.content,
+        user_id: currentUser.value,
+      },
+    );
     $q.notify({
       message: 'Sie haben den Kommentar geändert!',
       color: 'green',
     });
+    await getPosts();
   } catch (error) {
     console.error(error);
     $q.notify({
@@ -257,9 +276,12 @@ const editComment = async (comment) => {
 
 const likeComment = async (commentID) => {
   try {
-    const { data } = await axios.post(`http://localhost:3000/realestate/posts/comments/${commentID}/like`, {
-      user_id: currentUser.value,
-    });
+    const { data } = await axios.post(
+      `http://localhost:3000/realestate/posts/comments/${commentID}/like`,
+      {
+        user_id: currentUser.value,
+      },
+    );
 
     if (data.error === 'Like already exists') {
       $q.notify({
@@ -272,6 +294,7 @@ const likeComment = async (commentID) => {
         color: 'green',
       });
     }
+    await getPosts();
   } catch (error) {
     console.error(error);
     $q.notify({
@@ -283,7 +306,10 @@ const likeComment = async (commentID) => {
 
 const unlikeComment = async (commentID) => {
   try {
-    const { data } = await axios.delete(`http://localhost:3000/realestate/posts/comments/${commentID}/unlike`, { data: { user_id: currentUser.value } });
+    const { data } = await axios.delete(
+      `http://localhost:3000/realestate/posts/comments/${commentID}/unlike`,
+      { data: { user_id: currentUser.value } },
+    );
     if (data.error === 'Like does not exist') {
       $q.notify({
         message: 'Sie haben den Post nicht geliked!',
@@ -295,6 +321,7 @@ const unlikeComment = async (commentID) => {
         color: 'green',
       });
     }
+    await getPosts();
   } catch (error) {
     console.error(error);
     $q.notify({
@@ -308,12 +335,30 @@ const unlikeComment = async (commentID) => {
   <section class="py-8 lg:py-16">
     <div class="max-w-2xl mx-auto px-4">
       <div class="flex justify-between items-center mb-6">
-        <h2 class="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">Meinungen ({{ posts.length }})</h2>
+        <h2 class="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">
+          Posts ({{ posts.length }})
+        </h2>
       </div>
       <div class="mb-6">
-        <div class="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
-          <textarea v-model="postTitle" id="postTitle" rows="1" class="px-0 w-full text-lg border-0 focus:ring-0 focus:outline-none" placeholder="Title..." required></textarea>
-          <textarea v-model="postContent" id="postContent" rows="5" class="px-0 w-full text-sm border-0 focus:ring-0 focus:outline-none" placeholder="Content..." required></textarea>
+        <div
+          class="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700"
+        >
+          <textarea
+            v-model="postTitle"
+            id="postTitle"
+            rows="1"
+            class="px-0 w-full text-lg border-0 focus:ring-0 focus:outline-none"
+            placeholder="Title..."
+            required
+          ></textarea>
+          <textarea
+            v-model="postContent"
+            id="postContent"
+            rows="5"
+            class="px-0 w-full text-sm border-0 focus:ring-0 focus:outline-none"
+            placeholder="Content..."
+            required
+          ></textarea>
         </div>
         <div class="row justify-between">
           <button
@@ -331,11 +376,17 @@ const unlikeComment = async (commentID) => {
         </div>
       </div>
       <div v-for="p in posts" :key="p.id">
-        <article class="p-6 mb-6 text-base bg-white rounded-lg dark:bg-gray-900">
+        <article
+          class="p-6 mb-6 text-base bg-white rounded-lg dark:bg-gray-900"
+        >
           <footer class="flex justify-between items-center mb-2">
             <div class="flex items-center">
               <p class="inline-flex items-center mr-3 text-sm">
-                <img class="mr-2 w-6 h-6 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-2.jpg" alt="Michael Gough" />{{ p.userName }}
+                <img
+                  class="mr-2 w-6 h-6 rounded-full"
+                  src="https://flowbite.com/docs/images/people/profile-picture-2.jpg"
+                  alt="Michael Gough"
+                />{{ p.userName }}
               </p>
               <p class="text-sm dark:text-gray-400">
                 {{ formatDate(p.createdAt) }}
@@ -343,10 +394,18 @@ const unlikeComment = async (commentID) => {
             </div>
             <div class="gt-xs">
               <button>
-                <i v-if="p.userID == currentUser" @click="(currentPost = p), (showDeletePost = !showDeletePost)" class="fa-sharp fa-solid fa-trash q-mx-md text-red"></i>
+                <i
+                  v-if="p.userID == currentUser"
+                  @click="(currentPost = p), (showDeletePost = !showDeletePost)"
+                  class="fa-sharp fa-solid fa-trash q-mx-md text-red"
+                ></i>
               </button>
               <button>
-                <i v-if="p.userID == currentUser" class="fa-solid fa-pen-to-square q-mx-md text-primary" @click="(currentPost = p), (showEditPost = true)"></i>
+                <i
+                  v-if="p.userID == currentUser"
+                  class="fa-solid fa-pen-to-square q-mx-md text-primary"
+                  @click="(currentPost = p), (showEditPost = true)"
+                ></i>
               </button>
             </div>
           </footer>
@@ -354,10 +413,19 @@ const unlikeComment = async (commentID) => {
           <p class="">
             {{ p.content }}
           </p>
-          <div class="q-my-md py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700" v-if="showEditPost && currentPost === p">
+          <div
+            class="q-my-md py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700"
+            v-if="showEditPost && currentPost === p"
+          >
             <p class="text-subtitle1 q-py-sm">Editier deinen Post</p>
             <q-input required v-model="p.title" type="text" label="Title" />
-            <q-input required v-model="p.content" type="text" label="Content" class="q-mb-md" />
+            <q-input
+              required
+              v-model="p.content"
+              type="text"
+              label="Content"
+              class="q-mb-md"
+            />
             <div class="flex justify-end">
               <button
                 @click="showEditPost = false"
@@ -377,29 +445,59 @@ const unlikeComment = async (commentID) => {
           </div>
 
           <div class="flex items-center mt-4">
-            <button type="button" @click="likePost(p.postID)" class="flex items-center text-sm">
+            <button
+              type="button"
+              @click="likePost(p.postID)"
+              class="flex items-center text-sm"
+            >
               <i class="fa-solid fa-heart q-mr-sm text-primary"></i>
             </button>
             <p class="q-pr-sm">{{ p.likes.count }}</p>
-            <button v-if="p.likes.count > 0" @click="unlikePost(p.postID)" type="button" class="flex items-center text-sm">
+            <button
+              v-if="p.likes.count > 0"
+              @click="unlikePost(p.postID)"
+              type="button"
+              class="flex items-center text-sm"
+            >
               <i class="fa-regular fa-heart q-mr-sm text-primary"></i>
             </button>
-            <button @click="(currentPost = p), (showReply = true)" type="button" class="flex items-center text-sm mx-4">
+            <button
+              @click="(currentPost = p), (showReply = true)"
+              type="button"
+              class="flex items-center text-sm mx-4"
+            >
               <i class="fa-solid fa-reply q-mx-sm text-primary"></i>
               <p>Reply</p>
             </button>
             <div class="lt-sm">
               <button>
-                <i v-if="p.userID == currentUser" @click="(currentPost = p), (showDeletePost = !showDeletePost)" class="fa-sharp fa-solid fa-trash q-mx-md text-red"></i>
+                <i
+                  v-if="p.userID == currentUser"
+                  @click="(currentPost = p), (showDeletePost = !showDeletePost)"
+                  class="fa-sharp fa-solid fa-trash q-mx-md text-red"
+                ></i>
               </button>
               <button>
-                <i v-if="p.userID == currentUser" class="fa-solid fa-pen-to-square q-mx-md text-primary" @click="(currentPost = p), (showEditPost = true)"></i>
+                <i
+                  v-if="p.userID == currentUser"
+                  class="fa-solid fa-pen-to-square q-mx-md text-primary"
+                  @click="(currentPost = p), (showEditPost = true)"
+                ></i>
               </button>
             </div>
           </div>
-          <div class="q-my-md py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700" v-if="showReply && currentPost === p">
+          <div
+            class="q-my-md py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700"
+            v-if="showReply && currentPost === p"
+          >
             <p class="text-subtitle1 q-py-sm">Schreibe einen Kommentar</p>
-            <q-input required v-model="comment" type="text" label="Content" class="q-mb-md" />
+            <q-input
+              required
+              v-model="comment"
+              type="text"
+              label="Content"
+              class="q-mb-md"
+            />
             <div class="flex justify-end">
               <button
                 @click="(showReply = false), (comment = '')"
@@ -418,28 +516,61 @@ const unlikeComment = async (commentID) => {
             </div>
           </div>
         </article>
-        <article class="p-6 mb-6 ml-6 lg:ml-12 text-base bg-white rounded-lg dark:bg-gray-900" v-for="(c, i) in p.comments" :key="i">
+        <article
+          class="p-6 mb-6 ml-6 lg:ml-12 text-base bg-white rounded-lg dark:bg-gray-900"
+          v-for="(c, i) in p.comments"
+          :key="i"
+        >
           <footer class="flex justify-between items-center mb-2">
             <div class="flex items-center">
               <p class="inline-flex items-center mr-3 text-sm">
-                <img class="mr-2 w-6 h-6 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="Jese Leos" />{{ c.userName }}
+                <img
+                  class="mr-2 w-6 h-6 rounded-full"
+                  src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
+                  alt="Jese Leos"
+                />{{ c.userName }}
               </p>
               <p class="text-sm dark:text-gray-400">
-                <time pubdate datetime="2022-02-12" title="February 12th, 2022">{{ formatDate(c.createdAt) }}</time>
+                <time
+                  pubdate
+                  datetime="2022-02-12"
+                  title="February 12th, 2022"
+                  >{{ formatDate(c.createdAt) }}</time
+                >
               </p>
             </div>
             <div class="gt-xs">
               <button>
-                <i v-if="c.userID == currentUser" @click="(currentComment = c), (showDeleteComment = !showDeleteComment)" class="fa-sharp fa-solid fa-trash q-mx-md text-red"></i>
+                <i
+                  v-if="c.userID == currentUser"
+                  @click="
+                    (currentComment = c),
+                      (showDeleteComment = !showDeleteComment)
+                  "
+                  class="fa-sharp fa-solid fa-trash q-mx-md text-red"
+                ></i>
               </button>
               <button>
-                <i v-if="c.userID == currentUser" class="fa-solid fa-pen-to-square q-mx-md text-primary" @click="(currentComment = c), (showEditComment = true)"></i>
+                <i
+                  v-if="c.userID == currentUser"
+                  class="fa-solid fa-pen-to-square q-mx-md text-primary"
+                  @click="(currentComment = c), (showEditComment = true)"
+                ></i>
               </button>
             </div>
           </footer>
           <p class="">{{ c.content }}</p>
-          <div class="q-my-md py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700" v-if="showEditComment && currentComment === c">
-            <q-input required v-model="c.content" type="text" label="Content" class="q-mb-md" />
+          <div
+            class="q-my-md py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700"
+            v-if="showEditComment && currentComment === c"
+          >
+            <q-input
+              required
+              v-model="c.content"
+              type="text"
+              label="Content"
+              class="q-mb-md"
+            />
             <div class="flex justify-end">
               <button
                 @click="showEditComment = false"
@@ -458,19 +589,38 @@ const unlikeComment = async (commentID) => {
             </div>
           </div>
           <div class="flex items-center mt-4">
-            <button @click="likeComment(c.commentID)" type="button" class="flex items-center text-sm">
+            <button
+              @click="likeComment(c.commentID)"
+              type="button"
+              class="flex items-center text-sm"
+            >
               <i class="fa-solid fa-heart q-mr-sm text-primary"></i>
             </button>
             <p class="q-pr-sm">{{ c.likes.count }}</p>
-            <button @click="unlikeComment(c.commentID)" type="button" v-if="c.likes.count > 0">
+            <button
+              @click="unlikeComment(c.commentID)"
+              type="button"
+              v-if="c.likes.count > 0"
+            >
               <i class="fa-regular fa-heart q-mr-sm text-primary"></i>
             </button>
             <div class="lt-sm">
               <button>
-                <i v-if="c.userID == currentUser" @click="(currentComment = c), (showDeleteComment = !showDeleteComment)" class="fa-sharp fa-solid fa-trash q-mx-md text-red"></i>
+                <i
+                  v-if="c.userID == currentUser"
+                  @click="
+                    (currentComment = c),
+                      (showDeleteComment = !showDeleteComment)
+                  "
+                  class="fa-sharp fa-solid fa-trash q-mx-md text-red"
+                ></i>
               </button>
               <button>
-                <i v-if="c.userID == currentUser" class="fa-solid fa-pen-to-square q-mx-md text-primary" @click="(currentComment = c), (showEditComment = true)"></i>
+                <i
+                  v-if="c.userID == currentUser"
+                  class="fa-solid fa-pen-to-square q-mx-md text-primary"
+                  @click="(currentComment = c), (showEditComment = true)"
+                ></i>
               </button>
             </div>
           </div>
@@ -478,15 +628,25 @@ const unlikeComment = async (commentID) => {
       </div>
     </div>
     <q-dialog v-model="showDeletePost">
-      <div class="relative w-full h-full max-w-md md:h-auto">
+      <div class="relative w-full max-w-md">
         <div class="relative bg-white rounded-lg shadow">
-          <button type="button" class="absolute top-3 right-2.5 text-gray-400 bg-transparent rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-hide="popup-modal">
+          <button
+            type="button"
+            class="absolute top-3 right-2.5 text-gray-400 bg-transparent rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
+            data-modal-hide="popup-modal"
+          >
             <i v-close-popup class="fa-solid fa-x"></i>
             <span v-close-popup class="sr-only">Close modal</span>
           </button>
           <div class="p-6 text-center">
-            <i class="fa-solid fa-circle-exclamation fa-5x text-red q-mb-sm"></i>
-            <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Are you sure you want to delete this post?</h3>
+            <i
+              class="fa-solid fa-circle-exclamation fa-5x text-red q-mb-sm"
+            ></i>
+            <h3
+              class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400"
+            >
+              Are you sure you want to delete this post?
+            </h3>
             <div class="q-mb-md">
               <p class="text-subtitle1">"{{ currentPost.title }}"</p>
               <p>"{{ currentPost.content }}"</p>
@@ -511,15 +671,25 @@ const unlikeComment = async (commentID) => {
       </div>
     </q-dialog>
     <q-dialog v-model="showDeleteComment">
-      <div class="relative w-full h-full max-w-md md:h-auto">
+      <div class="relative w-full max-w-md">
         <div class="relative bg-white rounded-lg shadow">
-          <button type="button" class="absolute top-3 right-2.5 text-gray-400 bg-transparent rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-hide="popup-modal">
+          <button
+            type="button"
+            class="absolute top-3 right-2.5 text-gray-400 bg-transparent rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
+            data-modal-hide="popup-modal"
+          >
             <i v-close-popup class="fa-solid fa-x"></i>
             <span v-close-popup class="sr-only">Close modal</span>
           </button>
           <div class="p-6 text-center">
-            <i class="fa-solid fa-circle-exclamation fa-5x text-red q-mb-sm"></i>
-            <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Are you sure you want to delete this comment?</h3>
+            <i
+              class="fa-solid fa-circle-exclamation fa-5x text-red q-mb-sm"
+            ></i>
+            <h3
+              class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400"
+            >
+              Are you sure you want to delete this comment?
+            </h3>
             <div class="q-mb-md">
               <p>"{{ currentComment.content }}"</p>
             </div>

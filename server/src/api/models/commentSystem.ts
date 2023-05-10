@@ -17,7 +17,7 @@ async function dbCheckLikeExistsOnComment(userID: string, commentID: string) {
 
 async function dbGetPostsByRealEstate(re_id: string): Promise<post[]> {
   const { rows } = await pool.query(
-    'SELECT posts.post_id, posts.title, posts.content, posts.created_at, posts.re_id, posts.user_id, users.user_id ,users.name FROM posts join users on posts.user_id = users.user_id where re_id = $1 order by posts.created_at asc',
+    'SELECT posts.post_id, posts.title, posts.content, posts.created_at, posts.re_id, posts.user_id, users.user_id ,users.name FROM posts join users on posts.user_id = users.user_id where re_id = $1 order by posts.created_at desc',
     [re_id],
   );
   return (await postMapper(rows)) as post[];
@@ -33,7 +33,7 @@ async function dbGetPostByPostID(postID: string): Promise<post> {
 
 async function dbGetCommentsByPost(postID: string): Promise<comment[]> {
   const { rows } = await pool.query(
-    'SELECT comments.comment_id,comments.content,comments.created_at,comments.user_id,comments.post_id, users.user_id, users.name FROM comments join users on comments.user_id = users.user_id where post_id = $1 order by comments.created_at asc',
+    'SELECT comments.comment_id,comments.content,comments.created_at,comments.user_id,comments.post_id, users.user_id, users.name FROM comments join users on comments.user_id = users.user_id where post_id = $1 order by comments.created_at desc',
     [postID],
   );
   return (await commentMapper(rows)) as comment[];
