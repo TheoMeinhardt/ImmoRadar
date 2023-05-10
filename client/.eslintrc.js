@@ -14,5 +14,7 @@ module.exports = {
     'no-console': 'off',
     'import/no-unresolved': 'off',
     'import/extensions': 'off',
+    'operator-linebreak': 'off',
+    'no-restricted-syntax': 'off',
   },
 };

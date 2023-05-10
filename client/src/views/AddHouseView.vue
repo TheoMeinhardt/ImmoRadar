@@ -85,7 +85,7 @@ onMounted(async () => {
 });
 
 const addRoom = () => {
-  rooms.value++;
+  rooms.value += rooms.value;
 };
 
 const removeRoom = () => {
@@ -114,8 +114,8 @@ const removeBedroom = () => {
   }
 };
 
-const filterAssetsArray = (assets) => {
-  const filteredAssets = assets.filter((asset) => asset.selected === true);
+const filterAssetsArray = (oldAssets) => {
+  const filteredAssets = oldAssets.filter((asset) => asset.selected === true);
   const newAssetArray = [];
   for (const asset of filteredAssets) {
     newAssetArray.push({ assetID: asset.assetID, name: asset.name, icon: asset.icon });
@@ -123,9 +123,9 @@ const filterAssetsArray = (assets) => {
   return newAssetArray;
 };
 
-const postEstate = async (estate) => {
+const postEstate = async (newEstate) => {
   try {
-    await axios.post('http://localhost:3000/realEstate', estate);
+    await axios.post('http://localhost:3000/realEstate', newEstate);
     window.location.href = '/#/';
   } catch (err) {
     notifyWarning(err);
@@ -142,12 +142,12 @@ function onContinueStep() {
       stateRef.value.validate();
       countryRef.value.validate();
       if (
-        !estateRef.value.hasError
-        && !addressRef.value.hasError
-        && !cityRef.value.hasError
-        && !zipRef.value.hasError
-        && !stateRef.value.hasError
-        && !countryRef.value.hasError
+        !estateRef.value.hasError &&
+        !addressRef.value.hasError &&
+        !cityRef.value.hasError &&
+        !zipRef.value.hasError &&
+        !stateRef.value.hasError &&
+        !countryRef.value.hasError
       ) {
         stepperRef.value.next();
       }
@@ -159,11 +159,11 @@ function onContinueStep() {
       propAreaRef.value.validate();
       useAreaRef.value.validate();
       if (
-        !estatePriceRef.value.hasError
-        && !heatingPriceRef.value.hasError
-        && !propAreaRef.value.hasError
-        && !useAreaRef.value.hasError
-        && !provisionRef.value.hasError
+        !estatePriceRef.value.hasError &&
+        !heatingPriceRef.value.hasError &&
+        !propAreaRef.value.hasError &&
+        !useAreaRef.value.hasError &&
+        !provisionRef.value.hasError
       ) {
         stepperRef.value.next();
       }
@@ -668,7 +668,7 @@ function onContinueStep() {
         <q-step
           :name="5"
           title=""
-          icon="img:/images/4.svg"
+          icon="img:/images/5.svg"
           active-color="primary"
           active-icon="none"
         >
