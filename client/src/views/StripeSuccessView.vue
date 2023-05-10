@@ -3,20 +3,57 @@
     <div class="relative px-6 lg:px-8">
       <div class="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
         <div class="flex flex-row flex-nowrap items-center">
-          <p class="text-4xl font-bold tracking-tight text-primary sm:text-6xl">Zahlung erfolgreich abgeschlossen!</p>
+          <p class="text-4xl font-bold tracking-tight text-primary sm:text-6xl">
+            Zahlung erfolgreich abgeschlossen!
+          </p>
           <i class="fa-solid fa-check fa-5x" style="color: lightgreen"></i>
         </div>
-        <p class="mt-6 text-lg leading-8 text-white">Herzlichen Glückwunsch! Sie sind nun Premium-Mitglied bei uns und können von nun an unbegrenzt Immobilien hochladen ohne Werbung. Vielen Dank für Ihre Unterstützung und genießen Sie Ihre verbesserte Erfahrung. Vielen Dank!</p>
+        <p class="mt-6 text-lg leading-8 text-white">
+          Herzlichen Glückwunsch! Sie sind nun Premium-Mitglied bei uns und können von nun an
+          unbegrenzt Immobilien hochladen ohne Werbung. Vielen Dank für Ihre Unterstützung und
+          genießen Sie Ihre verbesserte Erfahrung. Vielen Dank!
+        </p>
         <div class="mt-10 flex items-center justify-center gap-x-6">
-          <a href="#" class="rounded-md bg-indigo-600 px-3.5 py-1.5 text-base font-semibold leading-7 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Zurück zur Karte</a>
+          <a
+            href="#"
+            class="rounded-md bg-indigo-600 px-3.5 py-1.5 text-base font-semibold leading-7 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >Zurück zur Karte</a
+          >
         </div>
       </div>
     </div>
     <div class="p-6">
-      <div v-if="alreadyBought" class="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400" role="alert"><span class="font-medium">Info:</span> Sieht so aus, als hätten Sie unsere Premium Version bereits gekauft - Dankeschön!</div>
-      <div v-if="noPayment" class="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400" role="alert"><span class="font-medium">Info:</span> Es ist gerade keine Zahlung getätigt worden!</div>
-      <div v-if="invalidSessionID" class="p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300" role="alert"><span class="font-medium">Vorsicht:</span> Diese Session ID ist ungültig und kann nicht zur Bezahlung verwendet werden!</div>
-      <div v-if="triedToSteal" class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert"><span class="font-medium">Warnung:</span> Sieht aus, als hätten Sie gerade versucht Premium zu ergaunern!</div>
+      <div
+        v-if="alreadyBought"
+        class="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
+        role="alert"
+      >
+        <span class="font-medium">Info:</span> Sieht so aus, als hätten Sie unsere Premium Version
+        bereits gekauft - Dankeschön!
+      </div>
+      <div
+        v-if="noPayment"
+        class="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
+        role="alert"
+      >
+        <span class="font-medium">Info:</span> Es ist gerade keine Zahlung getätigt worden!
+      </div>
+      <div
+        v-if="invalidSessionID"
+        class="p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300"
+        role="alert"
+      >
+        <span class="font-medium">Vorsicht:</span> Diese Session ID ist ungültig und kann nicht zur
+        Bezahlung verwendet werden!
+      </div>
+      <div
+        v-if="triedToSteal"
+        class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+        role="alert"
+      >
+        <span class="font-medium">Warnung:</span> Sieht aus, als hätten Sie gerade versucht Premium
+        zu ergaunern!
+      </div>
     </div>
   </div>
 </template>
@@ -38,7 +75,7 @@ const noPayment = ref(false);
 const dbSessionID = ref();
 
 onMounted(async () => {
-  //Premium
+  // Premium
   // const id = '575e72af-e14c-45e7-afa5-932a50d8400d';
   // document.documentElement.style.overflow = 'hidden';
 
@@ -50,14 +87,14 @@ onMounted(async () => {
   // const id = userStore.user.id;
 
   try {
-    let hash = location.hash;
-    let sessionHash = hash.match(/session_id=([^&]+)/);
+    const { hash } = location;
+    const sessionHash = hash.match(/session_id=([^&]+)/);
 
     if (sessionHash === null) {
       console.log('Es wurde keine Bezahlung durchgeführt!');
       noPayment.value = true;
     } else {
-      let sessionId = sessionHash[1];
+      const sessionId = sessionHash[1];
       const { data } = await axios.patch(`/user/stripe/${id}`, {
         session_id: sessionId,
       });

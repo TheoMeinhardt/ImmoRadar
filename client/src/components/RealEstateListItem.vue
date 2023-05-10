@@ -11,7 +11,13 @@
       <span class="text-address block">{{ realEstate.address.split(',')[1] }}</span>
     </div>
     <div class="col-4 text-right">
-      <span class="text-content block">{{ new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumSignificantDigits: 12 }).format(realEstate.price) }}</span>
+      <span class="text-content block">{{
+        new Intl.NumberFormat('de-DE', {
+          style: 'currency',
+          currency: 'EUR',
+          maximumSignificantDigits: 12,
+        }).format(realEstate.price)
+      }}</span>
       <span class="text-content block">{{ realEstate.usableArea }}m²</span>
       <span class="text-content block">{{ realEstate.rooms }} Rooms</span>
     </div>

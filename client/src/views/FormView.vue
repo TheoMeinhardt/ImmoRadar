@@ -1,6 +1,8 @@
 <template>
   <div class="xs container bg-secondary">
-    <div style="text-align: center"><img class="q-my-md" src="/images/Logo_Horizontal.svg" alt="" width="250" /></div>
+    <div style="text-align: center">
+      <img class="q-my-md" src="/images/Logo_Horizontal.svg" alt="" width="250" />
+    </div>
     <q-tabs style="font-family: Keep Calm" class="text-white">
       <q-route-tab to="/form">Login</q-route-tab>
       <q-route-tab to="/form/register">Register</q-route-tab>

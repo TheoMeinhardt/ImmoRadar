@@ -27,6 +27,7 @@
 
 <script setup>
 import axios from 'axios';
+
 document.documentElement.style.overflow = 'hidden';
 async function createCheckout() {
   const { data } = await axios.post('/realestate/create-checkout-session');

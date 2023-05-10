@@ -1,3 +1,4 @@
+// eslint-disable import/no-unresolved
 import { createRouter, createWebHashHistory } from 'vue-router';
 import AboutView from '../views/AboutView.vue';
 import FormView from '../views/FormView.vue';

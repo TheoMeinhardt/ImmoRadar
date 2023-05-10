@@ -3,15 +3,50 @@
     <div v-if="loginErrors.length > 0" class="error-message-container">
       <p class="text-white">{{ loginErrors }}</p>
     </div>
-    <q-input type="email" bg-color="white" style="font-family: Quicksand Book" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" class="q-my-lg" rounded outlined v-model="email" label="Email" required />
-    <q-input type="password" bg-color="white" style="font-family: Quicksand Book" :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }" rounded outlined v-model="password" label="Password" required />
+    <q-input
+      type="email"
+      bg-color="white"
+      style="font-family: Quicksand Book"
+      :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }"
+      class="q-my-lg"
+      rounded
+      outlined
+      v-model="email"
+      label="Email"
+      required
+    />
+    <q-input
+      type="password"
+      bg-color="white"
+      style="font-family: Quicksand Book"
+      :input-style="{ fontFamily: 'Keep Calm', color: '#717171' }"
+      rounded
+      outlined
+      v-model="password"
+      label="Password"
+      required
+    />
 
     <div class="q-pa-md">
-      <q-checkbox dark class="text-white" v-model="rememberMe" label="Remember me" style="font-family: Keep Calm" />
+      <q-checkbox
+        dark
+        class="text-white"
+        v-model="rememberMe"
+        label="Remember me"
+        style="font-family: Keep Calm"
+      />
     </div>
 
     <div style="font-family: Keep Calm; text-align: center">
-      <q-btn :disabled="submitInProgress" type="submit" rounded color="light-blue-3" style="width: 300px" align="center" class="btn block">
+      <q-btn
+        :disabled="submitInProgress"
+        type="submit"
+        rounded
+        color="light-blue-3"
+        style="width: 300px"
+        align="center"
+        class="btn block"
+      >
         <div v-if="!submitInProgress">Login</div>
         <div v-else>
           <q-spinner-tail size="1em" thickness="5" />
@@ -21,7 +56,9 @@
 
       <div>
         <span class="text-white text-caption q-my-sm block">or</span>
-        <span @click="submitGuestLogin" class="text-white cursor-pointer block">proceed without logging in</span>
+        <span @click="submitGuestLogin" class="text-white cursor-pointer block"
+          >proceed without logging in</span
+        >
       </div>
     </div>
   </form>
@@ -61,7 +98,7 @@ async function submitLogin() {
       userStore.isLoggedIn = true;
       userStore.checkIfProfileNeedsUpdate();
 
-      axios.defaults.headers.common['authorization'] = userStore.jwt;
+      axios.defaults.headers.common.authorization = userStore.jwt;
 
       realEstateStore.fetchAllRealEstateShort();
       router.push('/');
@@ -79,7 +116,7 @@ async function submitGuestLogin() {
   const { jwt } = await (await axios.post('/user/guest')).data;
 
   userStore.jwt = jwt;
-  axios.defaults.headers.common['authorization'] = userStore.jwt;
+  axios.defaults.headers.common.authorization = userStore.jwt;
 
   realEstateStore.fetchAllRealEstateShort();
 

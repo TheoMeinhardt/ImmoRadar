@@ -1,10 +1,9 @@
 import { defineStore } from 'pinia';
 
+// eslint-disable-next-line import/prefer-default-export
 export const useEstateMapStore = defineStore('estateMapStore', {
-  state: () => {
-    return {
-      long: Number,
-      lat: Number,
-    };
-  },
+  state: () => ({
+    long: Number,
+    lat: Number,
+  }),
 });

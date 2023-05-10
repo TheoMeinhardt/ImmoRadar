@@ -3,10 +3,38 @@
     <q-page-container>
       <div class="flex justify-center" style="width: 100vw">
         <div class="column justify-center items-center">
-          <q-input v-model="searchString" filled input-class="text-dark" type="search" bg-color="white" color="grey" placeholder="1160, Wien" class="searchBar block row">
+          <q-input
+            v-model="searchString"
+            filled
+            input-class="text-dark"
+            type="search"
+            bg-color="white"
+            color="grey"
+            placeholder="1160, Wien"
+            class="searchBar block row"
+          >
             <template v-slot:append>
-              <q-select v-model="forSaleRent" filled color="dark" options-dense bg-color="primary" class="forSaleRentDropdow" option-value="id" option-label="desc" emit-value map-options :options="forSaleRentOptions" dense flat />
-              <q-icon @click="search" name="fa-solid fa-search" class="q-ml-sm cursor-pointer" color="dark" />
+              <q-select
+                v-model="forSaleRent"
+                filled
+                color="dark"
+                options-dense
+                bg-color="primary"
+                class="forSaleRentDropdow"
+                option-value="id"
+                option-label="desc"
+                emit-value
+                map-options
+                :options="forSaleRentOptions"
+                dense
+                flat
+              />
+              <q-icon
+                @click="search"
+                name="fa-solid fa-search"
+                class="q-ml-sm cursor-pointer"
+                color="dark"
+              />
             </template>
           </q-input>
 
@@ -16,56 +44,153 @@
 
               <!-- Price Filter -->
               <div class="row justify-between q-mt-md">
-                <div class="col-3 text-left text-subtitle1 text-weight-bolder" style="font-family: 'Keep Calm'">Price</div>
-                <div class="col-9 text-right text-caption">{{ formatCurrency(priceRange.min) }} - {{ formatCurrency(priceRange.max) }}</div>
+                <div
+                  class="col-3 text-left text-subtitle1 text-weight-bolder"
+                  style="font-family: 'Keep Calm'"
+                >
+                  Price
+                </div>
+                <div class="col-9 text-right text-caption">
+                  {{ formatCurrency(priceRange.min) }} - {{ formatCurrency(priceRange.max) }}
+                </div>
               </div>
               <div class="text-center">
-                <q-range v-model="priceRange" :min="0" :max="calcMaxPrice + 100" :step="5" style="width: 95%" color="primary" label switch-label-side :left-label-value="leftPriceMarkerDisplay" :right-label-value="rightPriceMarkerDisplay" />
+                <q-range
+                  v-model="priceRange"
+                  :min="0"
+                  :max="calcMaxPrice + 100"
+                  :step="5"
+                  style="width: 95%"
+                  color="primary"
+                  label
+                  switch-label-side
+                  :left-label-value="leftPriceMarkerDisplay"
+                  :right-label-value="rightPriceMarkerDisplay"
+                />
               </div>
 
               <!-- Area Filter -->
               <div class="row justify-between q-mt-md">
-                <div class="col-5 text-left text-subtitle1 text-weight-bolder" style="font-family: 'Keep Calm'">Usable Area</div>
-                <div class="col-7 text-right text-caption">{{ usableAreaRange.min }}m² - {{ usableAreaRange.max }}m²</div>
+                <div
+                  class="col-5 text-left text-subtitle1 text-weight-bolder"
+                  style="font-family: 'Keep Calm'"
+                >
+                  Usable Area
+                </div>
+                <div class="col-7 text-right text-caption">
+                  {{ usableAreaRange.min }}m² - {{ usableAreaRange.max }}m²
+                </div>
               </div>
               <div class="text-center">
-                <q-range v-model="usableAreaRange" :min="0.0" :max="realEstateStore.maxUsableArea + 1" :step="1" style="width: 95%" color="primary" label switch-label-side :left-label-value="leftUsableAreaMarkerDisplay" :right-label-value="rightUsableAreaMarkerDisplay" />
+                <q-range
+                  v-model="usableAreaRange"
+                  :min="0.0"
+                  :max="realEstateStore.maxUsableArea + 1"
+                  :step="1"
+                  style="width: 95%"
+                  color="primary"
+                  label
+                  switch-label-side
+                  :left-label-value="leftUsableAreaMarkerDisplay"
+                  :right-label-value="rightUsableAreaMarkerDisplay"
+                />
               </div>
 
               <!-- Assets Filter -->
               <div class="row just-between q-mt-md">
-                <div class="col-3 text-left text-subtitle1 text-weight-bolder" style="font-family: 'Keep Calm'">Assets</div>
+                <div
+                  class="col-3 text-left text-subtitle1 text-weight-bolder"
+                  style="font-family: 'Keep Calm'"
+                >
+                  Assets
+                </div>
               </div>
               <div class="row" style="width: 100%">
-                <q-chip v-for="asset of assets" v-model:selected="assets[assets.findIndex((a) => a.assetID === asset.assetID)].selected" class="col-1 cursor-pointer" style="width: fit-content" outline color="primary" text-color="white" :key="asset.assetID">{{ asset.name }}</q-chip>
+                <q-chip
+                  v-for="asset of assets"
+                  v-model:selected="
+                    assets[assets.findIndex((a) => a.assetID === asset.assetID)].selected
+                  "
+                  class="col-1 cursor-pointer"
+                  style="width: fit-content"
+                  outline
+                  color="primary"
+                  text-color="white"
+                  :key="asset.assetID"
+                  >{{ asset.name }}</q-chip
+                >
               </div>
 
               <div class="q-mt-md text-center">
-                <q-btn @click="applyFilters" unelevated rounded color="primary" label="apply filters" />
-                <q-btn @click="resetFilters" unelevated outline rounded color="primary" class="q-ml-sm" label="reset" />
+                <q-btn
+                  @click="applyFilters"
+                  unelevated
+                  rounded
+                  color="primary"
+                  label="apply filters"
+                />
+                <q-btn
+                  @click="resetFilters"
+                  unelevated
+                  outline
+                  rounded
+                  color="primary"
+                  class="q-ml-sm"
+                  label="reset"
+                />
               </div>
 
               <div class="seperator q-my-sm"></div>
             </div>
           </q-slide-transition>
           <div class="row">
-            <q-btn @click="filtersOpened = !filtersOpened" color="white" size="md" flat dense label="filters" icon-right="fa-solid fa-angle-down" />
+            <q-btn
+              @click="filtersOpened = !filtersOpened"
+              color="white"
+              size="md"
+              flat
+              dense
+              label="filters"
+              icon-right="fa-solid fa-angle-down"
+            />
           </div>
         </div>
 
         <div class="row wrap justify-center">
           <div class="col-12 q-ml-xl q-mb-sm">
             <div class="gridListSwitchContainer q-px-md q-py-xs bg-dark">
-              <q-icon @click="gridView = true" name="fa-solid fa-border-all" :color="gridView ? 'white' : 'grey'" :size="gridView ? '1.25rem' : '1rem'" class="cursor-pointer q-mr-sm"></q-icon>
-              <q-icon @click="gridView = false" name="fa-solid fa-list-ul" :color="!gridView ? 'white' : 'grey'" :size="!gridView ? '1.25rem' : '1rem'" class="cursor-pointer"></q-icon>
+              <q-icon
+                @click="gridView = true"
+                name="fa-solid fa-border-all"
+                :color="gridView ? 'white' : 'grey'"
+                :size="gridView ? '1.25rem' : '1rem'"
+                class="cursor-pointer q-mr-sm"
+              ></q-icon>
+              <q-icon
+                @click="gridView = false"
+                name="fa-solid fa-list-ul"
+                :color="!gridView ? 'white' : 'grey'"
+                :size="!gridView ? '1.25rem' : '1rem'"
+                class="cursor-pointer"
+              ></q-icon>
             </div>
           </div>
 
           <div v-if="gridView" class="row wrap justify-center">
-            <RealEstateCard v-for="re of realEstates" :realEstate="re" :key="re.reID" class="col-6" style="width: 40vw"></RealEstateCard>
+            <RealEstateCard
+              v-for="re of realEstates"
+              :realEstate="re"
+              :key="re.reID"
+              class="col-6"
+              style="width: 40vw"
+            ></RealEstateCard>
           </div>
           <div v-else class="col">
-            <RealEstateListItem v-for="re of realEstates" :realEstate="re" :key="re.reID"></RealEstateListItem>
+            <RealEstateListItem
+              v-for="re of realEstates"
+              :realEstate="re"
+              :key="re.reID"
+            ></RealEstateListItem>
           </div>
         </div>
       </div>
@@ -79,7 +204,9 @@
 
 <script setup>
 import { point, bboxPolygon, booleanPointInPolygon } from '@turf/turf';
-import { ref, computed, onMounted, watch } from 'vue';
+import {
+  ref, computed, onMounted, watch,
+} from 'vue';
 
 import NavBar from '@/components/NavBar.vue';
 import RealEstateCard from '../components/RealEstateCard.vue';
@@ -112,13 +239,12 @@ const rightUsableAreaMarkerDisplay = computed(() => `${usableAreaRange.value.max
 
 async function applyFilters() {
   realEstates.value = searchedRealEstates.value.filter(
-    (re) =>
-      re.price >= priceRange.value.min &&
-      re.price <= priceRange.value.max &&
-      re.usableArea >= usableAreaRange.value.min &&
-      re.usableArea <= usableAreaRange.value.max &&
-      re.buyable === forSaleRent.value &&
-      realEstateHasAssets(
+    (re) => re.price >= priceRange.value.min
+      && re.price <= priceRange.value.max
+      && re.usableArea >= usableAreaRange.value.min
+      && re.usableArea <= usableAreaRange.value.max
+      && re.buyable === forSaleRent.value
+      && realEstateHasAssets(
         re,
         assets.value.filter((a) => a.selected),
       ),
@@ -134,7 +260,9 @@ async function search() {
 
     if (bbox) {
       const poly = bboxPolygon(bbox);
-      realEstates.value = filteredRealEstates.value.filter((re) => booleanPointInPolygon(point([re.long, re.lat]), poly) && re.buyable === forSaleRent.value);
+      realEstates.value = filteredRealEstates.value.filter(
+        (re) => booleanPointInPolygon(point([re.long, re.lat]), poly) && re.buyable === forSaleRent.value,
+      );
       searchedRealEstates.value = realEstates.value;
     }
   }
