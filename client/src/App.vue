@@ -20,8 +20,8 @@ axios.defaults.baseURL = import.meta.env.DEV
 console.log(`${import.meta.env.MODE} mode`);
 
 onMounted(async () => {
-  // if (!userStore.isLoggedIn) router.push('/form');
-  // else realEstateStore.fetchAllRealEstateShort();
+  if (!userStore.isLoggedIn) router.push('/form');
+  else realEstateStore.fetchAllRealEstateShort();
 });
 </script>
 
